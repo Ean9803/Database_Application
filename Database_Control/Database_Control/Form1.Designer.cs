@@ -39,7 +39,7 @@
             label3 = new Label();
             PassWord = new MaskedTextBox();
             UserName = new TextBox();
-            button1 = new Button();
+            LoginBtn = new Button();
             tableLayoutPanel8 = new TableLayoutPanel();
             panel21 = new Panel();
             label1 = new Label();
@@ -296,7 +296,7 @@
             tableLayoutPanel2.Controls.Add(label3, 0, 1);
             tableLayoutPanel2.Controls.Add(PassWord, 1, 1);
             tableLayoutPanel2.Controls.Add(UserName, 1, 0);
-            tableLayoutPanel2.Controls.Add(button1, 1, 2);
+            tableLayoutPanel2.Controls.Add(LoginBtn, 1, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 110);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -346,14 +346,15 @@
             UserName.Size = new Size(181, 23);
             UserName.TabIndex = 0;
             // 
-            // button1
+            // LoginBtn
             // 
-            button1.Location = new Point(104, 53);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 2;
-            button1.Text = "Login";
-            button1.UseVisualStyleBackColor = true;
+            LoginBtn.Location = new Point(104, 53);
+            LoginBtn.Name = "LoginBtn";
+            LoginBtn.Size = new Size(75, 23);
+            LoginBtn.TabIndex = 2;
+            LoginBtn.Text = "Login";
+            LoginBtn.UseVisualStyleBackColor = true;
+            LoginBtn.Click += Login_Click;
             // 
             // tableLayoutPanel8
             // 
@@ -1557,7 +1558,7 @@
         private Label label3;
         private MaskedTextBox PassWord;
         private TextBox UserName;
-        private Button button1;
+        private Button LoginBtn;
         private TabControl ControlPanelOptions;
         private TabPage DeliveryControl;
         private TabPage OrderControl;
