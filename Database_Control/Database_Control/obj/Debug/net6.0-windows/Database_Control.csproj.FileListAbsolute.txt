@@ -16,3 +16,10 @@ C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_C
 C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\Database_Control.genruntimeconfig.cache
 C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\ref\Database_Control.dll
 C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\Database_Control.Properties.Resources.resources
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\bin\Debug\net6.0-windows\System.Data.SqlClient.dll
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\bin\Debug\net6.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\bin\Debug\net6.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\bin\Debug\net6.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\bin\Debug\net6.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\bin\Debug\net6.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\Database_Control.csproj.CopyComplete

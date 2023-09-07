@@ -59,8 +59,13 @@ namespace Database_Control
 
         public SQL()
         {
-            com = new SqlConnection(@"Data Source=WIN-50GP30FGO75;Initial Catalog=Demodb;User ID=sa;Password=demol23");
+            com = new SqlConnection(@"Data Source=WIN-50GP30FGO75;Initial Catalog=Maestro;User ID=root;Password=root");
             com.Open();
+        }
+
+        public void Close()
+        {
+            com.Close();
         }
     }
 
@@ -138,7 +143,7 @@ namespace Database_Control
             list.Controls.Clear();
         }
 
-        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Height = 70)
+        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Height = 70, EventHandler OnClick = null)
         {
             Panel Item = new Panel();
             GroupBox Box = new GroupBox();
@@ -151,11 +156,11 @@ namespace Database_Control
                 Down += list.Controls[i].Size.Height;
             }
             Item.Location = new Point(3, Down);
-            Item.Name = "panel#" + StatusType.RandomString(5);
+            Item.Name = "Item#" + StatusType.RandomString(5);
             Item.Size = new Size(Width, Height);
             Item.TabIndex = 0;
             Item.Controls.Add(Box);
-
+            
             Box.Dock = DockStyle.Fill;
             Box.Location = new Point(0, 0);
             Box.Name = "groupBox";
@@ -163,6 +168,10 @@ namespace Database_Control
             Box.TabIndex = 0;
             Box.TabStop = false;
             Box.Text = GroupName;
+            Box.MouseEnter += (object? sender, EventArgs e) => { Item.BackColor = Color.Tan; };
+            Box.MouseLeave += (object? sender, EventArgs e) => { Item.BackColor = Color.White; };
+            if (OnClick != null)
+                Box.Click += OnClick;
 
             list.Controls.Add(Item);
         }
@@ -177,7 +186,7 @@ namespace Database_Control
             DeleteAllConents(Form.GetList(MainForm.List.OrderList));
             for (int i = 0; i < 10; i++)
             {
-                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Test: " + i);
+                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Test: " + i, OnClick: (object? sender, EventArgs e) => { Form.SetWindow(MainForm.WindowType.Login, new Dictionary<string, string>()); });
             }
             return true;
         }
