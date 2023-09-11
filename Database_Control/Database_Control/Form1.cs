@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
-using System.Runtime.CompilerServices;
+using System.Data;
+
 
 namespace Database_Control
 {
@@ -59,13 +60,124 @@ namespace Database_Control
 
         public SQL()
         {
-            com = new SqlConnection(@"Data Source=WIN-50GP30FGO75;Initial Catalog=Maestro;User ID=root;Password=root");
-            com.Open();
+            try
+            {
+                com = new SqlConnection(@"Data Source=CAYDEN;Initial Catalog=Maestro;User ID=root;Password=root");
+                com.Open();
+                MessageBox.Show("Connection Open!");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error opening Connection! " + ex.Message);
+            }
         }
 
         public void Close()
         {
             com.Close();
+        }
+
+        public bool InsertData(string tableName, Dictionary<string, string> data)
+        {
+            try
+            {
+                
+                if (com.State == ConnectionState.Closed)
+                {
+                    com.Open();
+                }
+
+                
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = com;
+
+                    
+                    string columns = string.Join(", ", data.Keys);
+                    string values = string.Join(", ", data.Values);
+
+                    string query = $"INSERT INTO {tableName} ({columns}) VALUES ({values})";
+
+                    cmd.CommandText = query;
+
+                    
+                    cmd.ExecuteNonQuery();
+                }
+
+                return true; 
+            }
+            catch (Exception ex)
+            {
+                
+                return false;
+            }
+        }
+
+        public bool UpdateData(string tableName, Dictionary<string, string> data, string whereClause)
+        {
+            try
+            {
+                
+                if (com.State == ConnectionState.Closed)
+                {
+                    com.Open();
+                }
+
+                
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = com;
+
+                    
+                    string setValues = string.Join(", ", data.Select(kvp => $"{kvp.Key} = '{kvp.Value}'"));
+                    string query = $"UPDATE {tableName} SET {setValues} WHERE {whereClause}";
+
+                    cmd.CommandText = query;
+
+                    
+                    cmd.ExecuteNonQuery();
+                }
+
+                return true; 
+            }
+            catch (Exception ex)
+            {
+                
+                return false;
+            }
+        }
+
+        public bool DeleteData(string tableName, string whereClause)
+        {
+            try
+            {
+                
+                if (com.State == ConnectionState.Closed)
+                {
+                    com.Open();
+                }
+
+                
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = com;
+
+                   
+                    string query = $"DELETE FROM {tableName} WHERE {whereClause}";
+
+                    cmd.CommandText = query;
+
+                    
+                    cmd.ExecuteNonQuery();
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                
+                return false;
+            }
         }
     }
 
