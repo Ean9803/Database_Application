@@ -6,8 +6,10 @@ namespace Database_Control
 {
     public partial class MainForm : Form
     {
+        private SQL Connection;
         public MainForm()
         {
+            Connection = new SQL("Company", "root", "root");
             InitializeComponent();
         }
 
@@ -58,11 +60,11 @@ namespace Database_Control
     {
         private SqlConnection com;
 
-        public SQL()
+        public SQL(string Database, string Username, string Password)
         {
             try
             {
-                com = new SqlConnection(@"Data Source=CAYDEN;Initial Catalog=Maestro;User ID=root;Password=root");
+                com = new SqlConnection(@"server=.\SQLEXPRESS;Database=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True");
                 com.Open();
                 MessageBox.Show("Connection Open!");
             }
