@@ -9,7 +9,9 @@ namespace Database_Control
         private SQL Connection;
         public MainForm()
         {
-            Connection = new SQL("Company", "root", "root");
+
+            Connection = new SQL("Cayden", "root", "root");
+
             InitializeComponent();
         }
 
@@ -33,10 +35,23 @@ namespace Database_Control
 
         private void Login_Click(object sender, EventArgs e)
         {
+            //TESTING METHODS
+            // string tableName = "EMPLOYEE";
+            //string[] columns = { "Salesman_ID", "Position", "Name", "Username", "Password" };
+            //object[] values = { "5", "Sales", "Cayden", "CayG", "Riskm168" };
+            //Connection.InsertData(tableName, columns, values);
+            //string tableName = "EMPLOYEE";
+            //string whereClause = "Salesman_ID = 1"; // Specify the condition to delete a specific row
+            //Connection.DeleteData(tableName, whereClause);
+            //string tableName = "EMPLOYEE";
+            //string[] columns = { "Position", "Name", "Password" };
+            //object[] values = { "Manager", "Aaron Munson", "Riskm169" };
+            //string whereClause = "Salesman_ID = 45"; // Specify the condition to update a specific row
+            //Connection.UpdateData(tableName, columns, values, whereClause);
+
             DisplayControl = new WindowData(this, new StatusType(StatusType.DefaultAdmin));
             SetWindow(WindowType.Delivery, new Dictionary<string, string>());
         }
-
         public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product }
         public FlowLayoutPanel GetList(List Item)
         {
@@ -64,123 +79,123 @@ namespace Database_Control
         {
             try
             {
-                com = new SqlConnection(@"server=.\SQLEXPRESS;Database=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True");
+
+                com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True");
+
+
+
                 com.Open();
                 MessageBox.Show("Connection Open!");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Error opening Connection! " + ex.Message);
             }
         }
+
+        public void InsertData(string tableName, string[] columns, object[] values)
+        {
+            try
+            {
+
+                string columnsString = string.Join(", ", columns);
+                string parameterPlaceholders = string.Join(", ", columns.Select((col, index) => $"@param{index}"));
+                string sqlInsert = $"INSERT INTO {tableName} ({columnsString}) VALUES ({parameterPlaceholders})";
+
+
+                using (SqlCommand cmd = new SqlCommand(sqlInsert, com))
+                {
+                    for (int i = 0; i < columns.Length; i++)
+                    {
+                        cmd.Parameters.AddWithValue($"@param{i}", values[i]);
+                    }
+
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show("Data inserted successfully!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error inserting data! " + ex.Message);
+            }
+        }
+        public void DeleteData(string tableName, string whereClause)
+        {
+            try
+            {
+
+                string sqlDelete = $"DELETE FROM {tableName} WHERE {whereClause}";
+
+
+                using (SqlCommand cmd = new SqlCommand(sqlDelete, com))
+                {
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show($"{rowsAffected} rows deleted successfully!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("No rows deleted.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error deleting data! " + ex.Message);
+            }
+        }
+
+        public void UpdateData(string tableName, string[] columns, object[] values, string whereClause)
+        {
+            try
+            {
+                if (columns.Length != values.Length)
+                {
+                    throw new ArgumentException("Columns and values arrays must have the same length.");
+                }
+
+
+                string setClause = string.Join(", ", columns.Select((col, index) => $"{col} = @param{index}"));
+                string sqlUpdate = $"UPDATE {tableName} SET {setClause} WHERE {whereClause}";
+
+
+                using (SqlCommand cmd = new SqlCommand(sqlUpdate, com))
+                {
+                    for (int i = 0; i < columns.Length; i++)
+                    {
+                        cmd.Parameters.AddWithValue($"@param{i}", values[i]);
+                    }
+
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show($"{rowsAffected} rows updated successfully!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("No rows updated.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error updating data! " + ex.Message);
+            }
+        }
+
 
         public void Close()
         {
             com.Close();
         }
 
-        public bool InsertData(string tableName, Dictionary<string, string> data)
-        {
-            try
-            {
-                
-                if (com.State == ConnectionState.Closed)
-                {
-                    com.Open();
-                }
-
-                
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    cmd.Connection = com;
-
-                    
-                    string columns = string.Join(", ", data.Keys);
-                    string values = string.Join(", ", data.Values);
-
-                    string query = $"INSERT INTO {tableName} ({columns}) VALUES ({values})";
-
-                    cmd.CommandText = query;
-
-                    
-                    cmd.ExecuteNonQuery();
-                }
-
-                return true; 
-            }
-            catch (Exception ex)
-            {
-                
-                return false;
-            }
-        }
-
-        public bool UpdateData(string tableName, Dictionary<string, string> data, string whereClause)
-        {
-            try
-            {
-                
-                if (com.State == ConnectionState.Closed)
-                {
-                    com.Open();
-                }
-
-                
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    cmd.Connection = com;
-
-                    
-                    string setValues = string.Join(", ", data.Select(kvp => $"{kvp.Key} = '{kvp.Value}'"));
-                    string query = $"UPDATE {tableName} SET {setValues} WHERE {whereClause}";
-
-                    cmd.CommandText = query;
-
-                    
-                    cmd.ExecuteNonQuery();
-                }
-
-                return true; 
-            }
-            catch (Exception ex)
-            {
-                
-                return false;
-            }
-        }
-
-        public bool DeleteData(string tableName, string whereClause)
-        {
-            try
-            {
-                
-                if (com.State == ConnectionState.Closed)
-                {
-                    com.Open();
-                }
-
-                
-                using (SqlCommand cmd = new SqlCommand())
-                {
-                    cmd.Connection = com;
-
-                   
-                    string query = $"DELETE FROM {tableName} WHERE {whereClause}";
-
-                    cmd.CommandText = query;
-
-                    
-                    cmd.ExecuteNonQuery();
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                
-                return false;
-            }
-        }
     }
 
     public class StatusType
