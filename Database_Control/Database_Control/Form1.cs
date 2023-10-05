@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
 using System.Data;
+using System;
 
 
 namespace Database_Control
@@ -79,11 +80,7 @@ namespace Database_Control
         {
             try
             {
-
                 com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True");
-
-
-
                 com.Open();
                 MessageBox.Show("Connection Open!");
             }
@@ -93,24 +90,28 @@ namespace Database_Control
             }
         }
 
-        public void InsertData(string tableName, string[] columns, object[] values)
+        public void InsertData(string tableName, List<(string Col, object Val)> Data)
         {
             try
             {
+                string columnsString = "";
+                string parameterPlaceholders = "";
 
-                string columnsString = string.Join(", ", columns);
-                string parameterPlaceholders = string.Join(", ", columns.Select((col, index) => $"@param{index}"));
+                for (int i = 0; i < Data.Count; i++)
+                {
+                    columnsString += Data[i].Col + ",";
+                    parameterPlaceholders += $"@param{i},";
+                }
+                columnsString = columnsString.Substring(0, columnsString.Length - 1);
+                parameterPlaceholders = parameterPlaceholders.Substring(0, parameterPlaceholders.Length - 1);
+
                 string sqlInsert = $"INSERT INTO {tableName} ({columnsString}) VALUES ({parameterPlaceholders})";
-
-
                 using (SqlCommand cmd = new SqlCommand(sqlInsert, com))
                 {
-                    for (int i = 0; i < columns.Length; i++)
+                    for (int i = 0; i < Data.Count; i++)
                     {
-                        cmd.Parameters.AddWithValue($"@param{i}", values[i]);
+                        cmd.Parameters.AddWithValue($"@param{i}", Data[i].Val);
                     }
-
-
                     cmd.ExecuteNonQuery();
                 }
 
@@ -121,17 +122,14 @@ namespace Database_Control
                 MessageBox.Show("Error inserting data! " + ex.Message);
             }
         }
+
         public void DeleteData(string tableName, string whereClause)
         {
             try
             {
-
                 string sqlDelete = $"DELETE FROM {tableName} WHERE {whereClause}";
-
-
                 using (SqlCommand cmd = new SqlCommand(sqlDelete, com))
                 {
-
                     int rowsAffected = cmd.ExecuteNonQuery();
 
                     if (rowsAffected > 0)
@@ -150,17 +148,17 @@ namespace Database_Control
             }
         }
 
-        public void UpdateData(string tableName, string[] columns, object[] values, string whereClause)
+        public void UpdateData(string tableName, List<(string Col, object Val)> Data, string[] columns, object[] values, string whereClause)
         {
             try
             {
-                if (columns.Length != values.Length)
+                string setClause = "";
+                for (int i = 0; i < Data.Count; i++)
                 {
-                    throw new ArgumentException("Columns and values arrays must have the same length.");
+                    setClause += $"{Data[i].Col} = @param{i},";
                 }
+                setClause = setClause.Substring(0, setClause.Length - 1);
 
-
-                string setClause = string.Join(", ", columns.Select((col, index) => $"{col} = @param{index}"));
                 string sqlUpdate = $"UPDATE {tableName} SET {setClause} WHERE {whereClause}";
 
 
@@ -170,8 +168,6 @@ namespace Database_Control
                     {
                         cmd.Parameters.AddWithValue($"@param{i}", values[i]);
                     }
-
-
                     int rowsAffected = cmd.ExecuteNonQuery();
 
                     if (rowsAffected > 0)
@@ -188,6 +184,30 @@ namespace Database_Control
             {
                 MessageBox.Show("Error updating data! " + ex.Message);
             }
+        }
+
+        
+        public Dictionary<string, List<object>> GetData(string tableName, List<string> Cols)
+        {
+            string sqlDelete = $"SELECT {string.Join(", ", Cols)} FROM {tableName}";
+            Dictionary<string, List<object>> Ret = new Dictionary<string, List<object>>();
+            using (SqlCommand cmd = new SqlCommand(sqlDelete, com))
+            {
+                SqlDataReader Read = cmd.ExecuteReader();
+
+                while (Read.Read())
+                {
+                    for (int i = 0; i < Cols.Count; i++)
+                    {
+                        if (!Ret.ContainsKey(Cols[i]))
+                        {
+                            Ret.Add(Cols[i], new List<object>());
+                        }
+                        Ret[Cols[i]].Add(Read.GetValue(i));
+                    }
+                }
+            }
+            return Ret;
         }
 
 
@@ -245,6 +265,8 @@ namespace Database_Control
         public WindowData(MainForm Form, StatusType Status) { this.Form = Form; this.Status = Status; }
 
         private delegate bool NewWindowState(MainForm Form, StatusType Status, Dictionary<string, string> DataIn);
+        public delegate object CollectionReturn();
+
         private Dictionary<MainForm.WindowType, NewWindowState> Windows = new Dictionary<MainForm.WindowType, NewWindowState>()
         {
             { MainForm.WindowType.Login, OpenLogin },
@@ -272,7 +294,98 @@ namespace Database_Control
             list.Controls.Clear();
         }
 
-        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Height = 70, EventHandler OnClick = null)
+        private static Dictionary<string, (uint Max, Color GroupColor, List<(GroupBox, Action, CollectionReturn Attribute)> Collection)> selectionGroup = new Dictionary<string, (uint, Color, List<(GroupBox, Action, CollectionReturn)>)>();
+
+        public static void SetSelectionGroup(string Name, uint MaxItems, Color colorGroup)
+        {
+            if (string.IsNullOrEmpty(Name))
+                return;
+            if (!selectionGroup.ContainsKey(Name))
+            {
+                selectionGroup.Add(Name, (MaxItems, colorGroup, new List<(GroupBox, Action, CollectionReturn)>()));
+            }
+            else
+            {
+                selectionGroup[Name] = (MaxItems, colorGroup, selectionGroup[Name].Collection);
+            }
+        }
+
+        public static List<CollectionReturn> GetSelectedObjects(string Group)
+        {
+            if (string.IsNullOrEmpty(Group))
+                return new List<CollectionReturn>();
+            List<CollectionReturn> Ret = new List<CollectionReturn>();
+            if (selectionGroup.ContainsKey(Group))
+            {
+                for (int i = 0; i < selectionGroup[Group].Collection.Count; i++)
+                {
+                    if (selectionGroup[Group].Collection[i].Attribute != null)
+                    {
+                        Ret.Add(selectionGroup[Group].Collection[i].Attribute);
+                    }
+                }
+            }
+            return Ret;
+        }
+
+        private static void UpdateSelectionGroups()
+        {
+            foreach (var item in selectionGroup)
+            {
+                for (int i = item.Value.Collection.Count - 1; i >= 0; i--)
+                {
+                    if (item.Value.Collection[i].Item1 == null || item.Value.Collection[i].Item2 == null)
+                    {
+                        item.Value.Collection.RemoveAt(i);
+                    }
+                }
+                while (item.Value.Collection.Count > item.Value.Max && item.Value.Collection.Count > 0)
+                {
+                    item.Value.Collection[0].Item2();
+                    item.Value.Collection.RemoveAt(0);
+                }
+            }
+        }
+
+        private static void RemoveFromCollection(string Group, GroupBox Box)
+        {
+            if (!string.IsNullOrEmpty(Group))
+            {
+                if (selectionGroup.ContainsKey(Group))
+                {
+                    for (int i = selectionGroup[Group].Collection.Count - 1; i >= 0; i--)
+                    {
+                        if (selectionGroup[Group].Collection[i].Item1 == Box)
+                        {
+                            selectionGroup[Group].Collection[i].Item2();
+                            selectionGroup[Group].Collection.RemoveAt(i);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static bool InCollection(string Group, GroupBox Box)
+        {
+            if (!string.IsNullOrEmpty(Group))
+            {
+                if (selectionGroup.ContainsKey(Group))
+                {
+                    bool Add = false;
+                    foreach (var item in selectionGroup[Group].Collection)
+                    {
+                        if (item.Item1 == Box)
+                        {
+                            Add = true;
+                        }
+                    }
+                    return Add;
+                }
+            }
+            return false;
+        }
+
+        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Height = 70, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null)
         {
             Panel Item = new Panel();
             GroupBox Box = new GroupBox();
@@ -297,10 +410,30 @@ namespace Database_Control
             Box.TabIndex = 0;
             Box.TabStop = false;
             Box.Text = GroupName;
-            Box.MouseEnter += (object? sender, EventArgs e) => { Item.BackColor = Color.Tan; };
-            Box.MouseLeave += (object? sender, EventArgs e) => { Item.BackColor = Color.White; };
+            Box.MouseEnter += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.Tan; };
+            Box.MouseLeave += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.White; };
             if (OnClick != null)
                 Box.Click += OnClick;
+
+            if (!string.IsNullOrEmpty(SelectionGroup))
+            {
+                if (selectionGroup.ContainsKey(SelectionGroup))
+                {
+                    Box.Click += (object? sender, EventArgs e) => 
+                    {
+                        Item.BackColor = selectionGroup[SelectionGroup].GroupColor;
+                        if (!InCollection(SelectionGroup, Box))
+                        {
+                            selectionGroup[SelectionGroup].Collection.Add((Box, () => { Item.BackColor = Color.White; }, Return));
+                            UpdateSelectionGroups();
+                        }
+                        else
+                        {
+                            RemoveFromCollection(SelectionGroup, Box);
+                        }
+                    };
+                }
+            }
 
             list.Controls.Add(Item);
         }
@@ -313,9 +446,13 @@ namespace Database_Control
         private static bool OpenDelivery(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
             DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+            SetSelectionGroup("Test", 4, Color.Gray);
             for (int i = 0; i < 10; i++)
             {
-                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Test: " + i, OnClick: (object? sender, EventArgs e) => { Form.SetWindow(MainForm.WindowType.Login, new Dictionary<string, string>()); });
+                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Test: " + i, OnClick: (object? sender, EventArgs e) => 
+                { 
+                    //Form.SetWindow(MainForm.WindowType.Login, new Dictionary<string, string>()); 
+                }, SelectionGroup: "Test");
             }
             return true;
         }
