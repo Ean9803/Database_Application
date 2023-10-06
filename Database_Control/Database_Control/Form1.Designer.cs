@@ -63,23 +63,54 @@
             ControlPanel = new GroupBox();
             ControlPanelOptions = new TabControl();
             DeliveryControl = new TabPage();
+            OpenListViewDelivery = new Button();
+            groupBox33 = new GroupBox();
+            CompanySearchList = new TextBox();
+            ProductsBtn = new Button();
+            DeleteOrder = new Button();
+            CreateOrder = new Button();
+            EditOrderBtn = new Button();
             OrderControl = new TabPage();
+            OpenListViewProduct = new Button();
+            groupBox32 = new GroupBox();
+            ProductListSearch = new TextBox();
+            DeleteProduct = new Button();
+            OpenDelivery = new Button();
+            NewProductBtn = new Button();
+            OpenProduct = new Button();
             Details = new GroupBox();
+            DetailBox = new RichTextBox();
             ProductDisplay = new TabPage();
             splitContainer3 = new SplitContainer();
             splitContainer4 = new SplitContainer();
             splitContainer5 = new SplitContainer();
             groupBox8 = new GroupBox();
             ProductImage = new Panel();
+            groupBox34 = new GroupBox();
+            ProductBack = new Button();
+            ProductEdit = new Button();
             groupBox9 = new GroupBox();
             richTextBox1 = new RichTextBox();
             groupBox10 = new GroupBox();
+            PricingText = new RichTextBox();
             ListDisplay = new TabPage();
             splitContainer6 = new SplitContainer();
             groupBox11 = new GroupBox();
             ItemControlPanel = new TabControl();
             ItemControl = new TabPage();
+            groupBox37 = new GroupBox();
+            ListNewItem = new Button();
+            ListEditItem = new Button();
+            ListItemSearch = new TextBox();
+            ShowCompanyList = new Button();
+            ItemBack = new Button();
             CompanyControl = new TabPage();
+            groupBox36 = new GroupBox();
+            ListNewCompany = new Button();
+            ListEditCompany = new Button();
+            ListCompanySearch = new TextBox();
+            ShowProductList = new Button();
+            CompanyBack = new Button();
             groupBox12 = new GroupBox();
             ItemList = new FlowLayoutPanel();
             panel8 = new Panel();
@@ -95,15 +126,16 @@
             panel13 = new Panel();
             groupBox18 = new GroupBox();
             EditDisplay = new TabPage();
+            EditBack = new Button();
             label4 = new Label();
             OrderingDisplay = new TabPage();
             tableLayoutPanel4 = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
             tableLayoutPanel7 = new TableLayoutPanel();
             groupBox19 = new GroupBox();
-            ProductSearch = new TextBox();
+            CompanySearch = new TextBox();
             groupBox21 = new GroupBox();
-            ProductList = new FlowLayoutPanel();
+            CompanyList = new FlowLayoutPanel();
             panel19 = new Panel();
             groupBox29 = new GroupBox();
             panel18 = new Panel();
@@ -119,9 +151,9 @@
             label5 = new Label();
             tableLayoutPanel6 = new TableLayoutPanel();
             groupBox20 = new GroupBox();
-            CompanySearch = new TextBox();
+            ProductSearch = new TextBox();
             groupBox22 = new GroupBox();
-            CompanyList = new FlowLayoutPanel();
+            ProductList = new FlowLayoutPanel();
             panel25 = new Panel();
             groupBox35 = new GroupBox();
             panel14 = new Panel();
@@ -132,6 +164,8 @@
             groupBox26 = new GroupBox();
             panel17 = new Panel();
             groupBox27 = new GroupBox();
+            Maingroup = new GroupBox();
+            LogoutBtn = new Button();
             MainDisplay.SuspendLayout();
             LoginDisplay.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -158,6 +192,11 @@
             splitContainer2.SuspendLayout();
             ControlPanel.SuspendLayout();
             ControlPanelOptions.SuspendLayout();
+            DeliveryControl.SuspendLayout();
+            groupBox33.SuspendLayout();
+            OrderControl.SuspendLayout();
+            groupBox32.SuspendLayout();
+            Details.SuspendLayout();
             ProductDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer3).BeginInit();
             splitContainer3.Panel1.SuspendLayout();
@@ -169,9 +208,12 @@
             splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer5).BeginInit();
             splitContainer5.Panel1.SuspendLayout();
+            splitContainer5.Panel2.SuspendLayout();
             splitContainer5.SuspendLayout();
             groupBox8.SuspendLayout();
+            groupBox34.SuspendLayout();
             groupBox9.SuspendLayout();
+            groupBox10.SuspendLayout();
             ListDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer6).BeginInit();
             splitContainer6.Panel1.SuspendLayout();
@@ -179,6 +221,10 @@
             splitContainer6.SuspendLayout();
             groupBox11.SuspendLayout();
             ItemControlPanel.SuspendLayout();
+            ItemControl.SuspendLayout();
+            groupBox37.SuspendLayout();
+            CompanyControl.SuspendLayout();
+            groupBox36.SuspendLayout();
             groupBox12.SuspendLayout();
             ItemList.SuspendLayout();
             panel8.SuspendLayout();
@@ -194,7 +240,7 @@
             tableLayoutPanel7.SuspendLayout();
             groupBox19.SuspendLayout();
             groupBox21.SuspendLayout();
-            ProductList.SuspendLayout();
+            CompanyList.SuspendLayout();
             panel19.SuspendLayout();
             panel18.SuspendLayout();
             panel20.SuspendLayout();
@@ -203,12 +249,13 @@
             tableLayoutPanel6.SuspendLayout();
             groupBox20.SuspendLayout();
             groupBox22.SuspendLayout();
-            CompanyList.SuspendLayout();
+            ProductList.SuspendLayout();
             panel25.SuspendLayout();
             panel14.SuspendLayout();
             panel15.SuspendLayout();
             panel16.SuspendLayout();
             panel17.SuspendLayout();
+            Maingroup.SuspendLayout();
             SuspendLayout();
             // 
             // MainDisplay
@@ -220,9 +267,8 @@
             MainDisplay.Controls.Add(ListDisplay);
             MainDisplay.Controls.Add(EditDisplay);
             MainDisplay.Controls.Add(OrderingDisplay);
-            MainDisplay.Dock = DockStyle.Fill;
             MainDisplay.ItemSize = new Size(1, 1);
-            MainDisplay.Location = new Point(0, 0);
+            MainDisplay.Location = new Point(0, 38);
             MainDisplay.Multiline = true;
             MainDisplay.Name = "MainDisplay";
             MainDisplay.Padding = new Point(0, 0);
@@ -626,6 +672,12 @@
             // DeliveryControl
             // 
             DeliveryControl.BackColor = Color.Black;
+            DeliveryControl.Controls.Add(OpenListViewDelivery);
+            DeliveryControl.Controls.Add(groupBox33);
+            DeliveryControl.Controls.Add(ProductsBtn);
+            DeliveryControl.Controls.Add(DeleteOrder);
+            DeliveryControl.Controls.Add(CreateOrder);
+            DeliveryControl.Controls.Add(EditOrderBtn);
             DeliveryControl.ForeColor = SystemColors.Control;
             DeliveryControl.Location = new Point(6, 4);
             DeliveryControl.Name = "DeliveryControl";
@@ -633,17 +685,188 @@
             DeliveryControl.Size = new Size(474, 70);
             DeliveryControl.TabIndex = 0;
             // 
+            // OpenListViewDelivery
+            // 
+            OpenListViewDelivery.BackColor = Color.Transparent;
+            OpenListViewDelivery.ForeColor = SystemColors.ActiveCaptionText;
+            OpenListViewDelivery.Location = new Point(368, 6);
+            OpenListViewDelivery.Name = "OpenListViewDelivery";
+            OpenListViewDelivery.Size = new Size(75, 23);
+            OpenListViewDelivery.TabIndex = 7;
+            OpenListViewDelivery.Text = "List View";
+            OpenListViewDelivery.UseVisualStyleBackColor = false;
+            OpenListViewDelivery.Click += OpenListViewDelivery_Click;
+            // 
+            // groupBox33
+            // 
+            groupBox33.Controls.Add(CompanySearchList);
+            groupBox33.ForeColor = SystemColors.ControlLightLight;
+            groupBox33.Location = new Point(6, 6);
+            groupBox33.Name = "groupBox33";
+            groupBox33.Size = new Size(197, 52);
+            groupBox33.TabIndex = 6;
+            groupBox33.TabStop = false;
+            groupBox33.Text = "Search Company";
+            // 
+            // CompanySearchList
+            // 
+            CompanySearchList.Dock = DockStyle.Fill;
+            CompanySearchList.Location = new Point(3, 19);
+            CompanySearchList.Name = "CompanySearchList";
+            CompanySearchList.Size = new Size(191, 23);
+            CompanySearchList.TabIndex = 4;
+            // 
+            // ProductsBtn
+            // 
+            ProductsBtn.BackColor = Color.Transparent;
+            ProductsBtn.ForeColor = SystemColors.ActiveCaptionText;
+            ProductsBtn.Location = new Point(206, 35);
+            ProductsBtn.Name = "ProductsBtn";
+            ProductsBtn.Size = new Size(120, 23);
+            ProductsBtn.TabIndex = 3;
+            ProductsBtn.Text = "Open Products";
+            ProductsBtn.UseVisualStyleBackColor = false;
+            ProductsBtn.Click += ProductsBtn_Click;
+            // 
+            // DeleteOrder
+            // 
+            DeleteOrder.BackColor = Color.Transparent;
+            DeleteOrder.FlatAppearance.BorderColor = Color.IndianRed;
+            DeleteOrder.FlatAppearance.BorderSize = 2;
+            DeleteOrder.ForeColor = SystemColors.ActiveCaptionText;
+            DeleteOrder.Location = new Point(348, 35);
+            DeleteOrder.Name = "DeleteOrder";
+            DeleteOrder.Size = new Size(123, 23);
+            DeleteOrder.TabIndex = 2;
+            DeleteOrder.Text = "Delete Order";
+            DeleteOrder.UseVisualStyleBackColor = false;
+            DeleteOrder.Click += DeleteOrder_Click;
+            // 
+            // CreateOrder
+            // 
+            CreateOrder.BackColor = Color.White;
+            CreateOrder.ForeColor = SystemColors.ActiveCaptionText;
+            CreateOrder.Location = new Point(287, 6);
+            CreateOrder.Name = "CreateOrder";
+            CreateOrder.Size = new Size(75, 23);
+            CreateOrder.TabIndex = 1;
+            CreateOrder.Text = "Add New";
+            CreateOrder.UseVisualStyleBackColor = false;
+            CreateOrder.Click += CreateOrder_Click;
+            // 
+            // EditOrderBtn
+            // 
+            EditOrderBtn.BackColor = Color.Transparent;
+            EditOrderBtn.ForeColor = SystemColors.ActiveCaptionText;
+            EditOrderBtn.Location = new Point(206, 6);
+            EditOrderBtn.Name = "EditOrderBtn";
+            EditOrderBtn.Size = new Size(75, 23);
+            EditOrderBtn.TabIndex = 0;
+            EditOrderBtn.Text = "Open";
+            EditOrderBtn.UseVisualStyleBackColor = false;
+            EditOrderBtn.Click += EditOrderBtn_Click;
+            // 
             // OrderControl
             // 
             OrderControl.BackColor = Color.Black;
+            OrderControl.Controls.Add(OpenListViewProduct);
+            OrderControl.Controls.Add(groupBox32);
+            OrderControl.Controls.Add(DeleteProduct);
+            OrderControl.Controls.Add(OpenDelivery);
+            OrderControl.Controls.Add(NewProductBtn);
+            OrderControl.Controls.Add(OpenProduct);
             OrderControl.Location = new Point(6, 4);
             OrderControl.Name = "OrderControl";
             OrderControl.Padding = new Padding(3);
             OrderControl.Size = new Size(474, 70);
             OrderControl.TabIndex = 1;
             // 
+            // OpenListViewProduct
+            // 
+            OpenListViewProduct.BackColor = Color.Transparent;
+            OpenListViewProduct.ForeColor = SystemColors.ActiveCaptionText;
+            OpenListViewProduct.Location = new Point(368, 6);
+            OpenListViewProduct.Name = "OpenListViewProduct";
+            OpenListViewProduct.Size = new Size(75, 23);
+            OpenListViewProduct.TabIndex = 6;
+            OpenListViewProduct.Text = "List View";
+            OpenListViewProduct.UseVisualStyleBackColor = false;
+            OpenListViewProduct.Click += OpenListViewProduct_Click;
+            // 
+            // groupBox32
+            // 
+            groupBox32.Controls.Add(ProductListSearch);
+            groupBox32.ForeColor = SystemColors.ControlLightLight;
+            groupBox32.Location = new Point(6, 6);
+            groupBox32.Name = "groupBox32";
+            groupBox32.Size = new Size(197, 52);
+            groupBox32.TabIndex = 5;
+            groupBox32.TabStop = false;
+            groupBox32.Text = "Search Products";
+            // 
+            // ProductListSearch
+            // 
+            ProductListSearch.Dock = DockStyle.Fill;
+            ProductListSearch.Location = new Point(3, 19);
+            ProductListSearch.Name = "ProductListSearch";
+            ProductListSearch.Size = new Size(191, 23);
+            ProductListSearch.TabIndex = 4;
+            // 
+            // DeleteProduct
+            // 
+            DeleteProduct.BackColor = Color.Transparent;
+            DeleteProduct.ForeColor = SystemColors.ActiveCaptionText;
+            DeleteProduct.Location = new Point(348, 35);
+            DeleteProduct.Name = "DeleteProduct";
+            DeleteProduct.Size = new Size(123, 23);
+            DeleteProduct.TabIndex = 3;
+            DeleteProduct.TabStop = false;
+            DeleteProduct.Text = "Delete Product";
+            DeleteProduct.UseVisualStyleBackColor = false;
+            DeleteProduct.Click += DeleteProduct_Click;
+            // 
+            // OpenDelivery
+            // 
+            OpenDelivery.BackColor = Color.Transparent;
+            OpenDelivery.ForeColor = SystemColors.ActiveCaptionText;
+            OpenDelivery.Location = new Point(206, 35);
+            OpenDelivery.Name = "OpenDelivery";
+            OpenDelivery.Size = new Size(120, 23);
+            OpenDelivery.TabIndex = 2;
+            OpenDelivery.TabStop = false;
+            OpenDelivery.Text = "Open Deliveries";
+            OpenDelivery.UseVisualStyleBackColor = false;
+            OpenDelivery.Click += OpenDelivery_Click;
+            // 
+            // NewProductBtn
+            // 
+            NewProductBtn.BackColor = Color.White;
+            NewProductBtn.ForeColor = SystemColors.ActiveCaptionText;
+            NewProductBtn.Location = new Point(287, 6);
+            NewProductBtn.Name = "NewProductBtn";
+            NewProductBtn.Size = new Size(75, 23);
+            NewProductBtn.TabIndex = 1;
+            NewProductBtn.TabStop = false;
+            NewProductBtn.Text = "Add New";
+            NewProductBtn.UseVisualStyleBackColor = false;
+            NewProductBtn.Click += NewProductBtn_Click;
+            // 
+            // OpenProduct
+            // 
+            OpenProduct.BackColor = Color.Transparent;
+            OpenProduct.ForeColor = SystemColors.ActiveCaptionText;
+            OpenProduct.Location = new Point(206, 6);
+            OpenProduct.Name = "OpenProduct";
+            OpenProduct.Size = new Size(75, 23);
+            OpenProduct.TabIndex = 2;
+            OpenProduct.TabStop = false;
+            OpenProduct.Text = "Open";
+            OpenProduct.UseVisualStyleBackColor = false;
+            OpenProduct.Click += OpenProduct_Click;
+            // 
             // Details
             // 
+            Details.Controls.Add(DetailBox);
             Details.Dock = DockStyle.Fill;
             Details.ForeColor = SystemColors.Control;
             Details.Location = new Point(0, 0);
@@ -652,6 +875,18 @@
             Details.TabIndex = 0;
             Details.TabStop = false;
             Details.Text = "Details";
+            // 
+            // DetailBox
+            // 
+            DetailBox.BackColor = SystemColors.InactiveCaptionText;
+            DetailBox.Dock = DockStyle.Fill;
+            DetailBox.ForeColor = SystemColors.Window;
+            DetailBox.Location = new Point(3, 19);
+            DetailBox.Name = "DetailBox";
+            DetailBox.ReadOnly = true;
+            DetailBox.Size = new Size(484, 316);
+            DetailBox.TabIndex = 0;
+            DetailBox.Text = "";
             // 
             // ProductDisplay
             // 
@@ -710,6 +945,10 @@
             // splitContainer5.Panel1
             // 
             splitContainer5.Panel1.Controls.Add(groupBox8);
+            // 
+            // splitContainer5.Panel2
+            // 
+            splitContainer5.Panel2.Controls.Add(groupBox34);
             splitContainer5.Size = new Size(600, 200);
             splitContainer5.SplitterDistance = 400;
             splitContainer5.TabIndex = 0;
@@ -736,6 +975,42 @@
             ProductImage.Size = new Size(394, 178);
             ProductImage.TabIndex = 0;
             // 
+            // groupBox34
+            // 
+            groupBox34.Controls.Add(ProductBack);
+            groupBox34.Controls.Add(ProductEdit);
+            groupBox34.ForeColor = SystemColors.ControlLightLight;
+            groupBox34.Location = new Point(2, 114);
+            groupBox34.Name = "groupBox34";
+            groupBox34.Size = new Size(89, 83);
+            groupBox34.TabIndex = 0;
+            groupBox34.TabStop = false;
+            groupBox34.Text = "Options";
+            // 
+            // ProductBack
+            // 
+            ProductBack.BackColor = Color.Transparent;
+            ProductBack.ForeColor = SystemColors.ActiveCaptionText;
+            ProductBack.Location = new Point(6, 51);
+            ProductBack.Name = "ProductBack";
+            ProductBack.Size = new Size(75, 23);
+            ProductBack.TabIndex = 1;
+            ProductBack.Text = "Back";
+            ProductBack.UseVisualStyleBackColor = false;
+            ProductBack.Click += ProductBack_Click;
+            // 
+            // ProductEdit
+            // 
+            ProductEdit.BackColor = Color.Transparent;
+            ProductEdit.ForeColor = SystemColors.ActiveCaptionText;
+            ProductEdit.Location = new Point(6, 22);
+            ProductEdit.Name = "ProductEdit";
+            ProductEdit.Size = new Size(75, 23);
+            ProductEdit.TabIndex = 0;
+            ProductEdit.Text = "Edit";
+            ProductEdit.UseVisualStyleBackColor = false;
+            ProductEdit.Click += ProductEdit_Click_1;
+            // 
             // groupBox9
             // 
             groupBox9.Controls.Add(richTextBox1);
@@ -755,12 +1030,14 @@
             richTextBox1.ForeColor = SystemColors.Window;
             richTextBox1.Location = new Point(3, 19);
             richTextBox1.Name = "richTextBox1";
+            richTextBox1.ReadOnly = true;
             richTextBox1.Size = new Size(594, 216);
             richTextBox1.TabIndex = 0;
             richTextBox1.Text = "Desc about product";
             // 
             // groupBox10
             // 
+            groupBox10.Controls.Add(PricingText);
             groupBox10.Dock = DockStyle.Fill;
             groupBox10.ForeColor = SystemColors.Control;
             groupBox10.Location = new Point(0, 0);
@@ -769,6 +1046,18 @@
             groupBox10.TabIndex = 0;
             groupBox10.TabStop = false;
             groupBox10.Text = "Pricing";
+            // 
+            // PricingText
+            // 
+            PricingText.BackColor = SystemColors.MenuText;
+            PricingText.Dock = DockStyle.Fill;
+            PricingText.ForeColor = SystemColors.Window;
+            PricingText.Location = new Point(3, 19);
+            PricingText.Name = "PricingText";
+            PricingText.ReadOnly = true;
+            PricingText.Size = new Size(181, 420);
+            PricingText.TabIndex = 0;
+            PricingText.Text = "";
             // 
             // ListDisplay
             // 
@@ -831,20 +1120,154 @@
             // ItemControl
             // 
             ItemControl.BackColor = Color.Black;
+            ItemControl.Controls.Add(groupBox37);
+            ItemControl.Controls.Add(ShowCompanyList);
+            ItemControl.Controls.Add(ItemBack);
             ItemControl.Location = new Point(6, 4);
             ItemControl.Name = "ItemControl";
             ItemControl.Padding = new Padding(3);
             ItemControl.Size = new Size(775, 50);
             ItemControl.TabIndex = 0;
             // 
+            // groupBox37
+            // 
+            groupBox37.Controls.Add(ListNewItem);
+            groupBox37.Controls.Add(ListEditItem);
+            groupBox37.Controls.Add(ListItemSearch);
+            groupBox37.ForeColor = SystemColors.ControlLightLight;
+            groupBox37.Location = new Point(209, 0);
+            groupBox37.Name = "groupBox37";
+            groupBox37.Size = new Size(479, 47);
+            groupBox37.TabIndex = 4;
+            groupBox37.TabStop = false;
+            groupBox37.Text = "Options";
+            // 
+            // ListNewItem
+            // 
+            ListNewItem.ForeColor = SystemColors.ActiveCaptionText;
+            ListNewItem.Location = new Point(317, 17);
+            ListNewItem.Name = "ListNewItem";
+            ListNewItem.Size = new Size(75, 23);
+            ListNewItem.TabIndex = 2;
+            ListNewItem.Text = "New";
+            ListNewItem.UseVisualStyleBackColor = true;
+            // 
+            // ListEditItem
+            // 
+            ListEditItem.ForeColor = SystemColors.ActiveCaptionText;
+            ListEditItem.Location = new Point(398, 17);
+            ListEditItem.Name = "ListEditItem";
+            ListEditItem.Size = new Size(75, 23);
+            ListEditItem.TabIndex = 1;
+            ListEditItem.Text = "Edit";
+            ListEditItem.UseVisualStyleBackColor = true;
+            // 
+            // ListItemSearch
+            // 
+            ListItemSearch.Location = new Point(6, 18);
+            ListItemSearch.Name = "ListItemSearch";
+            ListItemSearch.Size = new Size(251, 23);
+            ListItemSearch.TabIndex = 0;
+            // 
+            // ShowCompanyList
+            // 
+            ShowCompanyList.BackColor = Color.Transparent;
+            ShowCompanyList.ForeColor = SystemColors.ActiveCaptionText;
+            ShowCompanyList.Location = new Point(6, 6);
+            ShowCompanyList.Name = "ShowCompanyList";
+            ShowCompanyList.Size = new Size(135, 23);
+            ShowCompanyList.TabIndex = 1;
+            ShowCompanyList.Text = "Switch to Company List";
+            ShowCompanyList.UseVisualStyleBackColor = false;
+            ShowCompanyList.Click += ShowCompanyList_Click;
+            // 
+            // ItemBack
+            // 
+            ItemBack.BackColor = Color.Transparent;
+            ItemBack.ForeColor = SystemColors.ActiveCaptionText;
+            ItemBack.Location = new Point(694, 21);
+            ItemBack.Name = "ItemBack";
+            ItemBack.Size = new Size(75, 23);
+            ItemBack.TabIndex = 0;
+            ItemBack.Text = "Back";
+            ItemBack.UseVisualStyleBackColor = false;
+            ItemBack.Click += ItemBack_Click;
+            // 
             // CompanyControl
             // 
             CompanyControl.BackColor = Color.Black;
+            CompanyControl.Controls.Add(groupBox36);
+            CompanyControl.Controls.Add(ShowProductList);
+            CompanyControl.Controls.Add(CompanyBack);
             CompanyControl.Location = new Point(6, 4);
             CompanyControl.Name = "CompanyControl";
             CompanyControl.Padding = new Padding(3);
             CompanyControl.Size = new Size(775, 50);
             CompanyControl.TabIndex = 1;
+            // 
+            // groupBox36
+            // 
+            groupBox36.Controls.Add(ListNewCompany);
+            groupBox36.Controls.Add(ListEditCompany);
+            groupBox36.Controls.Add(ListCompanySearch);
+            groupBox36.ForeColor = SystemColors.ControlLightLight;
+            groupBox36.Location = new Point(209, 0);
+            groupBox36.Name = "groupBox36";
+            groupBox36.Size = new Size(479, 47);
+            groupBox36.TabIndex = 3;
+            groupBox36.TabStop = false;
+            groupBox36.Text = "Options";
+            // 
+            // ListNewCompany
+            // 
+            ListNewCompany.ForeColor = SystemColors.ActiveCaptionText;
+            ListNewCompany.Location = new Point(317, 17);
+            ListNewCompany.Name = "ListNewCompany";
+            ListNewCompany.Size = new Size(75, 23);
+            ListNewCompany.TabIndex = 2;
+            ListNewCompany.Text = "New";
+            ListNewCompany.UseVisualStyleBackColor = true;
+            // 
+            // ListEditCompany
+            // 
+            ListEditCompany.ForeColor = SystemColors.ActiveCaptionText;
+            ListEditCompany.Location = new Point(398, 17);
+            ListEditCompany.Name = "ListEditCompany";
+            ListEditCompany.Size = new Size(75, 23);
+            ListEditCompany.TabIndex = 1;
+            ListEditCompany.Text = "Edit";
+            ListEditCompany.UseVisualStyleBackColor = true;
+            // 
+            // ListCompanySearch
+            // 
+            ListCompanySearch.Location = new Point(6, 18);
+            ListCompanySearch.Name = "ListCompanySearch";
+            ListCompanySearch.Size = new Size(251, 23);
+            ListCompanySearch.TabIndex = 0;
+            // 
+            // ShowProductList
+            // 
+            ShowProductList.BackColor = Color.Transparent;
+            ShowProductList.ForeColor = SystemColors.ActiveCaptionText;
+            ShowProductList.Location = new Point(6, 6);
+            ShowProductList.Name = "ShowProductList";
+            ShowProductList.Size = new Size(135, 23);
+            ShowProductList.TabIndex = 2;
+            ShowProductList.Text = "Switch to Product List";
+            ShowProductList.UseVisualStyleBackColor = false;
+            ShowProductList.Click += ShowProductList_Click;
+            // 
+            // CompanyBack
+            // 
+            CompanyBack.BackColor = Color.Transparent;
+            CompanyBack.ForeColor = SystemColors.ActiveCaptionText;
+            CompanyBack.Location = new Point(694, 21);
+            CompanyBack.Name = "CompanyBack";
+            CompanyBack.Size = new Size(75, 23);
+            CompanyBack.TabIndex = 1;
+            CompanyBack.Text = "Back";
+            CompanyBack.UseVisualStyleBackColor = false;
+            CompanyBack.Click += CompanyBack_Click;
             // 
             // groupBox12
             // 
@@ -1000,12 +1423,24 @@
             // EditDisplay
             // 
             EditDisplay.BackColor = Color.Black;
+            EditDisplay.Controls.Add(EditBack);
             EditDisplay.Controls.Add(label4);
             EditDisplay.Location = new Point(4, 4);
             EditDisplay.Name = "EditDisplay";
             EditDisplay.Size = new Size(791, 442);
             EditDisplay.TabIndex = 4;
             EditDisplay.Text = "tabPage1";
+            // 
+            // EditBack
+            // 
+            EditBack.ForeColor = SystemColors.ActiveCaptionText;
+            EditBack.Location = new Point(361, 233);
+            EditBack.Name = "EditBack";
+            EditBack.Size = new Size(75, 23);
+            EditBack.TabIndex = 1;
+            EditBack.Text = "Back";
+            EditBack.UseVisualStyleBackColor = true;
+            EditBack.Click += EditBack_Click;
             // 
             // label4
             // 
@@ -1052,8 +1487,8 @@
             tableLayoutPanel5.Location = new Point(415, 3);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 2;
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 61.9266052F));
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 38.0733948F));
             tableLayoutPanel5.Size = new Size(373, 436);
             tableLayoutPanel5.TabIndex = 0;
             // 
@@ -1069,56 +1504,58 @@
             tableLayoutPanel7.RowCount = 2;
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 17.6470585F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 82.35294F));
-            tableLayoutPanel7.Size = new Size(367, 299);
+            tableLayoutPanel7.Size = new Size(367, 264);
             tableLayoutPanel7.TabIndex = 0;
             // 
             // groupBox19
             // 
-            groupBox19.Controls.Add(ProductSearch);
+            groupBox19.Controls.Add(CompanySearch);
             groupBox19.Dock = DockStyle.Fill;
+            groupBox19.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
             groupBox19.ForeColor = SystemColors.ButtonHighlight;
             groupBox19.Location = new Point(3, 3);
             groupBox19.Name = "groupBox19";
-            groupBox19.Size = new Size(361, 46);
+            groupBox19.Size = new Size(361, 40);
             groupBox19.TabIndex = 0;
             groupBox19.TabStop = false;
-            groupBox19.Text = "Search Products";
+            groupBox19.Text = "Search Companies";
             // 
-            // ProductSearch
+            // CompanySearch
             // 
-            ProductSearch.Dock = DockStyle.Fill;
-            ProductSearch.Location = new Point(3, 19);
-            ProductSearch.Name = "ProductSearch";
-            ProductSearch.Size = new Size(355, 23);
-            ProductSearch.TabIndex = 0;
+            CompanySearch.Dock = DockStyle.Fill;
+            CompanySearch.Location = new Point(3, 16);
+            CompanySearch.Name = "CompanySearch";
+            CompanySearch.Size = new Size(355, 20);
+            CompanySearch.TabIndex = 0;
             // 
             // groupBox21
             // 
-            groupBox21.Controls.Add(ProductList);
+            groupBox21.Controls.Add(CompanyList);
             groupBox21.Dock = DockStyle.Fill;
+            groupBox21.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             groupBox21.ForeColor = SystemColors.ButtonHighlight;
-            groupBox21.Location = new Point(3, 55);
+            groupBox21.Location = new Point(3, 49);
             groupBox21.Name = "groupBox21";
-            groupBox21.Size = new Size(361, 241);
+            groupBox21.Size = new Size(361, 212);
             groupBox21.TabIndex = 1;
             groupBox21.TabStop = false;
-            groupBox21.Text = "Products";
+            groupBox21.Text = "Companies";
             // 
-            // ProductList
+            // CompanyList
             // 
-            ProductList.AutoScroll = true;
-            ProductList.AutoSize = true;
-            ProductList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ProductList.Controls.Add(panel19);
-            ProductList.Controls.Add(panel18);
-            ProductList.Controls.Add(panel20);
-            ProductList.Dock = DockStyle.Fill;
-            ProductList.FlowDirection = FlowDirection.TopDown;
-            ProductList.Location = new Point(3, 19);
-            ProductList.Name = "ProductList";
-            ProductList.Size = new Size(355, 219);
-            ProductList.TabIndex = 2;
-            ProductList.WrapContents = false;
+            CompanyList.AutoScroll = true;
+            CompanyList.AutoSize = true;
+            CompanyList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            CompanyList.Controls.Add(panel19);
+            CompanyList.Controls.Add(panel18);
+            CompanyList.Controls.Add(panel20);
+            CompanyList.Dock = DockStyle.Fill;
+            CompanyList.FlowDirection = FlowDirection.TopDown;
+            CompanyList.Location = new Point(3, 19);
+            CompanyList.Name = "CompanyList";
+            CompanyList.Size = new Size(355, 190);
+            CompanyList.TabIndex = 2;
+            CompanyList.WrapContents = false;
             // 
             // panel19
             // 
@@ -1189,9 +1626,9 @@
             groupBox23.Controls.Add(label5);
             groupBox23.Dock = DockStyle.Fill;
             groupBox23.ForeColor = SystemColors.ButtonHighlight;
-            groupBox23.Location = new Point(3, 308);
+            groupBox23.Location = new Point(3, 273);
             groupBox23.Name = "groupBox23";
-            groupBox23.Size = new Size(367, 125);
+            groupBox23.Size = new Size(367, 160);
             groupBox23.TabIndex = 1;
             groupBox23.TabStop = false;
             groupBox23.Text = "Control Panel";
@@ -1199,12 +1636,13 @@
             // CancelOrder
             // 
             CancelOrder.ForeColor = SystemColors.ActiveCaptionText;
-            CancelOrder.Location = new Point(284, 91);
+            CancelOrder.Location = new Point(284, 133);
             CancelOrder.Name = "CancelOrder";
             CancelOrder.Size = new Size(75, 23);
             CancelOrder.TabIndex = 4;
             CancelOrder.Text = "Cancel";
             CancelOrder.UseVisualStyleBackColor = true;
+            CancelOrder.Click += CancelOrder_Click;
             // 
             // groupBox31
             // 
@@ -1212,7 +1650,7 @@
             groupBox31.ForeColor = SystemColors.Control;
             groupBox31.Location = new Point(9, 19);
             groupBox31.Name = "groupBox31";
-            groupBox31.Size = new Size(347, 51);
+            groupBox31.Size = new Size(347, 94);
             groupBox31.TabIndex = 3;
             groupBox31.TabStop = false;
             groupBox31.Text = "Memo";
@@ -1222,14 +1660,14 @@
             Memo.Dock = DockStyle.Fill;
             Memo.Location = new Point(3, 19);
             Memo.Name = "Memo";
-            Memo.Size = new Size(341, 29);
+            Memo.Size = new Size(341, 72);
             Memo.TabIndex = 0;
             Memo.Text = "";
             // 
             // SaveOrder
             // 
             SaveOrder.ForeColor = SystemColors.ActiveCaptionText;
-            SaveOrder.Location = new Point(203, 91);
+            SaveOrder.Location = new Point(203, 133);
             SaveOrder.Name = "SaveOrder";
             SaveOrder.Size = new Size(75, 23);
             SaveOrder.TabIndex = 2;
@@ -1238,17 +1676,17 @@
             // 
             // PasswordConfirm
             // 
-            PasswordConfirm.Location = new Point(0, 91);
+            PasswordConfirm.Location = new Point(9, 134);
             PasswordConfirm.Name = "PasswordConfirm";
             PasswordConfirm.PasswordChar = '*';
-            PasswordConfirm.Size = new Size(197, 23);
+            PasswordConfirm.Size = new Size(188, 23);
             PasswordConfirm.TabIndex = 1;
             // 
             // label5
             // 
             label5.AutoSize = true;
             label5.BackColor = Color.Transparent;
-            label5.Location = new Point(0, 73);
+            label5.Location = new Point(9, 116);
             label5.Name = "label5";
             label5.Size = new Size(127, 15);
             label5.TabIndex = 0;
@@ -1271,7 +1709,7 @@
             // 
             // groupBox20
             // 
-            groupBox20.Controls.Add(CompanySearch);
+            groupBox20.Controls.Add(ProductSearch);
             groupBox20.Dock = DockStyle.Fill;
             groupBox20.ForeColor = SystemColors.ButtonHighlight;
             groupBox20.Location = new Point(3, 3);
@@ -1279,19 +1717,19 @@
             groupBox20.Size = new Size(365, 46);
             groupBox20.TabIndex = 0;
             groupBox20.TabStop = false;
-            groupBox20.Text = "Search Companies";
+            groupBox20.Text = "Search Products";
             // 
-            // CompanySearch
+            // ProductSearch
             // 
-            CompanySearch.Dock = DockStyle.Fill;
-            CompanySearch.Location = new Point(3, 19);
-            CompanySearch.Name = "CompanySearch";
-            CompanySearch.Size = new Size(359, 23);
-            CompanySearch.TabIndex = 0;
+            ProductSearch.Dock = DockStyle.Fill;
+            ProductSearch.Location = new Point(3, 19);
+            ProductSearch.Name = "ProductSearch";
+            ProductSearch.Size = new Size(359, 23);
+            ProductSearch.TabIndex = 0;
             // 
             // groupBox22
             // 
-            groupBox22.Controls.Add(CompanyList);
+            groupBox22.Controls.Add(ProductList);
             groupBox22.Dock = DockStyle.Fill;
             groupBox22.ForeColor = SystemColors.ButtonHighlight;
             groupBox22.Location = new Point(3, 55);
@@ -1299,25 +1737,25 @@
             groupBox22.Size = new Size(365, 378);
             groupBox22.TabIndex = 1;
             groupBox22.TabStop = false;
-            groupBox22.Text = "Companies";
+            groupBox22.Text = "Products";
             // 
-            // CompanyList
+            // ProductList
             // 
-            CompanyList.AutoScroll = true;
-            CompanyList.AutoSize = true;
-            CompanyList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            CompanyList.Controls.Add(panel25);
-            CompanyList.Controls.Add(panel14);
-            CompanyList.Controls.Add(panel15);
-            CompanyList.Controls.Add(panel16);
-            CompanyList.Controls.Add(panel17);
-            CompanyList.Dock = DockStyle.Fill;
-            CompanyList.FlowDirection = FlowDirection.TopDown;
-            CompanyList.Location = new Point(3, 19);
-            CompanyList.Name = "CompanyList";
-            CompanyList.Size = new Size(359, 356);
-            CompanyList.TabIndex = 2;
-            CompanyList.WrapContents = false;
+            ProductList.AutoScroll = true;
+            ProductList.AutoSize = true;
+            ProductList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ProductList.Controls.Add(panel25);
+            ProductList.Controls.Add(panel14);
+            ProductList.Controls.Add(panel15);
+            ProductList.Controls.Add(panel16);
+            ProductList.Controls.Add(panel17);
+            ProductList.Dock = DockStyle.Fill;
+            ProductList.FlowDirection = FlowDirection.TopDown;
+            ProductList.Location = new Point(3, 19);
+            ProductList.Name = "ProductList";
+            ProductList.Size = new Size(359, 356);
+            ProductList.TabIndex = 2;
+            ProductList.WrapContents = false;
             // 
             // panel25
             // 
@@ -1419,13 +1857,37 @@
             groupBox27.TabStop = false;
             groupBox27.Text = "groupBox27";
             // 
+            // Maingroup
+            // 
+            Maingroup.Controls.Add(MainDisplay);
+            Maingroup.Controls.Add(LogoutBtn);
+            Maingroup.Dock = DockStyle.Fill;
+            Maingroup.ForeColor = SystemColors.ControlLightLight;
+            Maingroup.Location = new Point(0, 0);
+            Maingroup.Name = "Maingroup";
+            Maingroup.Size = new Size(800, 486);
+            Maingroup.TabIndex = 1;
+            Maingroup.TabStop = false;
+            Maingroup.Text = "---------------------------------";
+            // 
+            // LogoutBtn
+            // 
+            LogoutBtn.ForeColor = SystemColors.ActiveCaptionText;
+            LogoutBtn.Location = new Point(6, 12);
+            LogoutBtn.Name = "LogoutBtn";
+            LogoutBtn.Size = new Size(75, 23);
+            LogoutBtn.TabIndex = 0;
+            LogoutBtn.Text = "Logout";
+            LogoutBtn.UseVisualStyleBackColor = true;
+            LogoutBtn.Click += LogoutBtn_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaptionText;
-            ClientSize = new Size(800, 450);
-            Controls.Add(MainDisplay);
+            ClientSize = new Size(800, 486);
+            Controls.Add(Maingroup);
             ForeColor = SystemColors.Control;
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -1462,6 +1924,13 @@
             splitContainer2.ResumeLayout(false);
             ControlPanel.ResumeLayout(false);
             ControlPanelOptions.ResumeLayout(false);
+            DeliveryControl.ResumeLayout(false);
+            groupBox33.ResumeLayout(false);
+            groupBox33.PerformLayout();
+            OrderControl.ResumeLayout(false);
+            groupBox32.ResumeLayout(false);
+            groupBox32.PerformLayout();
+            Details.ResumeLayout(false);
             ProductDisplay.ResumeLayout(false);
             splitContainer3.Panel1.ResumeLayout(false);
             splitContainer3.Panel2.ResumeLayout(false);
@@ -1472,10 +1941,13 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer4).EndInit();
             splitContainer4.ResumeLayout(false);
             splitContainer5.Panel1.ResumeLayout(false);
+            splitContainer5.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer5).EndInit();
             splitContainer5.ResumeLayout(false);
             groupBox8.ResumeLayout(false);
+            groupBox34.ResumeLayout(false);
             groupBox9.ResumeLayout(false);
+            groupBox10.ResumeLayout(false);
             ListDisplay.ResumeLayout(false);
             splitContainer6.Panel1.ResumeLayout(false);
             splitContainer6.Panel2.ResumeLayout(false);
@@ -1483,6 +1955,12 @@
             splitContainer6.ResumeLayout(false);
             groupBox11.ResumeLayout(false);
             ItemControlPanel.ResumeLayout(false);
+            ItemControl.ResumeLayout(false);
+            groupBox37.ResumeLayout(false);
+            groupBox37.PerformLayout();
+            CompanyControl.ResumeLayout(false);
+            groupBox36.ResumeLayout(false);
+            groupBox36.PerformLayout();
             groupBox12.ResumeLayout(false);
             groupBox12.PerformLayout();
             ItemList.ResumeLayout(false);
@@ -1502,7 +1980,7 @@
             groupBox19.PerformLayout();
             groupBox21.ResumeLayout(false);
             groupBox21.PerformLayout();
-            ProductList.ResumeLayout(false);
+            CompanyList.ResumeLayout(false);
             panel19.ResumeLayout(false);
             panel18.ResumeLayout(false);
             panel20.ResumeLayout(false);
@@ -1514,12 +1992,13 @@
             groupBox20.PerformLayout();
             groupBox22.ResumeLayout(false);
             groupBox22.PerformLayout();
-            CompanyList.ResumeLayout(false);
+            ProductList.ResumeLayout(false);
             panel25.ResumeLayout(false);
             panel14.ResumeLayout(false);
             panel15.ResumeLayout(false);
             panel16.ResumeLayout(false);
             panel17.ResumeLayout(false);
+            Maingroup.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1596,15 +2075,15 @@
         private GroupBox groupBox19;
         private TableLayoutPanel tableLayoutPanel6;
         private GroupBox groupBox20;
-        private TextBox ProductSearch;
         private TextBox CompanySearch;
+        private TextBox ProductSearch;
         private GroupBox groupBox21;
         private GroupBox groupBox22;
         private GroupBox groupBox23;
-        private FlowLayoutPanel ProductList;
+        private FlowLayoutPanel CompanyList;
         private Panel panel19;
         private GroupBox groupBox29;
-        private FlowLayoutPanel CompanyList;
+        private FlowLayoutPanel ProductList;
         private Panel panel25;
         private GroupBox groupBox35;
         private Panel panel18;
@@ -1628,5 +2107,39 @@
         private TableLayoutPanel tableLayoutPanel8;
         private Panel panel21;
         private Label label1;
+        private Button DeleteOrder;
+        private Button CreateOrder;
+        private Button EditOrderBtn;
+        private RichTextBox DetailBox;
+        private Button ProductsBtn;
+        private Button DeleteProduct;
+        private Button OpenDelivery;
+        private Button NewProductBtn;
+        private Button OpenProduct;
+        private GroupBox groupBox33;
+        private TextBox CompanySearchList;
+        private GroupBox groupBox32;
+        private TextBox ProductListSearch;
+        private Button OpenListViewDelivery;
+        private Button OpenListViewProduct;
+        private GroupBox groupBox34;
+        private Button ProductBack;
+        private Button ProductEdit;
+        private RichTextBox PricingText;
+        private Button ShowCompanyList;
+        private Button ItemBack;
+        private Button ShowProductList;
+        private Button CompanyBack;
+        private GroupBox groupBox37;
+        private Button ListNewItem;
+        private Button ListEditItem;
+        private TextBox ListItemSearch;
+        private GroupBox groupBox36;
+        private Button ListNewCompany;
+        private Button ListEditCompany;
+        private TextBox ListCompanySearch;
+        private Button EditBack;
+        private GroupBox Maingroup;
+        private Button LogoutBtn;
     }
 }

@@ -14,6 +14,7 @@ namespace Database_Control
             Connection = new SQL("Cayden", "root", "root");
 
             InitializeComponent();
+            LogoutBtn.Visible = false;
         }
 
         private WindowData DisplayControl;
@@ -34,6 +35,184 @@ namespace Database_Control
             }
         }
 
+        #region Orders
+
+        public void InitOrderControlPanel()
+        {
+            ControlPanelOptions.SelectTab(0);
+            groupBox1.Text = "Current Orders";
+            UpdateOrderControlPanel();
+        }
+
+        public void UpdateOrderControlPanel()
+        {
+            List<WindowData.CollectionReturn> Item = WindowData.GetSelectedObjects("OrderSelect");
+            DetailBox.ResetText();
+            if (Item.Count > 0)
+            {
+                DeleteOrder.Enabled = true;
+                EditOrderBtn.Enabled = true;
+                foreach (var item in Item)
+                {
+                    Dictionary<string, string> Data = (Dictionary<string, string>)item();
+                    foreach (var Info in Data)
+                    {
+                        DetailBox.AppendText(Info.Key + "\n");
+                        DetailBox.AppendText(Info.Value + "\n");
+                    }
+                }
+            }
+            else
+            {
+                DeleteOrder.Enabled = false;
+                EditOrderBtn.Enabled = false;
+            }
+        }
+
+        private void EditOrderBtn_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Ordering, null);
+        }
+
+        private void CreateOrder_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Ordering, null);
+        }
+
+        private void DeleteOrder_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ProductsBtn_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
+        }
+
+        #endregion
+
+        #region Products
+
+        public void InitProductsControlPanel()
+        {
+            ControlPanelOptions.SelectTab(1);
+            groupBox1.Text = "Current Products";
+            UpdateProductsPanel();
+        }
+
+        public void UpdateProductsPanel()
+        {
+            List<WindowData.CollectionReturn> Item = WindowData.GetSelectedObjects("ProductSelect");
+            DetailBox.ResetText();
+            if (Item.Count > 0)
+            {
+                DeleteProduct.Enabled = true;
+                OpenProduct.Enabled = true;
+                foreach (var item in Item)
+                {
+                    Dictionary<string, string> Data = (Dictionary<string, string>)item();
+                    foreach (var Info in Data)
+                    {
+                        DetailBox.AppendText(Info.Key + "\n");
+                        DetailBox.AppendText(Info.Value + "\n");
+                    }
+                }
+            }
+            else
+            {
+                DeleteProduct.Enabled = false;
+                OpenProduct.Enabled = false;
+            }
+        }
+
+        private void DeleteProduct_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OpenProduct_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Product, null);
+        }
+
+        private void OpenDelivery_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+        }
+
+        private void NewProductBtn_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Edit, null);
+        }
+
+        #endregion
+
+        #region Edit
+
+        private void CancelOrder_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+        }
+
+        #endregion
+
+        #region ProductItem
+
+        private void ProductBack_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
+        }
+
+        private void ProductEdit_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region List
+
+        private void CompanyBack_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+        }
+
+        private void ItemBack_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+        }
+
+        private void ShowCompanyList_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ShowProductList_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OpenListViewDelivery_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.List, null);
+        }
+
+        private void OpenListViewProduct_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.List, null);
+        }
+
+        #endregion
+
+        #region Edit
+
+        private void EditBack_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+        }
+
+        #endregion
+
         private void Login_Click(object sender, EventArgs e)
         {
             //TESTING METHODS
@@ -51,7 +230,8 @@ namespace Database_Control
             //Connection.UpdateData(tableName, columns, values, whereClause);
 
             DisplayControl = new WindowData(this, new StatusType(StatusType.DefaultAdmin));
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>());
+            LogoutBtn.Visible = true;
+            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
         }
         public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product }
         public FlowLayoutPanel GetList(List Item)
@@ -69,6 +249,12 @@ namespace Database_Control
                 default:
                     return OrderList;
             }
+        }
+
+        private void LogoutBtn_Click(object sender, EventArgs e)
+        {
+            LogoutBtn.Visible = false;
+            SetWindow(WindowType.Login, null);
         }
     }
 
@@ -186,30 +372,30 @@ namespace Database_Control
             }
         }
 
-        
-        public Dictionary<string, List<object>> GetData(string tableName, List<string> Cols)
+
+        public List<Dictionary<string, object>> GetData(string tableName, List<string> Cols)
         {
-            string sqlDelete = $"SELECT {string.Join(", ", Cols)} FROM {tableName}";
-            Dictionary<string, List<object>> Ret = new Dictionary<string, List<object>>();
-            using (SqlCommand cmd = new SqlCommand(sqlDelete, com))
+            string sqlGet = $"SELECT {string.Join(", ", Cols)} FROM {tableName}";
+            List<Dictionary<string, object>> Ret = new List<Dictionary<string, object>>();
+            using (SqlCommand cmd = new SqlCommand(sqlGet, com))
             {
                 SqlDataReader Read = cmd.ExecuteReader();
 
                 while (Read.Read())
                 {
+                    Ret.Add(new Dictionary<string, object>());
                     for (int i = 0; i < Cols.Count; i++)
                     {
-                        if (!Ret.ContainsKey(Cols[i]))
+                        if (!Ret[Ret.Count - 1].ContainsKey(Cols[i]))
                         {
-                            Ret.Add(Cols[i], new List<object>());
+                            Ret[Ret.Count - 1].Add(Cols[i], null);
                         }
-                        Ret[Cols[i]].Add(Read.GetValue(i));
+                        Ret[Ret.Count - 1][Cols[i]] = Read.GetValue(i);
                     }
                 }
             }
             return Ret;
         }
-
 
         public void Close()
         {
@@ -402,7 +588,7 @@ namespace Database_Control
             Item.Size = new Size(Width, Height);
             Item.TabIndex = 0;
             Item.Controls.Add(Box);
-            
+
             Box.Dock = DockStyle.Fill;
             Box.Location = new Point(0, 0);
             Box.Name = "groupBox";
@@ -412,14 +598,12 @@ namespace Database_Control
             Box.Text = GroupName;
             Box.MouseEnter += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.Tan; };
             Box.MouseLeave += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.White; };
-            if (OnClick != null)
-                Box.Click += OnClick;
 
             if (!string.IsNullOrEmpty(SelectionGroup))
             {
                 if (selectionGroup.ContainsKey(SelectionGroup))
                 {
-                    Box.Click += (object? sender, EventArgs e) => 
+                    Box.Click += (object? sender, EventArgs e) =>
                     {
                         Item.BackColor = selectionGroup[SelectionGroup].GroupColor;
                         if (!InCollection(SelectionGroup, Box))
@@ -435,6 +619,9 @@ namespace Database_Control
                 }
             }
 
+            if (OnClick != null)
+                Box.Click += OnClick;
+
             list.Controls.Add(Item);
         }
 
@@ -446,14 +633,50 @@ namespace Database_Control
         private static bool OpenDelivery(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
             DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-            SetSelectionGroup("Test", 4, Color.Gray);
-            for (int i = 0; i < 10; i++)
+            if (DataIn.ContainsKey("Type"))
             {
-                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Test: " + i, OnClick: (object? sender, EventArgs e) => 
-                { 
-                    //Form.SetWindow(MainForm.WindowType.Login, new Dictionary<string, string>()); 
-                }, SelectionGroup: "Test");
+                if (DataIn["Type"].Equals("PRODUCTS"))
+                {
+                    Form.InitProductsControlPanel();
+                    SetSelectionGroup("ProductSelect", 1, Color.Gray);
+                    //Grab Order items
+                    for (int i = 0; i < 10; i++)
+                    {
+                        string Data = "Product " + i;
+                        AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + i,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            Form.UpdateProductsPanel();
+                        }, SelectionGroup: "ProductSelect",
+                        Return:
+                        () =>
+                        {
+                            return new Dictionary<string, string>() { { "Test Product:", Data } };
+                        });
+                    }
+                }
+                else if (DataIn["Type"].Equals("ORDERS"))
+                {
+                    Form.InitOrderControlPanel();
+                    SetSelectionGroup("OrderSelect", 1, Color.Gray);
+                    //Grab Order items
+                    for (int i = 0; i < 10; i++)
+                    {
+                        string Data = "Order " + i;
+                        AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order: " + i,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            Form.UpdateOrderControlPanel();
+                        }, SelectionGroup: "OrderSelect",
+                        Return:
+                        () =>
+                        {
+                            return new Dictionary<string, string>() { { "Test Order:", Data } };
+                        });
+                    }
+                }
             }
+
             return true;
         }
 
@@ -474,6 +697,42 @@ namespace Database_Control
 
         private static bool OpenOrdering(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
+            DeleteAllConents(Form.GetList(MainForm.List.OrderDiplay_Company));
+            DeleteAllConents(Form.GetList(MainForm.List.OrderDisplay_Product));
+
+            SetSelectionGroup("CompanySelect", 1, Color.Blue);
+            //Grab Order items
+            for (int i = 0; i < 10; i++)
+            {
+                string Data = "Product " + i;
+                AddNewConentItem(Form.GetList(MainForm.List.OrderDiplay_Company), "Company: " + i,
+                OnClick: (object? sender, EventArgs e) =>
+                {
+                    Form.UpdateProductsPanel();
+                }, SelectionGroup: "CompanySelect",
+                Return:
+                () =>
+                {
+                    return new Dictionary<string, string>() { { "Test Product:", Data } };
+                });
+            }
+
+            SetSelectionGroup("OrderProductSelect", 1000, Color.Green);
+            //Grab Order items
+            for (int i = 0; i < 10; i++)
+            {
+                string Data = "Product " + i;
+                AddNewConentItem(Form.GetList(MainForm.List.OrderDisplay_Product), "Product: " + i,
+                OnClick: (object? sender, EventArgs e) =>
+                {
+                    Form.UpdateProductsPanel();
+                }, SelectionGroup: "OrderProductSelect",
+                Return:
+                () =>
+                {
+                    return new Dictionary<string, string>() { { "Test Product:", Data } };
+                });
+            }
             return true;
         }
     }
