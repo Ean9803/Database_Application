@@ -99,6 +99,7 @@
             ItemControlPanel = new TabControl();
             ItemControl = new TabPage();
             groupBox37 = new GroupBox();
+            OpenItemList = new Button();
             ListNewItem = new Button();
             ListEditItem = new Button();
             ListItemSearch = new TextBox();
@@ -106,6 +107,7 @@
             ItemBack = new Button();
             CompanyControl = new TabPage();
             groupBox36 = new GroupBox();
+            OpenCompItem = new Button();
             ListNewCompany = new Button();
             ListEditCompany = new Button();
             ListCompanySearch = new TextBox();
@@ -147,8 +149,6 @@
             groupBox31 = new GroupBox();
             Memo = new RichTextBox();
             SaveOrder = new Button();
-            PasswordConfirm = new MaskedTextBox();
-            label5 = new Label();
             tableLayoutPanel6 = new TableLayoutPanel();
             groupBox20 = new GroupBox();
             ProductSearch = new TextBox();
@@ -1131,6 +1131,7 @@
             // 
             // groupBox37
             // 
+            groupBox37.Controls.Add(OpenItemList);
             groupBox37.Controls.Add(ListNewItem);
             groupBox37.Controls.Add(ListEditItem);
             groupBox37.Controls.Add(ListItemSearch);
@@ -1141,6 +1142,16 @@
             groupBox37.TabIndex = 4;
             groupBox37.TabStop = false;
             groupBox37.Text = "Options";
+            // 
+            // OpenItemList
+            // 
+            OpenItemList.ForeColor = SystemColors.ActiveCaptionText;
+            OpenItemList.Location = new Point(236, 17);
+            OpenItemList.Name = "OpenItemList";
+            OpenItemList.Size = new Size(75, 23);
+            OpenItemList.TabIndex = 3;
+            OpenItemList.Text = "Open";
+            OpenItemList.UseVisualStyleBackColor = true;
             // 
             // ListNewItem
             // 
@@ -1166,7 +1177,7 @@
             // 
             ListItemSearch.Location = new Point(6, 18);
             ListItemSearch.Name = "ListItemSearch";
-            ListItemSearch.Size = new Size(251, 23);
+            ListItemSearch.Size = new Size(224, 23);
             ListItemSearch.TabIndex = 0;
             // 
             // ShowCompanyList
@@ -1207,6 +1218,7 @@
             // 
             // groupBox36
             // 
+            groupBox36.Controls.Add(OpenCompItem);
             groupBox36.Controls.Add(ListNewCompany);
             groupBox36.Controls.Add(ListEditCompany);
             groupBox36.Controls.Add(ListCompanySearch);
@@ -1217,6 +1229,16 @@
             groupBox36.TabIndex = 3;
             groupBox36.TabStop = false;
             groupBox36.Text = "Options";
+            // 
+            // OpenCompItem
+            // 
+            OpenCompItem.ForeColor = SystemColors.ActiveCaptionText;
+            OpenCompItem.Location = new Point(236, 17);
+            OpenCompItem.Name = "OpenCompItem";
+            OpenCompItem.Size = new Size(75, 23);
+            OpenCompItem.TabIndex = 3;
+            OpenCompItem.Text = "Open";
+            OpenCompItem.UseVisualStyleBackColor = true;
             // 
             // ListNewCompany
             // 
@@ -1242,7 +1264,7 @@
             // 
             ListCompanySearch.Location = new Point(6, 18);
             ListCompanySearch.Name = "ListCompanySearch";
-            ListCompanySearch.Size = new Size(251, 23);
+            ListCompanySearch.Size = new Size(224, 23);
             ListCompanySearch.TabIndex = 0;
             // 
             // ShowProductList
@@ -1622,8 +1644,6 @@
             groupBox23.Controls.Add(CancelOrder);
             groupBox23.Controls.Add(groupBox31);
             groupBox23.Controls.Add(SaveOrder);
-            groupBox23.Controls.Add(PasswordConfirm);
-            groupBox23.Controls.Add(label5);
             groupBox23.Dock = DockStyle.Fill;
             groupBox23.ForeColor = SystemColors.ButtonHighlight;
             groupBox23.Location = new Point(3, 273);
@@ -1671,26 +1691,9 @@
             SaveOrder.Name = "SaveOrder";
             SaveOrder.Size = new Size(75, 23);
             SaveOrder.TabIndex = 2;
-            SaveOrder.Text = "Save";
+            SaveOrder.Text = "Next";
             SaveOrder.UseVisualStyleBackColor = true;
-            // 
-            // PasswordConfirm
-            // 
-            PasswordConfirm.Location = new Point(9, 134);
-            PasswordConfirm.Name = "PasswordConfirm";
-            PasswordConfirm.PasswordChar = '*';
-            PasswordConfirm.Size = new Size(188, 23);
-            PasswordConfirm.TabIndex = 1;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.BackColor = Color.Transparent;
-            label5.Location = new Point(9, 116);
-            label5.Name = "label5";
-            label5.Size = new Size(127, 15);
-            label5.TabIndex = 0;
-            label5.Text = "Enter password to save";
+            SaveOrder.Click += SaveOrder_Click;
             // 
             // tableLayoutPanel6
             // 
@@ -1985,7 +1988,6 @@
             panel18.ResumeLayout(false);
             panel20.ResumeLayout(false);
             groupBox23.ResumeLayout(false);
-            groupBox23.PerformLayout();
             groupBox31.ResumeLayout(false);
             tableLayoutPanel6.ResumeLayout(false);
             groupBox20.ResumeLayout(false);
@@ -2091,8 +2093,6 @@
         private Panel panel20;
         private GroupBox groupBox30;
         private Button SaveOrder;
-        private MaskedTextBox PasswordConfirm;
-        private Label label5;
         private Panel panel14;
         private GroupBox groupBox24;
         private Panel panel15;
@@ -2141,5 +2141,7 @@
         private Button EditBack;
         private GroupBox Maingroup;
         private Button LogoutBtn;
+        private Button OpenItemList;
+        private Button OpenCompItem;
     }
 }

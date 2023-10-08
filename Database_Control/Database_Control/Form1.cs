@@ -154,6 +154,11 @@ namespace Database_Control
             SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
         }
 
+        private void SaveOrder_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Edit, null);
+        }
+
         #endregion
 
         #region ProductItem
@@ -165,7 +170,7 @@ namespace Database_Control
 
         private void ProductEdit_Click_1(object sender, EventArgs e)
         {
-
+            SetWindow(WindowType.Edit, null);
         }
 
         #endregion
@@ -184,22 +189,42 @@ namespace Database_Control
 
         private void ShowCompanyList_Click(object sender, EventArgs e)
         {
-
+            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "COMPANY" } });
         }
 
         private void ShowProductList_Click(object sender, EventArgs e)
         {
-
+            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
         }
 
         private void OpenListViewDelivery_Click(object sender, EventArgs e)
         {
-            SetWindow(WindowType.List, null);
+            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "COMPANY" } });
         }
 
         private void OpenListViewProduct_Click(object sender, EventArgs e)
         {
-            SetWindow(WindowType.List, null);
+            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
+        }
+
+        public void InitCompanyControl()
+        {
+            ItemControlPanel.SelectTab(1);
+        }
+
+        public void InitItemControl()
+        {
+            ItemControlPanel.SelectTab(0);
+        }
+
+        public void UpdateCompanyControl()
+        {
+
+        }
+
+        public void UpdateItemControl()
+        {
+
         }
 
         #endregion
@@ -492,7 +517,7 @@ namespace Database_Control
             }
             else
             {
-                selectionGroup[Name] = (MaxItems, colorGroup, selectionGroup[Name].Collection);
+                selectionGroup[Name] = (MaxItems, colorGroup, new List<(GroupBox, Action, CollectionReturn)>());
             }
         }
 
@@ -503,11 +528,15 @@ namespace Database_Control
             List<CollectionReturn> Ret = new List<CollectionReturn>();
             if (selectionGroup.ContainsKey(Group))
             {
-                for (int i = 0; i < selectionGroup[Group].Collection.Count; i++)
+                for (int i = selectionGroup[Group].Collection.Count - 1; i >= 0; i--)
                 {
                     if (selectionGroup[Group].Collection[i].Attribute != null)
                     {
                         Ret.Add(selectionGroup[Group].Collection[i].Attribute);
+                    }
+                    else
+                    {
+                        selectionGroup[Group].Collection.RemoveAt(i);
                     }
                 }
             }
@@ -639,6 +668,7 @@ namespace Database_Control
                 {
                     Form.InitProductsControlPanel();
                     SetSelectionGroup("ProductSelect", 1, Color.Gray);
+                    Form.UpdateProductsPanel();
                     //Grab Order items
                     for (int i = 0; i < 10; i++)
                     {
@@ -659,6 +689,7 @@ namespace Database_Control
                 {
                     Form.InitOrderControlPanel();
                     SetSelectionGroup("OrderSelect", 1, Color.Gray);
+                    Form.UpdateOrderControlPanel();
                     //Grab Order items
                     for (int i = 0; i < 10; i++)
                     {
@@ -687,6 +718,48 @@ namespace Database_Control
 
         private static bool OpenList(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
+            DeleteAllConents(Form.GetList(MainForm.List.ListDisplay));
+            SetSelectionGroup("ListSelect", 1, Color.Orange);
+            if (DataIn.ContainsKey("Type"))
+            {
+                if (DataIn["Type"].Equals("COMPANY"))
+                {
+                    Form.InitCompanyControl();
+                    for (int i = 0; i < 10; i++)
+                    {
+                        string Data = "Company " + i;
+                        AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Company: " + i,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            Form.UpdateCompanyControl();
+                        }, SelectionGroup: "ListSelect",
+                        Return:
+                        () =>
+                        {
+                            return new Dictionary<string, string>() { { "Test Product:", Data } };
+                        });
+                    }
+                }
+                else if (DataIn["Type"].Equals("PRODUCTS"))
+                {
+                    Form.InitItemControl();
+                    for (int i = 0; i < 10; i++)
+                    {
+                        string Data = "Product " + i;
+                        AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Product: " + i,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            Form.UpdateItemControl();
+                        }, SelectionGroup: "ListSelect",
+                        Return:
+                        () =>
+                        {
+                            return new Dictionary<string, string>() { { "Test Product:", Data } };
+                        });
+                    }
+                }
+            }
+
             return true;
         }
 
