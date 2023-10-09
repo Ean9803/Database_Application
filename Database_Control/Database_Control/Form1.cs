@@ -1,16 +1,16 @@
 using System.Data.SqlClient;
 using System.Data;
 using System;
-
+using Microsoft.VisualBasic;
 
 namespace Database_Control
 {
     public partial class MainForm : Form
     {
-        private SQL Connection;
+        public SQL Connection { get; internal set; }
         public MainForm()
         {
-            Connection = new SQL("DESKTOP-E\\SQLEXPRESS", "root", "root");
+            Connection = new SQL("GameStation\\SQLEXPRESS", "root", "root");
             InitializeComponent();
 
             if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
@@ -22,7 +22,7 @@ namespace Database_Control
         }
 
         private WindowData DisplayControl;
-        public enum WindowType { Login, Delivery, Product, List, Edit, Ordering }
+        public enum WindowType { Login, Delivery, Product, Edit, Ordering }
 
         public void SetWindow(WindowType Type, Dictionary<string, string> DataIn)
         {
@@ -39,212 +39,29 @@ namespace Database_Control
             }
         }
 
-        #region Orders
-
-        public void InitOrderControlPanel()
+        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product, UIList }
+        public FlowLayoutPanel GetList(List Item)
         {
-            ControlPanelOptions.SelectTab(0);
-            groupBox1.Text = "Current Orders";
-            UpdateOrderControlPanel();
-        }
-
-        public void UpdateOrderControlPanel()
-        {
-            List<WindowData.CollectionReturn> Item = WindowData.GetSelectedObjects("OrderSelect");
-            DetailBox.ResetText();
-            if (Item.Count > 0)
+            switch (Item)
             {
-                DeleteOrder.Enabled = true;
-                EditOrderBtn.Enabled = true;
-                foreach (var item in Item)
-                {
-                    Dictionary<string, string> Data = (Dictionary<string, string>)item();
-                    foreach (var Info in Data)
-                    {
-                        DetailBox.AppendText(Info.Key + "\n");
-                        DetailBox.AppendText(Info.Value + "\n");
-                    }
-                }
-            }
-            else
-            {
-                DeleteOrder.Enabled = false;
-                EditOrderBtn.Enabled = false;
+                case List.OrderList:
+                    return OrderList;
+                case List.ListDisplay:
+                    return OptionsList;
+                case List.OrderDiplay_Company:
+                    return CompanyList;
+                case List.OrderDisplay_Product:
+                    return ProductList;
+                case List.UIList:
+                    return TopUI;
+                default:
+                    return OrderList;
             }
         }
 
-        private void EditOrderBtn_Click(object sender, EventArgs e)
+        private void LoginBtn_Click(object sender, EventArgs e)
         {
-            SetWindow(WindowType.Ordering, null);
-        }
-
-        private void CreateOrder_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Ordering, null);
-        }
-
-        private void DeleteOrder_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ProductsBtn_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
-        }
-
-        #endregion
-
-        #region Products
-
-        public void InitProductsControlPanel()
-        {
-            ControlPanelOptions.SelectTab(1);
-            groupBox1.Text = "Current Products";
-            UpdateProductsPanel();
-        }
-
-        public void UpdateProductsPanel()
-        {
-            List<WindowData.CollectionReturn> Item = WindowData.GetSelectedObjects("ProductSelect");
-            DetailBox.ResetText();
-            if (Item.Count > 0)
-            {
-                DeleteProduct.Enabled = true;
-                OpenProduct.Enabled = true;
-                foreach (var item in Item)
-                {
-                    Dictionary<string, string> Data = (Dictionary<string, string>)item();
-                    foreach (var Info in Data)
-                    {
-                        DetailBox.AppendText(Info.Key + "\n");
-                        DetailBox.AppendText(Info.Value + "\n");
-                    }
-                }
-            }
-            else
-            {
-                DeleteProduct.Enabled = false;
-                OpenProduct.Enabled = false;
-            }
-        }
-
-        private void DeleteProduct_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void OpenProduct_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Product, null);
-        }
-
-        private void OpenDelivery_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
-        }
-
-        private void NewProductBtn_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Edit, null);
-        }
-
-        #endregion
-
-        #region Edit
-
-        private void CancelOrder_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
-        }
-
-        private void SaveOrder_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Edit, null);
-        }
-
-        #endregion
-
-        #region ProductItem
-
-        private void ProductBack_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
-        }
-
-        private void ProductEdit_Click_1(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Edit, null);
-        }
-
-        #endregion
-
-        #region List
-
-        private void CompanyBack_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
-        }
-
-        private void ItemBack_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
-        }
-
-        private void ShowCompanyList_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "COMPANY" } });
-        }
-
-        private void ShowProductList_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
-        }
-
-        private void OpenListViewDelivery_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "COMPANY" } });
-        }
-
-        private void OpenListViewProduct_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.List, new Dictionary<string, string>() { { "Type", "PRODUCTS" } });
-        }
-
-        public void InitCompanyControl()
-        {
-            ItemControlPanel.SelectTab(1);
-        }
-
-        public void InitItemControl()
-        {
-            ItemControlPanel.SelectTab(0);
-        }
-
-        public void UpdateCompanyControl()
-        {
-
-        }
-
-        public void UpdateItemControl()
-        {
-
-        }
-
-        #endregion
-
-        #region Edit
-
-        private void EditBack_Click(object sender, EventArgs e)
-        {
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
-        }
-
-        #endregion
-
-        private void Login_Click(object sender, EventArgs e)
-        {
-            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Security");
+            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Security", "Name", "Position");
             if (User.Count == 0)
             {
                 MessageBox.Show("Login Invalid");
@@ -254,34 +71,51 @@ namespace Database_Control
                 StatusType Stat = new StatusType((int)User[0]["Security"], (int)User[0]["Salesman_ID"]);
                 DisplayControl = new WindowData(this, Stat);
                 LogoutBtn.Visible = true;
-                SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+                SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" }, { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
             }
         }
 
-        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product }
-        public FlowLayoutPanel GetList(List Item)
-        {
-            switch (Item)
-            {
-                case List.OrderList:
-                    return OrderList;
-                case List.ListDisplay:
-                    return ItemList;
-                case List.OrderDiplay_Company:
-                    return CompanyList;
-                case List.OrderDisplay_Product:
-                    return ProductList;
-                default:
-                    return OrderList;
-            }
-        }
-
-        private void LogoutBtn_Click(object sender, EventArgs e)
+        private void LogoutBtn_Click_1(object sender, EventArgs e)
         {
             LogoutBtn.Visible = false;
             UserName.Text = "";
             PassWord.Text = "";
             SetWindow(WindowType.Login, null);
+        }
+
+        private void CreateNewUser_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(UserName.Text) && PassWord.Text.Length >= 10)
+            {
+                List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User", new (string, string)[] { ("@User", UserName.Text) }), "Salesman_ID");
+                if (User.Count > 0)
+                {
+                    MessageBox.Show("Username taken, please pick another");
+                }
+                else
+                {
+                    string Name = Interaction.InputBox("Enter Employee Name");
+                    if (!string.IsNullOrEmpty(Name))
+                    {
+                        Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("Security", 0));
+
+                        User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Security", "Name", "Position");
+
+                        StatusType Stat = new StatusType(0, (int)User[0]["Salesman_ID"]);
+                        DisplayControl = new WindowData(this, Stat);
+                        LogoutBtn.Visible = true;
+                        SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" }, { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please enter valid name");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter " + (string.IsNullOrEmpty(UserName.Text) ? ("a valid Username " + (PassWord.Text.Length < 10 ? "and " : "")) : "") + (PassWord.Text.Length < 10 ? "a Password with 10 or more characters" : ""));
+            }
         }
     }
 
@@ -525,7 +359,6 @@ namespace Database_Control
             { MainForm.WindowType.Login, OpenLogin },
             { MainForm.WindowType.Delivery, OpenDelivery },
             { MainForm.WindowType.Product, OpenProduct },
-            { MainForm.WindowType.List, OpenList },
             { MainForm.WindowType.Edit, OpenEdit },
             { MainForm.WindowType.Ordering, OpenOrdering },
         };
@@ -642,31 +475,35 @@ namespace Database_Control
             return false;
         }
 
-        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Height = 70, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null)
+        private enum Direction { vertical, horizontal }
+
+        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Size = 70, int Offset = 20, Direction Flow = Direction.vertical, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null)
         {
             Panel Item = new Panel();
-            GroupBox Box = new GroupBox();
-            int Width = (list.Size.Width - 20);
+            ItemBtn Box = new ItemBtn();
+            int Width = Flow == Direction.vertical ? (list.Size.Width - Offset) : (list.Size.Height - Offset);
             Item.BackColor = Color.White;
             Item.BorderStyle = BorderStyle.Fixed3D;
             int Down = 3;
             for (int i = 0; i < list.Controls.Count; i++)
             {
-                Down += list.Controls[i].Size.Height;
+                Down += Flow == Direction.vertical ? list.Controls[i].Size.Height : list.Controls[i].Size.Width;
             }
-            Item.Location = new Point(3, Down);
+            Item.Location = Flow == Direction.vertical ? new Point(3, Down) : new Point(Down, 3);
             Item.Name = "Item#" + StatusType.RandomString(5);
-            Item.Size = new Size(Width, Height);
+            Item.Size = Flow == Direction.vertical ? new Size(Width, Size) : new Size(Size, Width);
             Item.TabIndex = 0;
             Item.Controls.Add(Box);
 
             Box.Dock = DockStyle.Fill;
             Box.Location = new Point(0, 0);
             Box.Name = "groupBox";
-            Box.Size = new Size((int)(Width * 0.9f), (int)(Height * 0.8f));
+            Box.Size = new Size((int)(Item.Size.Width * 0.9f), (int)(Item.Size.Height * 0.8f));
             Box.TabIndex = 0;
             Box.TabStop = false;
             Box.Text = GroupName;
+
+
             Box.MouseEnter += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.Tan; };
             Box.MouseLeave += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.White; };
 
@@ -674,7 +511,7 @@ namespace Database_Control
             {
                 if (selectionGroup.ContainsKey(SelectionGroup))
                 {
-                    Box.Click += (object? sender, EventArgs e) =>
+                    Box.OnItemClick += (object? sender, EventArgs e) =>
                     {
                         Item.BackColor = selectionGroup[SelectionGroup].GroupColor;
                         if (!InCollection(SelectionGroup, Box))
@@ -691,26 +528,96 @@ namespace Database_Control
             }
 
             if (OnClick != null)
-                Box.Click += OnClick;
+                Box.OnItemClick += OnClick;
 
             list.Controls.Add(Item);
         }
 
+        private static void SelectItem(FlowLayoutPanel list, int Item)
+        {
+            if (Item >= 0 && Item < list.Controls.Count)
+            {
+                (list.Controls[Item].Controls[0] as ItemBtn)?.ActivateClickItem();
+            }
+        }
+
         private static bool OpenLogin(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
+            DeleteAllConents(Form.GetList(MainForm.List.UIList));
             return true;
         }
 
         private static bool OpenDelivery(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
-            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-            if (DataIn.ContainsKey("Type"))
+            if (DataIn.ContainsKey("INIT"))
+            {
+                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                DeleteAllConents(Form.GetList(MainForm.List.ListDisplay));
+                DeleteAllConents(Form.GetList(MainForm.List.UIList));
+
+                AddNewConentItem(Form.GetList(MainForm.List.UIList), "Position: " + DataIn["INIT"], 200, 0, Direction.horizontal);
+                if (DataIn.ContainsKey("NAME"))
+                {
+                    AddNewConentItem(Form.GetList(MainForm.List.UIList), "Employee: " + DataIn["NAME"], 200, 0, Direction.horizontal);
+                }
+
+                SetSelectionGroup("OptionSelect", 1, Color.Green);
+                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Delivery", Flow: Direction.horizontal, Size: 100,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            SetSelectionGroup("ItemSelect", 1, Color.Green);
+                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID");
+                            foreach (var item in ListItems)
+                            {
+                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order_ID: " + item["Order_ID"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
+                            }
+                        }, 
+                        SelectionGroup: "OptionSelect");
+                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Product", Flow: Direction.horizontal, Size: 100,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            SetSelectionGroup("ItemSelect", 1, Color.Green);
+                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name");
+                            foreach (var item in ListItems)
+                            {
+                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
+                            }
+                        }, 
+                        SelectionGroup: "OptionSelect");
+                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Employee", Flow: Direction.horizontal, Size: 100,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            SetSelectionGroup("ItemSelect", 1, Color.Green);
+                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name");
+                            foreach (var item in ListItems)
+                            {
+                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
+                            }
+                        }, 
+                        SelectionGroup: "OptionSelect");
+                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Company", Flow: Direction.horizontal, Size: 100,
+                        OnClick: (object? sender, EventArgs e) =>
+                        {
+                            SetSelectionGroup("ItemSelect", 1, Color.Green);
+                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name");
+                            foreach (var item in ListItems)
+                            {
+                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Company: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
+                            }
+                        }, 
+                        SelectionGroup: "OptionSelect");
+                SelectItem(Form.GetList(MainForm.List.ListDisplay), 0);
+            }
+
+            if (DataIn.ContainsKey("Type") && false)
             {
                 if (DataIn["Type"].Equals("PRODUCTS"))
                 {
-                    Form.InitProductsControlPanel();
                     SetSelectionGroup("ProductSelect", 1, Color.Gray);
-                    Form.UpdateProductsPanel();
                     //Grab Order items
                     for (int i = 0; i < 10; i++)
                     {
@@ -718,33 +625,11 @@ namespace Database_Control
                         AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + i,
                         OnClick: (object? sender, EventArgs e) =>
                         {
-                            Form.UpdateProductsPanel();
                         }, SelectionGroup: "ProductSelect",
                         Return:
                         () =>
                         {
                             return new Dictionary<string, string>() { { "Test Product:", Data } };
-                        });
-                    }
-                }
-                else if (DataIn["Type"].Equals("ORDERS"))
-                {
-                    Form.InitOrderControlPanel();
-                    SetSelectionGroup("OrderSelect", 1, Color.Gray);
-                    Form.UpdateOrderControlPanel();
-                    //Grab Order items
-                    for (int i = 0; i < 10; i++)
-                    {
-                        string Data = "Order " + i;
-                        AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order: " + i,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                            Form.UpdateOrderControlPanel();
-                        }, SelectionGroup: "OrderSelect",
-                        Return:
-                        () =>
-                        {
-                            return new Dictionary<string, string>() { { "Test Order:", Data } };
                         });
                     }
                 }
@@ -755,53 +640,6 @@ namespace Database_Control
 
         private static bool OpenProduct(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
-            return true;
-        }
-
-        private static bool OpenList(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
-        {
-            DeleteAllConents(Form.GetList(MainForm.List.ListDisplay));
-            SetSelectionGroup("ListSelect", 1, Color.Orange);
-            if (DataIn.ContainsKey("Type"))
-            {
-                if (DataIn["Type"].Equals("COMPANY"))
-                {
-                    Form.InitCompanyControl();
-                    for (int i = 0; i < 10; i++)
-                    {
-                        string Data = "Company " + i;
-                        AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Company: " + i,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                            Form.UpdateCompanyControl();
-                        }, SelectionGroup: "ListSelect",
-                        Return:
-                        () =>
-                        {
-                            return new Dictionary<string, string>() { { "Test Product:", Data } };
-                        });
-                    }
-                }
-                else if (DataIn["Type"].Equals("PRODUCTS"))
-                {
-                    Form.InitItemControl();
-                    for (int i = 0; i < 10; i++)
-                    {
-                        string Data = "Product " + i;
-                        AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Product: " + i,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                            Form.UpdateItemControl();
-                        }, SelectionGroup: "ListSelect",
-                        Return:
-                        () =>
-                        {
-                            return new Dictionary<string, string>() { { "Test Product:", Data } };
-                        });
-                    }
-                }
-            }
-
             return true;
         }
 
@@ -823,7 +661,6 @@ namespace Database_Control
                 AddNewConentItem(Form.GetList(MainForm.List.OrderDiplay_Company), "Company: " + i,
                 OnClick: (object? sender, EventArgs e) =>
                 {
-                    Form.UpdateProductsPanel();
                 }, SelectionGroup: "CompanySelect",
                 Return:
                 () =>
@@ -840,7 +677,6 @@ namespace Database_Control
                 AddNewConentItem(Form.GetList(MainForm.List.OrderDisplay_Product), "Product: " + i,
                 OnClick: (object? sender, EventArgs e) =>
                 {
-                    Form.UpdateProductsPanel();
                 }, SelectionGroup: "OrderProductSelect",
                 Return:
                 () =>
