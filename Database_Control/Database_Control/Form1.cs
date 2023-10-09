@@ -10,10 +10,14 @@ namespace Database_Control
         private SQL Connection;
         public MainForm()
         {
-
-            Connection = new SQL("Cayden", "root", "root");
-
+            Connection = new SQL("DESKTOP-E\\SQLEXPRESS", "root", "root");
             InitializeComponent();
+
+            if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
+            {
+                Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("Security", int.MaxValue));
+            }
+
             LogoutBtn.Visible = false;
         }
 
@@ -240,24 +244,20 @@ namespace Database_Control
 
         private void Login_Click(object sender, EventArgs e)
         {
-            //TESTING METHODS
-            // string tableName = "EMPLOYEE";
-            //string[] columns = { "Salesman_ID", "Position", "Name", "Username", "Password" };
-            //object[] values = { "5", "Sales", "Cayden", "CayG", "Riskm168" };
-            //Connection.InsertData(tableName, columns, values);
-            //string tableName = "EMPLOYEE";
-            //string whereClause = "Salesman_ID = 1"; // Specify the condition to delete a specific row
-            //Connection.DeleteData(tableName, whereClause);
-            //string tableName = "EMPLOYEE";
-            //string[] columns = { "Position", "Name", "Password" };
-            //object[] values = { "Manager", "Aaron Munson", "Riskm169" };
-            //string whereClause = "Salesman_ID = 45"; // Specify the condition to update a specific row
-            //Connection.UpdateData(tableName, columns, values, whereClause);
-
-            DisplayControl = new WindowData(this, new StatusType(StatusType.DefaultAdmin));
-            LogoutBtn.Visible = true;
-            SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Security");
+            if (User.Count == 0)
+            {
+                MessageBox.Show("Login Invalid");
+            }
+            else
+            {
+                StatusType Stat = new StatusType((int)User[0]["Security"], (int)User[0]["Salesman_ID"]);
+                DisplayControl = new WindowData(this, Stat);
+                LogoutBtn.Visible = true;
+                SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" } });
+            }
         }
+
         public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product }
         public FlowLayoutPanel GetList(List Item)
         {
@@ -279,6 +279,8 @@ namespace Database_Control
         private void LogoutBtn_Click(object sender, EventArgs e)
         {
             LogoutBtn.Visible = false;
+            UserName.Text = "";
+            PassWord.Text = "";
             SetWindow(WindowType.Login, null);
         }
     }
@@ -291,9 +293,8 @@ namespace Database_Control
         {
             try
             {
-                com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True");
+                com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True;MultipleActiveResultSets=true");
                 com.Open();
-                MessageBox.Show("Connection Open!");
             }
             catch (Exception ex)
             {
@@ -301,14 +302,14 @@ namespace Database_Control
             }
         }
 
-        public void InsertData(string tableName, List<(string Col, object Val)> Data)
+        public void InsertData(string tableName, params (string Col, object Val)[] Data)
         {
             try
             {
                 string columnsString = "";
                 string parameterPlaceholders = "";
 
-                for (int i = 0; i < Data.Count; i++)
+                for (int i = 0; i < Data.Length; i++)
                 {
                     columnsString += Data[i].Col + ",";
                     parameterPlaceholders += $"@param{i},";
@@ -319,14 +320,12 @@ namespace Database_Control
                 string sqlInsert = $"INSERT INTO {tableName} ({columnsString}) VALUES ({parameterPlaceholders})";
                 using (SqlCommand cmd = new SqlCommand(sqlInsert, com))
                 {
-                    for (int i = 0; i < Data.Count; i++)
+                    for (int i = 0; i < Data.Length; i++)
                     {
                         cmd.Parameters.AddWithValue($"@param{i}", Data[i].Val);
                     }
                     cmd.ExecuteNonQuery();
                 }
-
-                MessageBox.Show("Data inserted successfully!");
             }
             catch (Exception ex)
             {
@@ -334,15 +333,23 @@ namespace Database_Control
             }
         }
 
-        public void DeleteData(string tableName, string whereClause)
+        public void DeleteData(string tableName, (string Clause, (string, string)[] WhereParams) whereClause)
         {
             try
             {
-                string sqlDelete = $"DELETE FROM {tableName} WHERE {whereClause}";
+                string sqlDelete = $"DELETE FROM {tableName} WHERE {whereClause.Clause}";
                 using (SqlCommand cmd = new SqlCommand(sqlDelete, com))
                 {
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (whereClause.WhereParams != null)
+                    {
+                        for (int i = 0; i < whereClause.WhereParams.Length; i++)
+                        {
+                            cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
+                        }
+                    }
 
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    /*
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show($"{rowsAffected} rows deleted successfully!");
@@ -351,6 +358,7 @@ namespace Database_Control
                     {
                         MessageBox.Show("No rows deleted.");
                     }
+                    */
                 }
             }
             catch (Exception ex)
@@ -359,28 +367,36 @@ namespace Database_Control
             }
         }
 
-        public void UpdateData(string tableName, List<(string Col, object Val)> Data, string[] columns, object[] values, string whereClause)
+        public void UpdateData(string tableName, (string Clause, (string, string)[] WhereParams) whereClause, params (string Col, object Val)[] Data)
         {
             try
             {
                 string setClause = "";
-                for (int i = 0; i < Data.Count; i++)
+                for (int i = 0; i < Data.Length; i++)
                 {
                     setClause += $"{Data[i].Col} = @param{i},";
                 }
                 setClause = setClause.Substring(0, setClause.Length - 1);
 
-                string sqlUpdate = $"UPDATE {tableName} SET {setClause} WHERE {whereClause}";
+                string sqlUpdate = $"UPDATE {tableName} SET {setClause}" + (string.IsNullOrEmpty(whereClause.Clause) ? "" : $" WHERE {whereClause.Clause}");
 
 
                 using (SqlCommand cmd = new SqlCommand(sqlUpdate, com))
                 {
-                    for (int i = 0; i < columns.Length; i++)
+                    if (whereClause.WhereParams != null)
                     {
-                        cmd.Parameters.AddWithValue($"@param{i}", values[i]);
+                        for (int i = 0; i < whereClause.WhereParams.Length; i++)
+                        {
+                            cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
+                        }
+                    }
+
+                    for (int i = 0; i < Data.Length; i++)
+                    {
+                        cmd.Parameters.AddWithValue($"@param{i}", Data[i].Val);
                     }
                     int rowsAffected = cmd.ExecuteNonQuery();
-
+                    /*
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show($"{rowsAffected} rows updated successfully!");
@@ -389,6 +405,7 @@ namespace Database_Control
                     {
                         MessageBox.Show("No rows updated.");
                     }
+                    */
                 }
             }
             catch (Exception ex)
@@ -398,25 +415,38 @@ namespace Database_Control
         }
 
 
-        public List<Dictionary<string, object>> GetData(string tableName, List<string> Cols)
+        public List<Dictionary<string, object>> GetData(string tableName, (string Clause, (string, string)[] WhereParams) whereClause, params string[] Cols)
         {
-            string sqlGet = $"SELECT {string.Join(", ", Cols)} FROM {tableName}";
+            string sqlGet = $"SELECT {string.Join(", ", Cols)} FROM {tableName}" + (string.IsNullOrEmpty(whereClause.Clause) ? "" : $" WHERE {whereClause.Clause}");
             List<Dictionary<string, object>> Ret = new List<Dictionary<string, object>>();
             using (SqlCommand cmd = new SqlCommand(sqlGet, com))
             {
-                SqlDataReader Read = cmd.ExecuteReader();
-
-                while (Read.Read())
+                try
                 {
-                    Ret.Add(new Dictionary<string, object>());
-                    for (int i = 0; i < Cols.Count; i++)
+                    if (whereClause.WhereParams != null)
                     {
-                        if (!Ret[Ret.Count - 1].ContainsKey(Cols[i]))
+                        for (int i = 0; i < whereClause.WhereParams.Length; i++)
                         {
-                            Ret[Ret.Count - 1].Add(Cols[i], null);
+                            cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
                         }
-                        Ret[Ret.Count - 1][Cols[i]] = Read.GetValue(i);
                     }
+                    SqlDataReader Read = cmd.ExecuteReader();
+                    while (Read.Read())
+                    {
+                        Ret.Add(new Dictionary<string, object>());
+                        for (int i = 0; i < Cols.Length; i++)
+                        {
+                            if (!Ret[Ret.Count - 1].ContainsKey(Cols[i]))
+                            {
+                                Ret[Ret.Count - 1].Add(Cols[i], null);
+                            }
+                            Ret[Ret.Count - 1][Cols[i]] = Read.GetValue(i);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error getting data! " + ex.Message);
                 }
             }
             return Ret;
@@ -431,13 +461,25 @@ namespace Database_Control
 
     public class StatusType
     {
-        public const int DefaultAdmin = int.MinValue;
+        public const int DefaultAdmin = int.MaxValue;
         public const int DefaultViewer = 0;
 
         private int Stat;
-        public StatusType(int Value)
+        private int ID;
+        public StatusType(int Value, int ID)
         {
             Stat = Value;
+            this.ID = ID;
+        }
+
+        public int GetStatNumber()
+        {
+            return Stat;
+        }
+
+        public int GetIDNumber()
+        {
+            return ID;
         }
 
         public bool GetStat(int Index)
