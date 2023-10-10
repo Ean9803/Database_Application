@@ -27,7 +27,7 @@ namespace Database_Control
         private WindowData DisplayControl;
         public enum WindowType { Login, Delivery, Product, Edit, Ordering }
 
-        public void SetWindow(WindowType Type, Dictionary<string, string> DataIn)
+        public void SetWindow(WindowType Type, Dictionary<string, object> DataIn)
         {
             if (DisplayControl != null)
             {
@@ -84,7 +84,7 @@ namespace Database_Control
                 StatusType Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"]);
                 DisplayControl = new WindowData(this, Stat);
                 LogoutBtn.Visible = true;
-                SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" }, { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
+                SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
             }
         }
 
@@ -117,7 +117,7 @@ namespace Database_Control
                         StatusType Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"]);
                         DisplayControl = new WindowData(this, Stat);
                         LogoutBtn.Visible = true;
-                        SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" }, { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
+                        SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
                     }
                     else
                     {
@@ -133,17 +133,17 @@ namespace Database_Control
 
         private void ItemSearch_TextChanged(object sender, EventArgs e)
         {
-            DisplayControl.SortItems(GetList(List.OrderList), ItemSearch.Text);
+            WindowData.SortItems(GetList(List.OrderList), ItemSearch.Text);
         }
 
         private void CompanySearch_TextChanged(object sender, EventArgs e)
         {
-            DisplayControl.SortItems(GetList(List.OrderDiplay_Company), CompanySearch.Text);
+            WindowData.SortItems(GetList(List.OrderDiplay_Company), CompanySearch.Text);
         }
 
         private void ProductSearch_TextChanged(object sender, EventArgs e)
         {
-            DisplayControl.SortItems(GetList(List.OrderDisplay_Product), ProductSearch.Text);
+            WindowData.SortItems(GetList(List.OrderDisplay_Product), ProductSearch.Text);
         }
 
         private void CancelOrder_Click(object sender, EventArgs e)

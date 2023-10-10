@@ -12,7 +12,7 @@ namespace Database_Control
         private MainForm Form;
         public WindowData(MainForm Form, StatusType Status) { this.Form = Form; this.Status = Status; }
 
-        private delegate bool NewWindowState(MainForm Form, StatusType Status, Dictionary<string, string> DataIn);
+        private delegate bool NewWindowState(MainForm Form, StatusType Status, Dictionary<string, object> DataIn);
         public delegate object CollectionReturn();
         public delegate List<Control> CreateButonConent();
 
@@ -25,7 +25,7 @@ namespace Database_Control
             { MainForm.WindowType.Ordering, OpenOrdering },
         };
 
-        public bool OpenWindow(MainForm.WindowType Type, Dictionary<string, string> DataIn)
+        public bool OpenWindow(MainForm.WindowType Type, Dictionary<string, object> DataIn)
         {
             if (Windows.ContainsKey(Type))
             {
@@ -305,7 +305,7 @@ namespace Database_Control
             }
         }
 
-        public void SortItems(FlowLayoutPanel list, string Text)
+        public static void SortItems(FlowLayoutPanel list, string Text)
         {
             List<(double, Control)> Sorted = new List<(double, Control)>();
             for (int i = 0; i < list.Controls.Count; i++)
@@ -322,13 +322,13 @@ namespace Database_Control
             }
         }
 
-        private static bool OpenLogin(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
+        private static bool OpenLogin(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
             DeleteAllConents(Form.GetList(MainForm.List.UIList));
             return true;
         }
 
-        private static bool OpenDelivery(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
+        private static bool OpenDelivery(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
             if (DataIn == null)
                 return true;
@@ -338,10 +338,10 @@ namespace Database_Control
                 DeleteAllConents(Form.GetList(MainForm.List.ListDisplay));
                 DeleteAllConents(Form.GetList(MainForm.List.UIList));
 
-                AddNewConentItem(Form.GetList(MainForm.List.UIList), "Position: " + DataIn["INIT"], 200, 0, Direction.horizontal);
+                AddNewConentItem(Form.GetList(MainForm.List.UIList), "Position: " + DataIn["INIT"].ToString(), 200, 0, Direction.horizontal);
                 if (DataIn.ContainsKey("NAME"))
                 {
-                    AddNewConentItem(Form.GetList(MainForm.List.UIList), "Employee: " + DataIn["NAME"], 200, 0, Direction.horizontal);
+                    AddNewConentItem(Form.GetList(MainForm.List.UIList), "Employee: " + DataIn["NAME"].ToString(), 200, 0, Direction.horizontal);
                 }
 
                 SetSelectionGroup("OptionSelect", (1, 1), Color.Green);
@@ -364,7 +364,7 @@ namespace Database_Control
                                                 AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Order_ID"].ToString(), 200, 0, Direction.horizontal,
                                                 (object? sender, EventArgs Event) =>
                                                 {
-                                                    Form.SetWindow(MainForm.WindowType.Ordering, null);
+                                                    Form.SetWindow(MainForm.WindowType.Ordering, item);
                                                 });
                                             }
                                             if (Status.HasAbility(StatusType.Action.CanDeleteDelivery))
@@ -535,33 +535,57 @@ namespace Database_Control
             return true;
         }
 
-        private static bool OpenProduct(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
+        private static bool OpenProduct(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
             return true;
         }
 
-        private static bool OpenEdit(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
+        private static bool OpenEdit(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
             return true;
         }
 
-        private static bool OpenOrdering(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
+        private static bool OpenOrdering(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
             DeleteAllConents(Form.GetList(MainForm.List.OrderDiplay_Company));
             DeleteAllConents(Form.GetList(MainForm.List.OrderDisplay_Product));
 
             SetSelectionGroup("CompanySelect", (1, 1), Color.Orchid);
-            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name");
-            foreach (var item in ListItems)
+            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID");
+            (string, int) ItemSelct = ("", 0);
+            for (int i = 0; i < ListItems.Count; i++)
             {
-                AddNewConentItem(Form.GetList(MainForm.List.OrderDiplay_Company), "Company: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "CompanySelect");
+                if (ListItems[i]["Company_ID"].Equals(DataIn["Company_ID"]))
+                {
+                    ItemSelct = (ListItems[i]["Name"].ToString(), i);
+                }
+                AddNewConentItem(Form.GetList(MainForm.List.OrderDiplay_Company), "Company: " + ListItems[i]["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "CompanySelect");
             }
 
+            SelectItem(Form.GetList(MainForm.List.OrderDiplay_Company), ItemSelct.Item2);
+            SortItems(Form.GetList(MainForm.List.OrderDiplay_Company), ItemSelct.Item1);
+
             SetSelectionGroup("OrderProductSelect", (1, 1000), Color.Green);
-            ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name");
-            foreach (var item in ListItems)
+
+            List<Dictionary<string, object>> Bundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", DataIn["Bundle_ID"].ToString()) }), "Product_ID");
+            List<int> SelectItems = new List<int>();
+            ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID");
+            for (int i = 0; i < ListItems.Count; i++)
             {
-                AddNewConentItem(Form.GetList(MainForm.List.OrderDisplay_Product), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "OrderProductSelect");
+                foreach (var Bundle in Bundles)
+                {
+                    if (ListItems[i]["Product_ID"].Equals(Bundle["Product_ID"]))
+                    {
+                        SelectItems.Add(i);
+                        break;
+                    }
+                }
+                AddNewConentItem(Form.GetList(MainForm.List.OrderDisplay_Product), "Product: " + ListItems[i]["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "OrderProductSelect");
+            }
+
+            foreach (var item in SelectItems)
+            {
+                SelectItem(Form.GetList(MainForm.List.OrderDisplay_Product), item);
             }
 
             return true;
