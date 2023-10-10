@@ -39,7 +39,7 @@ namespace Database_Control
             }
         }
 
-        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product, UIList }
+        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product, UIList, ControlList }
         public FlowLayoutPanel GetList(List Item)
         {
             switch (Item)
@@ -54,6 +54,8 @@ namespace Database_Control
                     return ProductList;
                 case List.UIList:
                     return TopUI;
+                case List.ControlList:
+                    return ItemOptionPanel;
                 default:
                     return OrderList;
             }
@@ -61,14 +63,14 @@ namespace Database_Control
 
         private void LoginBtn_Click(object sender, EventArgs e)
         {
-            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Security", "Name", "Position");
+            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position");
             if (User.Count == 0)
             {
                 MessageBox.Show("Login Invalid");
             }
             else
             {
-                StatusType Stat = new StatusType((int)User[0]["Security"], (int)User[0]["Salesman_ID"]);
+                StatusType Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"]);
                 DisplayControl = new WindowData(this, Stat);
                 LogoutBtn.Visible = true;
                 SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" }, { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -99,9 +101,9 @@ namespace Database_Control
                     {
                         Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("Security", 0));
 
-                        User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Security", "Name", "Position");
+                        User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position");
 
-                        StatusType Stat = new StatusType(0, (int)User[0]["Salesman_ID"]);
+                        StatusType Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"]);
                         DisplayControl = new WindowData(this, Stat);
                         LogoutBtn.Visible = true;
                         SetWindow(WindowType.Delivery, new Dictionary<string, string>() { { "Type", "ORDERS" }, { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -116,6 +118,26 @@ namespace Database_Control
             {
                 MessageBox.Show("Please enter " + (string.IsNullOrEmpty(UserName.Text) ? ("a valid Username " + (PassWord.Text.Length < 10 ? "and " : "")) : "") + (PassWord.Text.Length < 10 ? "a Password with 10 or more characters" : ""));
             }
+        }
+
+        private void ItemSearch_TextChanged(object sender, EventArgs e)
+        {
+            DisplayControl.SortItems(GetList(List.OrderList), ItemSearch.Text);
+        }
+
+        private void CompanySearch_TextChanged(object sender, EventArgs e)
+        {
+            DisplayControl.SortItems(GetList(List.OrderDiplay_Company), CompanySearch.Text);
+        }
+
+        private void ProductSearch_TextChanged(object sender, EventArgs e)
+        {
+            DisplayControl.SortItems(GetList(List.OrderDisplay_Product), ProductSearch.Text);
+        }
+
+        private void CancelOrder_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, null);
         }
     }
 
@@ -183,16 +205,6 @@ namespace Database_Control
                     }
 
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    /*
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show($"{rowsAffected} rows deleted successfully!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("No rows deleted.");
-                    }
-                    */
                 }
             }
             catch (Exception ex)
@@ -230,16 +242,6 @@ namespace Database_Control
                         cmd.Parameters.AddWithValue($"@param{i}", Data[i].Val);
                     }
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    /*
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show($"{rowsAffected} rows updated successfully!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("No rows updated.");
-                    }
-                    */
                 }
             }
             catch (Exception ex)
@@ -295,9 +297,6 @@ namespace Database_Control
 
     public class StatusType
     {
-        public const int DefaultAdmin = int.MaxValue;
-        public const int DefaultViewer = 0;
-
         private int Stat;
         private int ID;
         public StatusType(int Value, int ID)
@@ -323,7 +322,7 @@ namespace Database_Control
 
         public static bool CheckStatus(int Stat, int Index)
         {
-            return (Stat & (1 << Index - 1)) != 0;
+            return (Stat & (1 << Index)) != 0;
         }
 
         public static int UpdateValue(int Current, int NewBit, int pos)
@@ -342,6 +341,95 @@ namespace Database_Control
                 Out += (char)Rng.Next((int)'!', (int)'~');
             }
             return Out;
+        }
+
+        private static Dictionary<string, Action[]> Defaults = new Dictionary<string, Action[]>()
+        {
+            { 
+                "Admin",
+                new Action[]
+                {
+                    Action.CanSeeDelivey,
+                    Action.CanSeeProduct,
+                    Action.CanSeeEmployee,
+                    Action.CanSeeCompany,
+                    Action.CanUpdateDelivery,
+                    Action.CanCreateDelivery,
+                    Action.CanDeleteDelivery,
+                    Action.CanUpdateProduct,
+                    Action.CanCreateProduct,
+                    Action.CanDeleteProduct,
+                    Action.CanUpdateEmployee,
+                    Action.CanCreateEmployee,
+                    Action.CanDeleteEmployee,
+                    Action.CanUpdateCompany,
+                    Action.CanCreateCompany,
+                    Action.CanDeleteCompany
+                }
+            },
+            {
+                "Grunt",
+                new Action[]
+                {
+                    Action.CanSeeDelivey,
+                    Action.CanSeeProduct,
+                    Action.CanSeeCompany
+                }
+            },
+            {
+                "Overseer",
+                new Action[]
+                {
+                    Action.CanSeeDelivey,
+                    Action.CanSeeProduct,
+                    Action.CanSeeEmployee,
+                    Action.CanCreateDelivery,
+                    Action.CanUpdateDelivery
+                }
+            },
+            {
+                "Inventory",
+                new Action[]
+                {
+                    Action.CanSeeProduct,
+                    Action.CanSeeCompany,
+                    Action.CanUpdateProduct,
+                    Action.CanCreateProduct
+                }
+            }
+        };
+
+        public enum Action { CanSeeDelivey, CanSeeProduct, CanSeeEmployee, CanSeeCompany, CanUpdateDelivery, CanCreateDelivery, CanDeleteDelivery, CanUpdateProduct, CanCreateProduct, CanDeleteProduct, CanUpdateEmployee, CanCreateEmployee, CanDeleteEmployee, CanUpdateCompany, CanCreateCompany, CanDeleteCompany }
+
+        public bool HasAbility(Action action)
+        {
+            return CheckStatus(Stat, (int)action);
+        }
+
+        public static int CreateFrom(string Position)
+        {
+            if (int.TryParse(Position, out int Result))
+            {
+                return Result;
+            }
+            else
+            {
+                if (Defaults.ContainsKey(Position))
+                {
+                    return CreateStat(Defaults[Position]);
+                }
+                return CreateStat(Defaults["Grunt"]);
+            }
+        }
+
+        private static int CreateStat(params Action[] actions)
+        {
+            int StatOut = 0;
+            foreach (var item in actions)
+            {
+                StatOut = UpdateValue(StatOut, 1, (int)item);
+            }
+            return StatOut;
         }
     }
 
@@ -380,19 +468,19 @@ namespace Database_Control
             list.Controls.Clear();
         }
 
-        private static Dictionary<string, (uint Max, Color GroupColor, List<(GroupBox, Action, CollectionReturn Attribute)> Collection)> selectionGroup = new Dictionary<string, (uint, Color, List<(GroupBox, Action, CollectionReturn)>)>();
+        private static Dictionary<string, (uint Max, uint Min, Color GroupColor, List<(GroupBox, Action, CollectionReturn Attribute, int Live)> Collection)> selectionGroup = new Dictionary<string, (uint, uint, Color, List<(GroupBox, Action, CollectionReturn, int)>)>();
 
-        public static void SetSelectionGroup(string Name, uint MaxItems, Color colorGroup)
+        public static void SetSelectionGroup(string Name, (uint MinItems, uint MaxItems) Bounds, Color colorGroup)
         {
             if (string.IsNullOrEmpty(Name))
                 return;
             if (!selectionGroup.ContainsKey(Name))
             {
-                selectionGroup.Add(Name, (MaxItems, colorGroup, new List<(GroupBox, Action, CollectionReturn)>()));
+                selectionGroup.Add(Name, (Bounds.MaxItems, Bounds.MinItems, colorGroup, new List<(GroupBox, Action, CollectionReturn, int)>()));
             }
             else
             {
-                selectionGroup[Name] = (MaxItems, colorGroup, new List<(GroupBox, Action, CollectionReturn)>());
+                selectionGroup[Name] = (Bounds.MaxItems, Bounds.MinItems, colorGroup, new List<(GroupBox, Action, CollectionReturn, int)>());
             }
         }
 
@@ -429,7 +517,7 @@ namespace Database_Control
                         item.Value.Collection.RemoveAt(i);
                     }
                 }
-                while (item.Value.Collection.Count > item.Value.Max && item.Value.Collection.Count > 0)
+                while (item.Value.Collection.Count > item.Value.Max && item.Value.Collection.Count > item.Value.Min)
                 {
                     item.Value.Collection[0].Item2();
                     item.Value.Collection.RemoveAt(0);
@@ -443,30 +531,41 @@ namespace Database_Control
             {
                 if (selectionGroup.ContainsKey(Group))
                 {
-                    for (int i = selectionGroup[Group].Collection.Count - 1; i >= 0; i--)
+                    if (selectionGroup[Group].Collection.Count - 1 >= selectionGroup[Group].Min)
                     {
-                        if (selectionGroup[Group].Collection[i].Item1 == Box)
+                        for (int i = selectionGroup[Group].Collection.Count - 1; i >= 0; i--)
                         {
-                            selectionGroup[Group].Collection[i].Item2();
-                            selectionGroup[Group].Collection.RemoveAt(i);
+                            if (selectionGroup[Group].Collection[i].Item1 == Box)
+                            {
+                                selectionGroup[Group].Collection[i].Item2();
+                                selectionGroup[Group].Collection.RemoveAt(i);
+                            }
                         }
                     }
                 }
             }
         }
 
-        private static bool InCollection(string Group, GroupBox Box)
+        private static bool InCollection(string Group, GroupBox Box, bool Wake = false)
         {
             if (!string.IsNullOrEmpty(Group))
             {
                 if (selectionGroup.ContainsKey(Group))
                 {
                     bool Add = false;
-                    foreach (var item in selectionGroup[Group].Collection)
+                    for (int i = 0; i < selectionGroup[Group].Collection.Count; i++)
                     {
-                        if (item.Item1 == Box)
+                        if (selectionGroup[Group].Collection[i].Item1 == Box)
                         {
-                            Add = true;
+                            if (selectionGroup[Group].Collection[i].Live == 0 && Wake)
+                            {
+                                selectionGroup[Group].Collection[i] = (selectionGroup[Group].Collection[i].Item1, selectionGroup[Group].Collection[i].Item2, selectionGroup[Group].Collection[i].Attribute, 1);
+                            }
+                            else
+                            {
+                                Add = true;
+                            }
+                            break;
                         }
                     }
                     return Add;
@@ -475,9 +574,60 @@ namespace Database_Control
             return false;
         }
 
+        //"Iterative with two matrix rows"
+        public static int LevenshteinDistance(string source, string target)
+        {
+            // degenerate cases
+            if (source == target) return 0;
+            if (source.Length == 0) return target.Length;
+            if (target.Length == 0) return source.Length;
+
+            // create two work vectors of integer distances
+            int[] v0 = new int[target.Length + 1];
+            int[] v1 = new int[target.Length + 1];
+
+            // initialize v0 (the previous row of distances)
+            // this row is A[0][i]: edit distance for an empty s
+            // the distance is just the number of characters to delete from t
+            for (int i = 0; i < v0.Length; i++)
+                v0[i] = i;
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                // calculate v1 (current row distances) from the previous row v0
+
+                // first element of v1 is A[i+1][0]
+                //   edit distance is delete (i+1) chars from s to match empty t
+                v1[0] = i + 1;
+
+                // use formula to fill in the rest of the row
+                for (int j = 0; j < target.Length; j++)
+                {
+                    var cost = (source[i] == target[j]) ? 0 : 1;
+                    v1[j + 1] = Math.Min(v1[j] + 1, Math.Min(v0[j + 1] + 1, v0[j] + cost));
+                }
+
+                // copy v1 (current row) to v0 (previous row) for next iteration
+                for (int j = 0; j < v0.Length; j++)
+                    v0[j] = v1[j];
+            }
+
+            return v1[target.Length];
+        }
+
+        public static double CalculateSimilarity(string source, string target)
+        {
+            if ((source == null) || (target == null)) return 0.0;
+            if ((source.Length == 0) || (target.Length == 0)) return 0.0;
+            if (source == target) return 1.0;
+
+            int stepsToSame = LevenshteinDistance(source, target);
+            return (1.0 - ((double)stepsToSame / (double)Math.Max(source.Length, target.Length)));
+        }
+
         private enum Direction { vertical, horizontal }
 
-        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Size = 70, int Offset = 20, Direction Flow = Direction.vertical, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null)
+        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Size = 70, int Offset = 20, Direction Flow = Direction.vertical, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null, Action UnClick = null)
         {
             Panel Item = new Panel();
             ItemBtn Box = new ItemBtn();
@@ -516,12 +666,8 @@ namespace Database_Control
                         Item.BackColor = selectionGroup[SelectionGroup].GroupColor;
                         if (!InCollection(SelectionGroup, Box))
                         {
-                            selectionGroup[SelectionGroup].Collection.Add((Box, () => { Item.BackColor = Color.White; }, Return));
+                            selectionGroup[SelectionGroup].Collection.Add((Box, () => { Item.BackColor = Color.White; if (UnClick != null) { UnClick(); } }, Return, 0));
                             UpdateSelectionGroups();
-                        }
-                        else
-                        {
-                            RemoveFromCollection(SelectionGroup, Box);
                         }
                     };
                 }
@@ -529,6 +675,21 @@ namespace Database_Control
 
             if (OnClick != null)
                 Box.OnItemClick += OnClick;
+
+            if (!string.IsNullOrEmpty(SelectionGroup))
+            {
+                if (selectionGroup.ContainsKey(SelectionGroup))
+                {
+                    Box.OnItemClick += (object? sender, EventArgs e) =>
+                    {
+                        Item.BackColor = selectionGroup[SelectionGroup].GroupColor;
+                        if (InCollection(SelectionGroup, Box, true))
+                        {
+                            RemoveFromCollection(SelectionGroup, Box);
+                        }
+                    };
+                }
+            }
 
             list.Controls.Add(Item);
         }
@@ -541,6 +702,23 @@ namespace Database_Control
             }
         }
 
+        public void SortItems(FlowLayoutPanel list, string Text)
+        {
+            List<(double, Control)> Sorted = new List<(double, Control)>();
+            for (int i = 0; i < list.Controls.Count; i++)
+            {
+                string Title = list.Controls[i].Controls[0].Text.Substring(list.Controls[i].Controls[0].Text.IndexOf(':') + 1).Trim();
+                double Percent = CalculateSimilarity(Title, Text);
+                Sorted.Add((Percent, list.Controls[i]));
+            }
+            Sorted.Sort((x, y) => { return (x.Item1 == y.Item1 ? 0 : MathF.Sign((float)(y.Item1 - x.Item1))); });
+            list.Controls.Clear();
+            foreach (var item in Sorted)
+            {
+                list.Controls.Add(item.Item2);
+            }
+        }
+
         private static bool OpenLogin(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
             DeleteAllConents(Form.GetList(MainForm.List.UIList));
@@ -549,6 +727,8 @@ namespace Database_Control
 
         private static bool OpenDelivery(MainForm Form, StatusType Status, Dictionary<string, string> DataIn)
         {
+            if (DataIn == null)
+                return true;
             if (DataIn.ContainsKey("INIT"))
             {
                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
@@ -561,78 +741,163 @@ namespace Database_Control
                     AddNewConentItem(Form.GetList(MainForm.List.UIList), "Employee: " + DataIn["NAME"], 200, 0, Direction.horizontal);
                 }
 
-                SetSelectionGroup("OptionSelect", 1, Color.Green);
-                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Delivery", Flow: Direction.horizontal, Size: 100,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                            SetSelectionGroup("ItemSelect", 1, Color.Green);
-                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID");
-                            foreach (var item in ListItems)
-                            {
-                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order_ID: " + item["Order_ID"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
-                            }
-                        }, 
-                        SelectionGroup: "OptionSelect");
-                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Product", Flow: Direction.horizontal, Size: 100,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                            SetSelectionGroup("ItemSelect", 1, Color.Green);
-                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name");
-                            foreach (var item in ListItems)
-                            {
-                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
-                            }
-                        }, 
-                        SelectionGroup: "OptionSelect");
-                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Employee", Flow: Direction.horizontal, Size: 100,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                            SetSelectionGroup("ItemSelect", 1, Color.Green);
-                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name");
-                            foreach (var item in ListItems)
-                            {
-                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
-                            }
-                        }, 
-                        SelectionGroup: "OptionSelect");
-                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Company", Flow: Direction.horizontal, Size: 100,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                            SetSelectionGroup("ItemSelect", 1, Color.Green);
-                            DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name");
-                            foreach (var item in ListItems)
-                            {
-                                AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Company: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect");
-                            }
-                        }, 
-                        SelectionGroup: "OptionSelect");
-                SelectItem(Form.GetList(MainForm.List.ListDisplay), 0);
-            }
-
-            if (DataIn.ContainsKey("Type") && false)
-            {
-                if (DataIn["Type"].Equals("PRODUCTS"))
+                SetSelectionGroup("OptionSelect", (1, 1), Color.Green);
+                if (Status.HasAbility(StatusType.Action.CanSeeDelivey))
                 {
-                    SetSelectionGroup("ProductSelect", 1, Color.Gray);
-                    //Grab Order items
-                    for (int i = 0; i < 10; i++)
-                    {
-                        string Data = "Product " + i;
-                        AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + i,
-                        OnClick: (object? sender, EventArgs e) =>
-                        {
-                        }, SelectionGroup: "ProductSelect",
-                        Return:
-                        () =>
-                        {
-                            return new Dictionary<string, string>() { { "Test Product:", Data } };
-                        });
-                    }
+                    AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Delivery", Flow: Direction.horizontal, Size: 100,
+                            OnClick: (object? sender, EventArgs e) =>
+                            {
+                                SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
+                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID");
+                                foreach (var item in ListItems)
+                                {
+                                    AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order_ID: " + item["Order_ID"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect", 
+                                        OnClick: (object? sender, EventArgs e) =>
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanUpdateDelivery))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Order_ID"].ToString(), 200, 0, Direction.horizontal,
+                                                (object? sender, EventArgs Event) =>
+                                                {
+                                                    Form.SetWindow(MainForm.WindowType.Ordering, null);
+                                                });
+                                            }
+                                            if (Status.HasAbility(StatusType.Action.CanDeleteDelivery))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
+                                            }
+                                        }, UnClick: () => 
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanCreateDelivery))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
+                                                (object? sender, EventArgs Event) => 
+                                                {
+                                                    Form.SetWindow(MainForm.WindowType.Ordering, null);
+                                                });
+                                            }
+                                        });
+                                }
+
+                                SelectItem(Form.GetList(MainForm.List.OrderList), 0);
+                            },
+                            SelectionGroup: "OptionSelect");
                 }
+
+                if (Status.HasAbility(StatusType.Action.CanSeeProduct))
+                {
+                    AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Product", Flow: Direction.horizontal, Size: 100,
+                            OnClick: (object? sender, EventArgs e) =>
+                            {
+                                SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
+                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name");
+                                foreach (var item in ListItems)
+                                {
+                                    AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
+                                        OnClick: (object? sender, EventArgs e) =>
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanUpdateProduct))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal);
+                                            }
+                                            if (Status.HasAbility(StatusType.Action.CanDeleteProduct))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
+                                            }
+                                        }, UnClick: () =>
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanCreateProduct))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal);
+                                            }
+                                        });
+                                }
+
+                                SelectItem(Form.GetList(MainForm.List.OrderList), 0);
+                            },
+                            SelectionGroup: "OptionSelect");
+                }
+
+                if (Status.HasAbility(StatusType.Action.CanSeeEmployee))
+                {
+                    AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Employee", Flow: Direction.horizontal, Size: 100,
+                            OnClick: (object? sender, EventArgs e) =>
+                            {
+                                SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
+                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name");
+                                foreach (var item in ListItems)
+                                {
+                                    AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
+                                        OnClick: (object? sender, EventArgs e) =>
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanUpdateEmployee))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal);
+                                            }
+                                            if (Status.HasAbility(StatusType.Action.CanDeleteEmployee))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
+                                            }
+                                        }, UnClick: () =>
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal);
+                                            }
+                                        });
+                                }
+
+                                SelectItem(Form.GetList(MainForm.List.OrderList), 0);
+                            },
+                            SelectionGroup: "OptionSelect");
+                }
+
+                if (Status.HasAbility(StatusType.Action.CanSeeCompany))
+                {
+                    AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Company", Flow: Direction.horizontal, Size: 100,
+                            OnClick: (object? sender, EventArgs e) =>
+                            {
+                                SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
+                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name");
+                                foreach (var item in ListItems)
+                                {
+                                    AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Company: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
+                                        OnClick: (object? sender, EventArgs e) =>
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanUpdateDelivery))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal);
+                                            }
+                                            if (Status.HasAbility(StatusType.Action.CanDeleteDelivery))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
+                                            }
+                                        }, UnClick: () =>
+                                        {
+                                            DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                            if (Status.HasAbility(StatusType.Action.CanCreateDelivery))
+                                            {
+                                                AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal);
+                                            }
+                                        });
+                                }
+
+                                SelectItem(Form.GetList(MainForm.List.OrderList), 0);
+                            },
+                            SelectionGroup: "OptionSelect");
+                }
+                SelectItem(Form.GetList(MainForm.List.ListDisplay), 0);
             }
 
             return true;
@@ -653,37 +918,20 @@ namespace Database_Control
             DeleteAllConents(Form.GetList(MainForm.List.OrderDiplay_Company));
             DeleteAllConents(Form.GetList(MainForm.List.OrderDisplay_Product));
 
-            SetSelectionGroup("CompanySelect", 1, Color.Blue);
-            //Grab Order items
-            for (int i = 0; i < 10; i++)
+            SetSelectionGroup("CompanySelect", (1,1), Color.Orchid);
+            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name");
+            foreach (var item in ListItems)
             {
-                string Data = "Product " + i;
-                AddNewConentItem(Form.GetList(MainForm.List.OrderDiplay_Company), "Company: " + i,
-                OnClick: (object? sender, EventArgs e) =>
-                {
-                }, SelectionGroup: "CompanySelect",
-                Return:
-                () =>
-                {
-                    return new Dictionary<string, string>() { { "Test Product:", Data } };
-                });
+                AddNewConentItem(Form.GetList(MainForm.List.OrderDiplay_Company), "Company: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "CompanySelect");
             }
 
-            SetSelectionGroup("OrderProductSelect", 1000, Color.Green);
-            //Grab Order items
-            for (int i = 0; i < 10; i++)
+            SetSelectionGroup("OrderProductSelect", (1,1000), Color.Green);
+            ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name");
+            foreach (var item in ListItems)
             {
-                string Data = "Product " + i;
-                AddNewConentItem(Form.GetList(MainForm.List.OrderDisplay_Product), "Product: " + i,
-                OnClick: (object? sender, EventArgs e) =>
-                {
-                }, SelectionGroup: "OrderProductSelect",
-                Return:
-                () =>
-                {
-                    return new Dictionary<string, string>() { { "Test Product:", Data } };
-                });
+                AddNewConentItem(Form.GetList(MainForm.List.OrderDisplay_Product), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "OrderProductSelect");
             }
+
             return true;
         }
     }
