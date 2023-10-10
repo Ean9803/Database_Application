@@ -62,7 +62,15 @@
             this.Details = new System.Windows.Forms.GroupBox();
             this.DetailTabs = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.ProductDisplay = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
@@ -147,6 +155,11 @@
             this.groupBox4.SuspendLayout();
             this.Details.SuspendLayout();
             this.DetailTabs.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.ProductDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
@@ -626,6 +639,9 @@
             this.DetailTabs.Alignment = System.Windows.Forms.TabAlignment.Right;
             this.DetailTabs.Controls.Add(this.tabPage1);
             this.DetailTabs.Controls.Add(this.tabPage2);
+            this.DetailTabs.Controls.Add(this.tabPage3);
+            this.DetailTabs.Controls.Add(this.tabPage4);
+            this.DetailTabs.Controls.Add(this.tabPage5);
             this.DetailTabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DetailTabs.ItemSize = new System.Drawing.Size(1, 1);
             this.DetailTabs.Location = new System.Drawing.Point(3, 24);
@@ -642,6 +658,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.Black;
+            this.tabPage1.Controls.Add(this.panel2);
             this.tabPage1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.tabPage1.Location = new System.Drawing.Point(4, 4);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -650,15 +667,110 @@
             this.tabPage1.TabIndex = 6;
             this.tabPage1.Text = "tabPage1";
             // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel2.BackgroundImage")));
+            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(585, 337);
+            this.panel2.TabIndex = 0;
+            // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Black;
+            this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.ForeColor = System.Drawing.Color.Black;
             this.tabPage2.Location = new System.Drawing.Point(4, 4);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(5);
             this.tabPage2.Size = new System.Drawing.Size(585, 337);
             this.tabPage2.TabIndex = 0;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox5.ForeColor = System.Drawing.Color.White;
+            this.groupBox5.Location = new System.Drawing.Point(5, 5);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(575, 327);
+            this.groupBox5.TabIndex = 0;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Delivery";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.BackColor = System.Drawing.Color.Black;
+            this.tabPage3.Controls.Add(this.groupBox6);
+            this.tabPage3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage3.Location = new System.Drawing.Point(4, 4);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(5);
+            this.tabPage3.Size = new System.Drawing.Size(585, 337);
+            this.tabPage3.TabIndex = 7;
+            this.tabPage3.Text = "tabPage3";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.BackColor = System.Drawing.Color.Black;
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox6.ForeColor = System.Drawing.Color.White;
+            this.groupBox6.Location = new System.Drawing.Point(5, 5);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(575, 327);
+            this.groupBox6.TabIndex = 0;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Product";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.BackColor = System.Drawing.Color.Black;
+            this.tabPage4.Controls.Add(this.groupBox7);
+            this.tabPage4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage4.Location = new System.Drawing.Point(4, 4);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(5);
+            this.tabPage4.Size = new System.Drawing.Size(585, 337);
+            this.tabPage4.TabIndex = 8;
+            this.tabPage4.Text = "tabPage4";
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox7.ForeColor = System.Drawing.Color.White;
+            this.groupBox7.Location = new System.Drawing.Point(5, 5);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(575, 327);
+            this.groupBox7.TabIndex = 0;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Company";
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.BackColor = System.Drawing.Color.Black;
+            this.tabPage5.Controls.Add(this.groupBox11);
+            this.tabPage5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage5.Location = new System.Drawing.Point(4, 4);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(5);
+            this.tabPage5.Size = new System.Drawing.Size(585, 337);
+            this.tabPage5.TabIndex = 9;
+            this.tabPage5.Text = "tabPage5";
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox11.ForeColor = System.Drawing.Color.White;
+            this.groupBox11.Location = new System.Drawing.Point(5, 5);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(575, 327);
+            this.groupBox11.TabIndex = 0;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Employee";
             // 
             // ProductDisplay
             // 
@@ -1329,7 +1441,6 @@
             this.Maingroup.Size = new System.Drawing.Size(982, 653);
             this.Maingroup.TabIndex = 1;
             this.Maingroup.TabStop = false;
-            this.Maingroup.Text = "---------------------------------";
             // 
             // splitContainer7
             // 
@@ -1442,6 +1553,11 @@
             this.groupBox4.ResumeLayout(false);
             this.Details.ResumeLayout(false);
             this.DetailTabs.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.ProductDisplay.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
@@ -1590,5 +1706,13 @@
         private TabPage tabPage1;
         private TabPage tabPage2;
         private Panel panel1;
+        private TabPage tabPage3;
+        private TabPage tabPage4;
+        private TabPage tabPage5;
+        private GroupBox groupBox5;
+        private GroupBox groupBox6;
+        private GroupBox groupBox7;
+        private GroupBox groupBox11;
+        private Panel panel2;
     }
 }
