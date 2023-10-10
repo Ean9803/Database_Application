@@ -160,6 +160,8 @@ namespace Database_Control
                 DeliveryInfo.AppendText("Order Created by: " + Employee[0]["Name"].ToString() + " | Current Position: " + Employee[0]["Position"].ToString() + "\n");
             else
                 DeliveryInfo.AppendText("Order Created by: [EMPLOYEE NOT FOUND]\n");
+            DeliveryInfo.AppendText("[MEMO]:\n");
+            DeliveryInfo.AppendText(ListItems["Memo"].ToString() + "\n");
             DeliveryInfo.AppendText("[ORDER HISTORY]:\n");
             DeliveryInfo.AppendText(ListItems["History"].ToString());
         }

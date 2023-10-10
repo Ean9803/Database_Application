@@ -301,7 +301,7 @@ namespace Database_Control
         {
             if (Item >= 0 && Item < list.Controls.Count)
             {
-                (list.Controls[Item].Controls[0] as ItemBtn)?.ActivateClickItem();
+                (list.Controls[Item].Controls[list.Controls[Item].Controls.Count - 1] as ItemBtn)?.ActivateClickItem();
             }
         }
 
@@ -352,7 +352,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID", "Status", "Company_ID", "Salesman_ID", "History");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID", "Status", "Company_ID", "Salesman_ID", "History", "Memo");
                                 foreach (var item in ListItems)
                                 {
                                     AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order_ID: " + item["Order_ID"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
@@ -555,19 +555,25 @@ namespace Database_Control
             (string, int) ItemSelct = ("", 0);
             for (int i = 0; i < ListItems.Count; i++)
             {
-                if (ListItems[i]["Company_ID"].Equals(DataIn["Company_ID"]))
+                if (DataIn != null)
                 {
-                    ItemSelct = (ListItems[i]["Name"].ToString(), i);
+                    if (ListItems[i]["Company_ID"].Equals(DataIn["Company_ID"]))
+                    {
+                        ItemSelct = (ListItems[i]["Name"].ToString(), i);
+                    }
                 }
                 AddNewConentItem(Form.GetList(MainForm.List.OrderDiplay_Company), "Company: " + ListItems[i]["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "CompanySelect");
             }
 
-            SelectItem(Form.GetList(MainForm.List.OrderDiplay_Company), ItemSelct.Item2);
-            SortItems(Form.GetList(MainForm.List.OrderDiplay_Company), ItemSelct.Item1);
+            if (DataIn != null)
+            {
+                SelectItem(Form.GetList(MainForm.List.OrderDiplay_Company), ItemSelct.Item2);
+                SortItems(Form.GetList(MainForm.List.OrderDiplay_Company), ItemSelct.Item1);
+            }
 
             SetSelectionGroup("OrderProductSelect", (1, 1000), Color.Green);
 
-            List<Dictionary<string, object>> Bundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", DataIn["Bundle_ID"].ToString()) }), "Product_ID");
+            List<Dictionary<string, object>> Bundles = DataIn != null ? Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", DataIn["Bundle_ID"].ToString()) }), "Product_ID") : new List<Dictionary<string, object>>();
             List<int> SelectItems = new List<int>();
             ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID");
             for (int i = 0; i < ListItems.Count; i++)
