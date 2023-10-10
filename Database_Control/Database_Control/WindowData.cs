@@ -14,6 +14,7 @@ namespace Database_Control
 
         private delegate bool NewWindowState(MainForm Form, StatusType Status, Dictionary<string, string> DataIn);
         public delegate object CollectionReturn();
+        public delegate List<Control> CreateButonConent();
 
         private Dictionary<MainForm.WindowType, NewWindowState> Windows = new Dictionary<MainForm.WindowType, NewWindowState>()
         {
@@ -55,6 +56,14 @@ namespace Database_Control
             {
                 selectionGroup[Name] = (Bounds.MaxItems, Bounds.MinItems, colorGroup, new List<(GroupBox, Action, CollectionReturn, int)>());
             }
+        }
+
+        private static Dictionary<int, string> StatusMap = new Dictionary<int, string>() { { 1, "Init" } };
+        public static string GetOrderStatus(int Stat)
+        {
+            if (StatusMap.ContainsKey(Stat))
+                return StatusMap[Stat];
+            return "UNKNOWN";
         }
 
         public static List<CollectionReturn> GetSelectedObjects(string Group)
@@ -200,7 +209,7 @@ namespace Database_Control
 
         private enum Direction { vertical, horizontal }
 
-        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Size = 70, int Offset = 20, Direction Flow = Direction.vertical, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null, Action UnClick = null)
+        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Size = 70, int Offset = 20, Direction Flow = Direction.vertical, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null, Action UnClick = null, CreateButonConent Content = null)
         {
             Panel Item = new Panel();
             ItemBtn Box = new ItemBtn();
@@ -226,15 +235,17 @@ namespace Database_Control
             Box.TabStop = false;
             Box.Text = GroupName;
 
+            EventHandler MouseEnterMeth = (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.Tan; };
+            EventHandler MouseLeaveMeth = (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.White; };
 
-            Box.MouseEnter += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.Tan; };
-            Box.MouseLeave += (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Box)) Item.BackColor = Color.White; };
+            EventHandler EnterCollection = null;
+            EventHandler ExitCollection = null;
 
             if (!string.IsNullOrEmpty(SelectionGroup))
             {
                 if (selectionGroup.ContainsKey(SelectionGroup))
                 {
-                    Box.OnItemClick += (object? sender, EventArgs e) =>
+                    EnterCollection += (object? sender, EventArgs e) =>
                     {
                         Item.BackColor = selectionGroup[SelectionGroup].GroupColor;
                         if (!InCollection(SelectionGroup, Box))
@@ -243,17 +254,7 @@ namespace Database_Control
                             UpdateSelectionGroups();
                         }
                     };
-                }
-            }
-
-            if (OnClick != null)
-                Box.OnItemClick += OnClick;
-
-            if (!string.IsNullOrEmpty(SelectionGroup))
-            {
-                if (selectionGroup.ContainsKey(SelectionGroup))
-                {
-                    Box.OnItemClick += (object? sender, EventArgs e) =>
+                    ExitCollection += (object? sender, EventArgs e) =>
                     {
                         Item.BackColor = selectionGroup[SelectionGroup].GroupColor;
                         if (InCollection(SelectionGroup, Box, true))
@@ -264,7 +265,36 @@ namespace Database_Control
                 }
             }
 
+            Box.MouseEnter += MouseEnterMeth;
+            Box.MouseLeave += MouseLeaveMeth;
+
+            if (EnterCollection != null)
+                Box.OnItemClick += EnterCollection;
+            if (OnClick != null)
+                Box.OnItemClick += OnClick;
+            if (ExitCollection != null)
+                Box.OnItemClick += ExitCollection;
+
             list.Controls.Add(Item);
+
+            if (Content != null)
+            {
+                List<Control> In = Content();
+                foreach (var item in In)
+                {
+                    item.MouseEnter += MouseEnterMeth;
+                    item.MouseLeave += MouseLeaveMeth;
+
+                    if (EnterCollection != null)
+                        item.Click += EnterCollection;
+                    if (OnClick != null)
+                        item.Click += OnClick;
+                    if (ExitCollection != null)
+                        item.Click += ExitCollection;
+                    Item.Controls.Add(item);
+                    item.BringToFront();
+                }
+            }
         }
 
         private static void SelectItem(FlowLayoutPanel list, int Item)
@@ -322,7 +352,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID", "Status", "Company_ID", "Salesman_ID", "History");
                                 foreach (var item in ListItems)
                                 {
                                     AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order_ID: " + item["Order_ID"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
@@ -342,6 +372,7 @@ namespace Database_Control
                                                 AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
                                             }
                                             Form.SetDetailPanel(MainForm.PanelDetail.Delivery);
+                                            Form.FillDeliveryDisplay(item);
                                         }, UnClick: () =>
                                         {
                                             DeleteAllConents(Form.GetList(MainForm.List.ControlList));
@@ -354,6 +385,23 @@ namespace Database_Control
                                                 });
                                             }
                                             Form.SetDetailPanel(MainForm.PanelDetail.None);
+                                        }, Content: () =>
+                                        {
+                                            List<Control> Controls = new List<Control>();
+
+                                            Label L = new Label();
+                                            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Name");
+                                            string To = "";
+                                            if (ListItems.Count > 0)
+                                            {
+                                                To = " | Company: " + ListItems[0]["Name"].ToString();
+                                            }
+                                            L.Text = "Order Status: " + GetOrderStatus((int)item["Status"]) + To;
+                                            L.Location = new Point(5, 20);
+                                            L.Size = new Size(350, 30);
+                                            L.ForeColor = Color.Black;
+                                            Controls.Add(L);
+                                            return Controls;
                                         });
                                 }
 
@@ -369,7 +417,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID");
                                 foreach (var item in ListItems)
                                 {
                                     AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
@@ -385,6 +433,7 @@ namespace Database_Control
                                                 AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
                                             }
                                             Form.SetDetailPanel(MainForm.PanelDetail.Product);
+                                            Form.FillProductDisplay(item);
                                         }, UnClick: () =>
                                         {
                                             DeleteAllConents(Form.GetList(MainForm.List.ControlList));
@@ -408,7 +457,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name", "Username");
                                 foreach (var item in ListItems)
                                 {
                                     AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
@@ -424,6 +473,7 @@ namespace Database_Control
                                                 AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
                                             }
                                             Form.SetDetailPanel(MainForm.PanelDetail.Employee);
+                                            Form.FillEmployeeDisplay(item);
                                         }, UnClick: () =>
                                         {
                                             DeleteAllConents(Form.GetList(MainForm.List.ControlList));
@@ -447,7 +497,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID");
                                 foreach (var item in ListItems)
                                 {
                                     AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Company: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
@@ -463,6 +513,7 @@ namespace Database_Control
                                                 AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
                                             }
                                             Form.SetDetailPanel(MainForm.PanelDetail.Company);
+                                            Form.FillCompanyDisplay(item);
                                         }, UnClick: () =>
                                         {
                                             DeleteAllConents(Form.GetList(MainForm.List.ControlList));

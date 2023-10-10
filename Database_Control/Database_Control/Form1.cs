@@ -19,6 +19,9 @@ namespace Database_Control
             }
 
             LogoutBtn.Visible = false;
+
+            if (AutoLogin)
+                LoginBtn_Click(this, EventArgs.Empty);
         }
 
         private WindowData DisplayControl;
@@ -67,9 +70,11 @@ namespace Database_Control
             DetailTabs.SelectTab((int)Detail);
         }
 
+        private bool AutoLogin = true;
+
         private void LoginBtn_Click(object sender, EventArgs e)
         {
-            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position");
+            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", AutoLogin ? "Admin" : UserName.Text), ("@Pass", AutoLogin ? "Admin" : PassWord.Text) }), "Salesman_ID", "Name", "Position");
             if (User.Count == 0)
             {
                 MessageBox.Show("Login Invalid");
@@ -146,7 +151,30 @@ namespace Database_Control
             SetWindow(WindowType.Delivery, null);
         }
 
-        public void FillDeliveryDisplay(List<Dictionary<string, object>> ListItems)
+        public void FillDeliveryDisplay(Dictionary<string, object> ListItems)
+        {
+            DeliveryInfo.Clear();
+            DeliveryInfo.AppendText("Order ID: " + ListItems["Order_ID"].ToString() + "\n--------------------------------------\nOrder Status: " + ListItems["Status"].ToString() + "\n--------------------------------------\n");
+            List<Dictionary<string, object>> Employee = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", ListItems["Salesman_ID"].ToString()) }), "Name", "Username", "Position");
+            if (Employee.Count > 0)
+                DeliveryInfo.AppendText("Order Created by: " + Employee[0]["Name"].ToString() + " | Current Position: " + Employee[0]["Position"].ToString() + "\n");
+            else
+                DeliveryInfo.AppendText("Order Created by: [EMPLOYEE NOT FOUND]\n");
+            DeliveryInfo.AppendText("[ORDER HISTORY]:\n");
+            DeliveryInfo.AppendText(ListItems["History"].ToString());
+        }
+
+        public void FillProductDisplay(Dictionary<string, object> ListItems)
+        {
+
+        }
+
+        public void FillCompanyDisplay(Dictionary<string, object> ListItems)
+        {
+
+        }
+
+        public void FillEmployeeDisplay(Dictionary<string, object> ListItems)
         {
 
         }

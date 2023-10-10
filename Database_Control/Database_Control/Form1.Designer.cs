@@ -65,6 +65,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.DeliveryInfo = new System.Windows.Forms.RichTextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -157,6 +158,7 @@
             this.DetailTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -693,6 +695,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.DeliveryInfo);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.ForeColor = System.Drawing.Color.White;
             this.groupBox5.Location = new System.Drawing.Point(5, 5);
@@ -701,6 +704,20 @@
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Delivery";
+            // 
+            // DeliveryInfo
+            // 
+            this.DeliveryInfo.BackColor = System.Drawing.SystemColors.InfoText;
+            this.DeliveryInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.DeliveryInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DeliveryInfo.ForeColor = System.Drawing.SystemColors.Window;
+            this.DeliveryInfo.Location = new System.Drawing.Point(3, 23);
+            this.DeliveryInfo.Name = "DeliveryInfo";
+            this.DeliveryInfo.ReadOnly = true;
+            this.DeliveryInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.DeliveryInfo.Size = new System.Drawing.Size(569, 301);
+            this.DeliveryInfo.TabIndex = 0;
+            this.DeliveryInfo.Text = "";
             // 
             // tabPage3
             // 
@@ -1555,6 +1572,7 @@
             this.DetailTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
@@ -1714,5 +1732,6 @@
         private GroupBox groupBox7;
         private GroupBox groupBox11;
         private Panel panel2;
+        private RichTextBox DeliveryInfo;
     }
 }
