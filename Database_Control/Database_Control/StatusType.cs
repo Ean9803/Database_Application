@@ -10,10 +10,31 @@ namespace Database_Control
     {
         private int Stat;
         private int ID;
-        public StatusType(int Value, int ID)
+        private string Name;
+        private string Position;
+        private string Pass;
+        public StatusType(int Value, int ID, string Name, string Position, string Password)
         {
             Stat = Value;
             this.ID = ID;
+            this.Name = Name;
+            this.Position = Position;
+            Pass = Password;
+        }
+
+        public string GetPass()
+        {
+            return Pass;
+        }
+
+        public string GetPosition()
+        {
+            return Position;
+        }
+
+        public string GetName()
+        {
+            return Name;
         }
 
         public int GetStatNumber()

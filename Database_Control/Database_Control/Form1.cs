@@ -25,6 +25,7 @@ namespace Database_Control
         }
 
         private WindowData DisplayControl;
+        private StatusType Stat;
         public enum WindowType { Login, Delivery, Product, Edit, Ordering }
 
         public void SetWindow(WindowType Type, Dictionary<string, object> DataIn)
@@ -74,14 +75,14 @@ namespace Database_Control
 
         private void LoginBtn_Click(object sender, EventArgs e)
         {
-            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", AutoLogin ? "Admin" : UserName.Text), ("@Pass", AutoLogin ? "Admin" : PassWord.Text) }), "Salesman_ID", "Name", "Position");
+            List<Dictionary<string, object>> User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", AutoLogin ? "Admin" : UserName.Text), ("@Pass", AutoLogin ? "Admin" : PassWord.Text) }), "Salesman_ID", "Name", "Position", "Password");
             if (User.Count == 0)
             {
                 MessageBox.Show("Login Invalid");
             }
             else
             {
-                StatusType Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"]);
+                Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"], (string)User[0]["Name"], (string)User[0]["Position"], (string)User[0]["Password"]);
                 DisplayControl = new WindowData(this, Stat);
                 LogoutBtn.Visible = true;
                 SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -112,9 +113,9 @@ namespace Database_Control
                     {
                         Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("Security", 0));
 
-                        User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position");
+                        User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position", "Password");
 
-                        StatusType Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"]);
+                        Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"], (string)User[0]["Name"], (string)User[0]["Position"], (string)User[0]["Password"]);
                         DisplayControl = new WindowData(this, Stat);
                         LogoutBtn.Visible = true;
                         SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -154,7 +155,11 @@ namespace Database_Control
         public void FillDeliveryDisplay(Dictionary<string, object> ListItems)
         {
             DeliveryInfo.Clear();
-            DeliveryInfo.AppendText("Order ID: " + ListItems["Order_ID"].ToString() + "\n--------------------------------------\nOrder Status: " + ListItems["Status"].ToString() + "\n--------------------------------------\n");
+            DeliveryInfo.AppendText("Order ID: " + ListItems["Order_ID"].ToString() + 
+                "\n--------------------------------------\n" +
+                "Order Status: " + WindowData.GetOrderStatus((int)ListItems["Status"]) + 
+                "\n--------------------------------------\n" +
+                "Order creation date: " + ListItems["CreationDate"].ToString());
             List<Dictionary<string, object>> Employee = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", ListItems["Salesman_ID"].ToString()) }), "Name", "Username", "Position");
             if (Employee.Count > 0)
                 DeliveryInfo.AppendText("Order Created by: " + Employee[0]["Name"].ToString() + " | Current Position: " + Employee[0]["Position"].ToString() + "\n");
@@ -164,6 +169,44 @@ namespace Database_Control
             DeliveryInfo.AppendText(ListItems["Memo"].ToString() + "\n");
             DeliveryInfo.AppendText("[ORDER HISTORY]:\n");
             DeliveryInfo.AppendText(ListItems["History"].ToString());
+        }
+
+        public Action SaveOrderAction;
+
+        private void SaveOrder_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(OrderPassword.Text))
+            {
+                if (OrderPassword.Text.Equals(Stat.GetPass()))
+                {
+                    if (SaveOrderAction != null)
+                        SaveOrderAction();
+                    MessageBox.Show("Action complete");
+                }
+                else
+                {
+                    MessageBox.Show("Enter correct password to complete");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Enter password to complete");
+            }
+        }
+
+        public void resetPass()
+        {
+            OrderPassword.Text = "";
+        }
+
+        public string GetMemo()
+        {
+            return Memo.Text;
+        }
+
+        public void SetMemo(string MemoString)
+        {
+            Memo.Text = MemoString;
         }
 
         public void FillProductDisplay(Dictionary<string, object> ListItems)

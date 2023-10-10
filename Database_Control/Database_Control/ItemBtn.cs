@@ -98,4 +98,28 @@ namespace Database_Control
             }
         }
     }
+
+    class InputField : TextBox
+    {
+        public delegate void InputEnd(string Text);
+        public InputEnd OnEnterKey;
+        public Action OnEnd;
+
+        public InputField()
+        {
+            this.KeyDown += Text_KeyDown;
+        }
+
+        private void Text_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (OnEnterKey != null && OnEnd != null)
+                {
+                    OnEnterKey(Text);
+                    OnEnd();
+                }
+            }
+        }
+    }
 }

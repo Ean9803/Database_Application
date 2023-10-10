@@ -96,32 +96,22 @@
             this.CompanySearch = new System.Windows.Forms.TextBox();
             this.groupBox21 = new System.Windows.Forms.GroupBox();
             this.CompanyList = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel19 = new System.Windows.Forms.Panel();
-            this.groupBox29 = new System.Windows.Forms.GroupBox();
-            this.panel18 = new System.Windows.Forms.Panel();
-            this.groupBox28 = new System.Windows.Forms.GroupBox();
-            this.panel20 = new System.Windows.Forms.Panel();
-            this.groupBox30 = new System.Windows.Forms.GroupBox();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
-            this.CancelOrder = new System.Windows.Forms.Button();
+            this.splitContainer9 = new System.Windows.Forms.SplitContainer();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
             this.Memo = new System.Windows.Forms.RichTextBox();
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.OrderPassword = new System.Windows.Forms.TextBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.CancelOrder = new System.Windows.Forms.Button();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.SaveOrder = new System.Windows.Forms.Button();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox20 = new System.Windows.Forms.GroupBox();
             this.ProductSearch = new System.Windows.Forms.TextBox();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
             this.ProductList = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel25 = new System.Windows.Forms.Panel();
-            this.groupBox35 = new System.Windows.Forms.GroupBox();
-            this.panel14 = new System.Windows.Forms.Panel();
-            this.groupBox24 = new System.Windows.Forms.GroupBox();
-            this.panel15 = new System.Windows.Forms.Panel();
-            this.groupBox25 = new System.Windows.Forms.GroupBox();
-            this.panel16 = new System.Windows.Forms.Panel();
-            this.groupBox26 = new System.Windows.Forms.GroupBox();
-            this.panel17 = new System.Windows.Forms.Panel();
-            this.groupBox27 = new System.Windows.Forms.GroupBox();
             this.Maingroup = new System.Windows.Forms.GroupBox();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.splitContainer8 = new System.Windows.Forms.SplitContainer();
@@ -186,21 +176,19 @@
             this.tableLayoutPanel7.SuspendLayout();
             this.groupBox19.SuspendLayout();
             this.groupBox21.SuspendLayout();
-            this.CompanyList.SuspendLayout();
-            this.panel19.SuspendLayout();
-            this.panel18.SuspendLayout();
-            this.panel20.SuspendLayout();
             this.groupBox23.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer9)).BeginInit();
+            this.splitContainer9.Panel1.SuspendLayout();
+            this.splitContainer9.Panel2.SuspendLayout();
+            this.splitContainer9.SuspendLayout();
             this.groupBox31.SuspendLayout();
+            this.tableLayoutPanel10.SuspendLayout();
+            this.groupBox12.SuspendLayout();
+            this.groupBox13.SuspendLayout();
+            this.groupBox14.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.groupBox20.SuspendLayout();
             this.groupBox22.SuspendLayout();
-            this.ProductList.SuspendLayout();
-            this.panel25.SuspendLayout();
-            this.panel14.SuspendLayout();
-            this.panel15.SuspendLayout();
-            this.panel16.SuspendLayout();
-            this.panel17.SuspendLayout();
             this.Maingroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
             this.splitContainer7.Panel1.SuspendLayout();
@@ -891,7 +879,7 @@
             this.groupBox34.Controls.Add(this.ProductBack);
             this.groupBox34.Controls.Add(this.ProductEdit);
             this.groupBox34.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox34.Location = new System.Drawing.Point(2, 152);
+            this.groupBox34.Location = new System.Drawing.Point(3, 143);
             this.groupBox34.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox34.Name = "groupBox34";
             this.groupBox34.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1115,9 +1103,6 @@
             this.CompanyList.AutoScroll = true;
             this.CompanyList.AutoSize = true;
             this.CompanyList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CompanyList.Controls.Add(this.panel19);
-            this.CompanyList.Controls.Add(this.panel18);
-            this.CompanyList.Controls.Add(this.panel20);
             this.CompanyList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CompanyList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.CompanyList.Location = new System.Drawing.Point(3, 24);
@@ -1127,80 +1112,9 @@
             this.CompanyList.TabIndex = 2;
             this.CompanyList.WrapContents = false;
             // 
-            // panel19
-            // 
-            this.panel19.BackColor = System.Drawing.Color.White;
-            this.panel19.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel19.Controls.Add(this.groupBox29);
-            this.panel19.Location = new System.Drawing.Point(3, 4);
-            this.panel19.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel19.Name = "panel19";
-            this.panel19.Size = new System.Drawing.Size(398, 92);
-            this.panel19.TabIndex = 5;
-            // 
-            // groupBox29
-            // 
-            this.groupBox29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox29.Location = new System.Drawing.Point(0, 0);
-            this.groupBox29.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox29.Name = "groupBox29";
-            this.groupBox29.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox29.Size = new System.Drawing.Size(394, 88);
-            this.groupBox29.TabIndex = 0;
-            this.groupBox29.TabStop = false;
-            this.groupBox29.Text = "groupBox29";
-            // 
-            // panel18
-            // 
-            this.panel18.BackColor = System.Drawing.Color.White;
-            this.panel18.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel18.Controls.Add(this.groupBox28);
-            this.panel18.Location = new System.Drawing.Point(3, 104);
-            this.panel18.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel18.Name = "panel18";
-            this.panel18.Size = new System.Drawing.Size(398, 92);
-            this.panel18.TabIndex = 6;
-            // 
-            // groupBox28
-            // 
-            this.groupBox28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox28.Location = new System.Drawing.Point(0, 0);
-            this.groupBox28.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox28.Name = "groupBox28";
-            this.groupBox28.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox28.Size = new System.Drawing.Size(394, 88);
-            this.groupBox28.TabIndex = 0;
-            this.groupBox28.TabStop = false;
-            this.groupBox28.Text = "groupBox28";
-            // 
-            // panel20
-            // 
-            this.panel20.BackColor = System.Drawing.Color.White;
-            this.panel20.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel20.Controls.Add(this.groupBox30);
-            this.panel20.Location = new System.Drawing.Point(3, 204);
-            this.panel20.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel20.Name = "panel20";
-            this.panel20.Size = new System.Drawing.Size(398, 92);
-            this.panel20.TabIndex = 7;
-            // 
-            // groupBox30
-            // 
-            this.groupBox30.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox30.Location = new System.Drawing.Point(0, 0);
-            this.groupBox30.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox30.Name = "groupBox30";
-            this.groupBox30.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox30.Size = new System.Drawing.Size(394, 88);
-            this.groupBox30.TabIndex = 0;
-            this.groupBox30.TabStop = false;
-            this.groupBox30.Text = "groupBox30";
-            // 
             // groupBox23
             // 
-            this.groupBox23.Controls.Add(this.CancelOrder);
-            this.groupBox23.Controls.Add(this.groupBox31);
-            this.groupBox23.Controls.Add(this.SaveOrder);
+            this.groupBox23.Controls.Add(this.splitContainer9);
             this.groupBox23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox23.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.groupBox23.Location = new System.Drawing.Point(3, 355);
@@ -1212,27 +1126,34 @@
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Control Panel";
             // 
-            // CancelOrder
+            // splitContainer9
             // 
-            this.CancelOrder.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.CancelOrder.Location = new System.Drawing.Point(321, 158);
-            this.CancelOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.CancelOrder.Name = "CancelOrder";
-            this.CancelOrder.Size = new System.Drawing.Size(86, 31);
-            this.CancelOrder.TabIndex = 4;
-            this.CancelOrder.Text = "Cancel";
-            this.CancelOrder.UseVisualStyleBackColor = true;
-            this.CancelOrder.Click += new System.EventHandler(this.CancelOrder_Click);
+            this.splitContainer9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer9.Location = new System.Drawing.Point(3, 24);
+            this.splitContainer9.Name = "splitContainer9";
+            this.splitContainer9.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer9.Panel1
+            // 
+            this.splitContainer9.Panel1.Controls.Add(this.groupBox31);
+            // 
+            // splitContainer9.Panel2
+            // 
+            this.splitContainer9.Panel2.Controls.Add(this.tableLayoutPanel10);
+            this.splitContainer9.Size = new System.Drawing.Size(445, 181);
+            this.splitContainer9.SplitterDistance = 106;
+            this.splitContainer9.TabIndex = 6;
             // 
             // groupBox31
             // 
             this.groupBox31.Controls.Add(this.Memo);
+            this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox31.ForeColor = System.Drawing.SystemColors.Control;
-            this.groupBox31.Location = new System.Drawing.Point(10, 25);
+            this.groupBox31.Location = new System.Drawing.Point(0, 0);
             this.groupBox31.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox31.Name = "groupBox31";
             this.groupBox31.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox31.Size = new System.Drawing.Size(397, 125);
+            this.groupBox31.Size = new System.Drawing.Size(445, 106);
             this.groupBox31.TabIndex = 3;
             this.groupBox31.TabStop = false;
             this.groupBox31.Text = "Memo";
@@ -1243,20 +1164,95 @@
             this.Memo.Location = new System.Drawing.Point(3, 24);
             this.Memo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Memo.Name = "Memo";
-            this.Memo.Size = new System.Drawing.Size(391, 97);
+            this.Memo.Size = new System.Drawing.Size(439, 78);
             this.Memo.TabIndex = 0;
             this.Memo.Text = "";
             // 
+            // tableLayoutPanel10
+            // 
+            this.tableLayoutPanel10.ColumnCount = 3;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel10.Controls.Add(this.groupBox12, 0, 0);
+            this.tableLayoutPanel10.Controls.Add(this.groupBox13, 2, 0);
+            this.tableLayoutPanel10.Controls.Add(this.groupBox14, 1, 0);
+            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel10.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 1;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(445, 71);
+            this.tableLayoutPanel10.TabIndex = 6;
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.OrderPassword);
+            this.groupBox12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox12.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox12.Location = new System.Drawing.Point(3, 3);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(239, 65);
+            this.groupBox12.TabIndex = 5;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Password";
+            // 
+            // OrderPassword
+            // 
+            this.OrderPassword.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OrderPassword.Location = new System.Drawing.Point(3, 23);
+            this.OrderPassword.Name = "OrderPassword";
+            this.OrderPassword.PasswordChar = '*';
+            this.OrderPassword.Size = new System.Drawing.Size(233, 27);
+            this.OrderPassword.TabIndex = 1;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.CancelOrder);
+            this.groupBox13.Location = new System.Drawing.Point(348, 3);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Padding = new System.Windows.Forms.Padding(5);
+            this.groupBox13.Size = new System.Drawing.Size(94, 65);
+            this.groupBox13.TabIndex = 6;
+            this.groupBox13.TabStop = false;
+            // 
+            // CancelOrder
+            // 
+            this.CancelOrder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CancelOrder.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.CancelOrder.Location = new System.Drawing.Point(5, 25);
+            this.CancelOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.CancelOrder.Name = "CancelOrder";
+            this.CancelOrder.Size = new System.Drawing.Size(84, 35);
+            this.CancelOrder.TabIndex = 4;
+            this.CancelOrder.Text = "Cancel";
+            this.CancelOrder.UseVisualStyleBackColor = true;
+            this.CancelOrder.Click += new System.EventHandler(this.CancelOrder_Click);
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.SaveOrder);
+            this.groupBox14.Location = new System.Drawing.Point(248, 3);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Padding = new System.Windows.Forms.Padding(5);
+            this.groupBox14.Size = new System.Drawing.Size(94, 65);
+            this.groupBox14.TabIndex = 7;
+            this.groupBox14.TabStop = false;
+            // 
             // SaveOrder
             // 
+            this.SaveOrder.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SaveOrder.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.SaveOrder.Location = new System.Drawing.Point(13, 158);
+            this.SaveOrder.Location = new System.Drawing.Point(5, 25);
             this.SaveOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SaveOrder.Name = "SaveOrder";
-            this.SaveOrder.Size = new System.Drawing.Size(86, 31);
+            this.SaveOrder.Size = new System.Drawing.Size(84, 35);
             this.SaveOrder.TabIndex = 2;
             this.SaveOrder.Text = "Next";
             this.SaveOrder.UseVisualStyleBackColor = true;
+            this.SaveOrder.Click += new System.EventHandler(this.SaveOrder_Click);
             // 
             // tableLayoutPanel6
             // 
@@ -1317,11 +1313,6 @@
             this.ProductList.AutoScroll = true;
             this.ProductList.AutoSize = true;
             this.ProductList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ProductList.Controls.Add(this.panel25);
-            this.ProductList.Controls.Add(this.panel14);
-            this.ProductList.Controls.Add(this.panel15);
-            this.ProductList.Controls.Add(this.panel16);
-            this.ProductList.Controls.Add(this.panel17);
             this.ProductList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ProductList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.ProductList.Location = new System.Drawing.Point(3, 24);
@@ -1330,121 +1321,6 @@
             this.ProductList.Size = new System.Drawing.Size(444, 464);
             this.ProductList.TabIndex = 2;
             this.ProductList.WrapContents = false;
-            // 
-            // panel25
-            // 
-            this.panel25.BackColor = System.Drawing.Color.White;
-            this.panel25.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel25.Controls.Add(this.groupBox35);
-            this.panel25.Location = new System.Drawing.Point(3, 4);
-            this.panel25.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel25.Name = "panel25";
-            this.panel25.Size = new System.Drawing.Size(398, 92);
-            this.panel25.TabIndex = 5;
-            // 
-            // groupBox35
-            // 
-            this.groupBox35.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox35.Location = new System.Drawing.Point(0, 0);
-            this.groupBox35.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox35.Name = "groupBox35";
-            this.groupBox35.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox35.Size = new System.Drawing.Size(394, 88);
-            this.groupBox35.TabIndex = 0;
-            this.groupBox35.TabStop = false;
-            this.groupBox35.Text = "groupBox35";
-            // 
-            // panel14
-            // 
-            this.panel14.BackColor = System.Drawing.Color.White;
-            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel14.Controls.Add(this.groupBox24);
-            this.panel14.Location = new System.Drawing.Point(3, 104);
-            this.panel14.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(398, 92);
-            this.panel14.TabIndex = 6;
-            // 
-            // groupBox24
-            // 
-            this.groupBox24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox24.Location = new System.Drawing.Point(0, 0);
-            this.groupBox24.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox24.Size = new System.Drawing.Size(394, 88);
-            this.groupBox24.TabIndex = 0;
-            this.groupBox24.TabStop = false;
-            this.groupBox24.Text = "groupBox24";
-            // 
-            // panel15
-            // 
-            this.panel15.BackColor = System.Drawing.Color.White;
-            this.panel15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel15.Controls.Add(this.groupBox25);
-            this.panel15.Location = new System.Drawing.Point(3, 204);
-            this.panel15.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(398, 92);
-            this.panel15.TabIndex = 7;
-            // 
-            // groupBox25
-            // 
-            this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox25.Location = new System.Drawing.Point(0, 0);
-            this.groupBox25.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox25.Name = "groupBox25";
-            this.groupBox25.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox25.Size = new System.Drawing.Size(394, 88);
-            this.groupBox25.TabIndex = 0;
-            this.groupBox25.TabStop = false;
-            this.groupBox25.Text = "groupBox25";
-            // 
-            // panel16
-            // 
-            this.panel16.BackColor = System.Drawing.Color.White;
-            this.panel16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel16.Controls.Add(this.groupBox26);
-            this.panel16.Location = new System.Drawing.Point(3, 304);
-            this.panel16.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel16.Name = "panel16";
-            this.panel16.Size = new System.Drawing.Size(398, 92);
-            this.panel16.TabIndex = 8;
-            // 
-            // groupBox26
-            // 
-            this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox26.Location = new System.Drawing.Point(0, 0);
-            this.groupBox26.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox26.Name = "groupBox26";
-            this.groupBox26.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox26.Size = new System.Drawing.Size(394, 88);
-            this.groupBox26.TabIndex = 0;
-            this.groupBox26.TabStop = false;
-            this.groupBox26.Text = "groupBox26";
-            // 
-            // panel17
-            // 
-            this.panel17.BackColor = System.Drawing.Color.White;
-            this.panel17.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel17.Controls.Add(this.groupBox27);
-            this.panel17.Location = new System.Drawing.Point(3, 404);
-            this.panel17.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel17.Name = "panel17";
-            this.panel17.Size = new System.Drawing.Size(398, 92);
-            this.panel17.TabIndex = 9;
-            // 
-            // groupBox27
-            // 
-            this.groupBox27.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox27.Location = new System.Drawing.Point(0, 0);
-            this.groupBox27.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox27.Name = "groupBox27";
-            this.groupBox27.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox27.Size = new System.Drawing.Size(394, 88);
-            this.groupBox27.TabIndex = 0;
-            this.groupBox27.TabStop = false;
-            this.groupBox27.Text = "groupBox27";
             // 
             // Maingroup
             // 
@@ -1603,23 +1479,22 @@
             this.groupBox19.PerformLayout();
             this.groupBox21.ResumeLayout(false);
             this.groupBox21.PerformLayout();
-            this.CompanyList.ResumeLayout(false);
-            this.panel19.ResumeLayout(false);
-            this.panel18.ResumeLayout(false);
-            this.panel20.ResumeLayout(false);
             this.groupBox23.ResumeLayout(false);
+            this.splitContainer9.Panel1.ResumeLayout(false);
+            this.splitContainer9.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer9)).EndInit();
+            this.splitContainer9.ResumeLayout(false);
             this.groupBox31.ResumeLayout(false);
+            this.tableLayoutPanel10.ResumeLayout(false);
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox14.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.groupBox20.ResumeLayout(false);
             this.groupBox20.PerformLayout();
             this.groupBox22.ResumeLayout(false);
             this.groupBox22.PerformLayout();
-            this.ProductList.ResumeLayout(false);
-            this.panel25.ResumeLayout(false);
-            this.panel14.ResumeLayout(false);
-            this.panel15.ResumeLayout(false);
-            this.panel16.ResumeLayout(false);
-            this.panel17.ResumeLayout(false);
             this.Maingroup.ResumeLayout(false);
             this.splitContainer7.Panel1.ResumeLayout(false);
             this.splitContainer7.Panel2.ResumeLayout(false);
@@ -1677,24 +1552,8 @@
         private GroupBox groupBox22;
         private GroupBox groupBox23;
         private FlowLayoutPanel CompanyList;
-        private Panel panel19;
-        private GroupBox groupBox29;
         private FlowLayoutPanel ProductList;
-        private Panel panel25;
-        private GroupBox groupBox35;
-        private Panel panel18;
-        private GroupBox groupBox28;
-        private Panel panel20;
-        private GroupBox groupBox30;
         private Button SaveOrder;
-        private Panel panel14;
-        private GroupBox groupBox24;
-        private Panel panel15;
-        private GroupBox groupBox25;
-        private Panel panel16;
-        private GroupBox groupBox26;
-        private Panel panel17;
-        private GroupBox groupBox27;
         private GroupBox groupBox31;
         private RichTextBox Memo;
         private Button CancelOrder;
@@ -1733,5 +1592,11 @@
         private GroupBox groupBox11;
         private Panel panel2;
         private RichTextBox DeliveryInfo;
+        private GroupBox groupBox12;
+        private TextBox OrderPassword;
+        private SplitContainer splitContainer9;
+        private TableLayoutPanel tableLayoutPanel10;
+        private GroupBox groupBox13;
+        private GroupBox groupBox14;
     }
 }
