@@ -99,7 +99,7 @@ namespace Database_Control
         }
     }
 
-    class InputField : TextBox
+    public class InputField : TextBox
     {
         public delegate void InputEnd(string Text);
         public InputEnd OnEnterKey;

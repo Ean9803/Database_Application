@@ -43,7 +43,7 @@ namespace Database_Control
             }
         }
 
-        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product, UIList, ControlList }
+        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product, UIList, ControlList, ProductItemList, ProductSupplier, ProductReferences }
         public FlowLayoutPanel GetList(List Item)
         {
             switch (Item)
@@ -60,6 +60,12 @@ namespace Database_Control
                     return TopUI;
                 case List.ControlList:
                     return ItemOptionPanel;
+                case List.ProductItemList:
+                    return ProductOptionList;
+                case List.ProductSupplier:
+                    return SupplierList;
+                case List.ProductReferences:
+                    return ReferencedOrdersList;
                 default:
                     return OrderList;
             }
@@ -147,6 +153,16 @@ namespace Database_Control
             WindowData.SortItems(GetList(List.OrderDisplay_Product), ProductSearch.Text);
         }
 
+        private void SupplierSearch_TextChanged(object sender, EventArgs e)
+        {
+            WindowData.SortItems(GetList(List.ProductSupplier), SupplierSearch.Text);
+        }
+
+        private void referenceSearch_TextChanged(object sender, EventArgs e)
+        {
+            WindowData.SortItems(GetList(List.ProductReferences), referenceSearch.Text);
+        }
+
         private void CancelOrder_Click(object sender, EventArgs e)
         {
             SetWindow(WindowType.Delivery, null);
@@ -197,6 +213,7 @@ namespace Database_Control
         public void resetPass()
         {
             OrderPassword.Text = "";
+            ProductPassword.Text = "";
         }
 
         public string GetMemo()
@@ -211,7 +228,182 @@ namespace Database_Control
 
         public void FillProductDisplay(Dictionary<string, object> ListItems)
         {
+            ProductInfo.Clear();
+            ProductInfo.AppendText("Product ID: " + ListItems["Product_ID"].ToString() + " | Name: " + ListItems["Name"].ToString() +
+                "\n--------------------------------------\n" +
+                "Available Amount: " + ListItems["Available_Amt"].ToString() +
+                "\n--------------------------------------\n" +
+                "Price: $" + ListItems["Price"].ToString() +
+                "\n--------------------------------------\n" +
+                "Prep Time: " + ListItems["Time"].ToString() + "\n");
+            List<Dictionary<string, object>> Comp = Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", ListItems["Supplier"].ToString()) }), "Name");
+            ProductInfo.AppendText("Supplier: " + Comp[0]["Name"].ToString() + "\n\n");
+            ProductInfo.AppendText("Description:\n" + ListItems["Description"].ToString());
+        }
 
+        public void SetReferencedNum(string Num)
+        {
+            ReservedLable.Text = Num;
+        }
+
+        public void SetPrice(string Price)
+        {
+            ProductPrice.Text = Price;
+        }
+
+        public float GetProductPrice()
+        {
+            if (float.TryParse(ProductPrice.Text, out float Result))
+            {
+                return Result;
+            }
+            return -1;
+        }
+
+        public string GetProductDesc()
+        {
+            return ProductDescript.Text;
+        }
+
+        public void SetProductDesc(string MemoString, bool ReadOnly)
+        {
+            ProductDescript.ReadOnly = ReadOnly;
+            ProductDescript.Text = MemoString;
+        }
+
+        public int GetPrepTime()
+        {
+            if(int.TryParse(PrepTime.Text, out int Result))
+            {
+                return Math.Max(Result, 0);
+            }
+            return 0;
+        }
+
+        public void SetPrepTime(string Time)
+        {
+            PrepTime.Text = Time;
+        }
+
+        private void ProductBack_Click(object sender, EventArgs e)
+        {
+            SetWindow(WindowType.Delivery, null);
+        }
+
+        public Action SaveProductAction;
+
+        private void SaveProduct_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(ProductPassword.Text))
+            {
+                if (ProductPassword.Text.Equals(Stat.GetPass()))
+                {
+                    if (SaveProductAction != null)
+                        SaveProductAction();
+                    MessageBox.Show("Action complete");
+                }
+                else
+                {
+                    MessageBox.Show("Enter correct password to complete");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Enter password to complete");
+            }
+        }
+
+        public void SetTotalAmount(int Amount)
+        {
+            ProductAmount.Text = Amount.ToString();
+        }
+
+        public int GetTotalAmount()
+        {
+            if (int.TryParse(ProductAmount.Text, out int Result))
+            {
+                return Result;
+            }
+            return -1;
+        }
+
+        public void SetProductName(string Name, bool ReadOnly)
+        {
+            ProductName.ReadOnly = ReadOnly;
+            ProductName.Text = Name;
+        }
+
+        public string GetProductName()
+        {
+            return ProductName.Text;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            WindowData.CreateDeleteDialog("Enter Password To Delete Links", (string Text) =>
+            {
+                if (Text.Equals(Stat.GetPass()) && Stat.HasAbility(StatusType.Action.CanDeleteDelivery))
+                {
+                    List<(Control, WindowData.CollectionReturn Call)> Removes = WindowData.GetSelectedObjects("OrderProductSelect");
+                    Dictionary<string, object> DataIn = null;
+                    List<string> DeletedItemsProduct = new List<string>();
+                    List<string> DeletedItemsOrder = new List<string>();
+                    foreach (var item in Removes)
+                    {
+                        Dictionary<string, object> Data = item.Call();
+                        string ProductID = Data["Product_ID"].ToString();
+                        string OrderID = Data["Order_ID"].ToString();
+                        if (!DeletedItemsProduct.Contains(Data["ProductName"].ToString()))
+                            DeletedItemsProduct.Add(Data["ProductName"].ToString());
+
+                        if (!DeletedItemsOrder.Contains(OrderID))
+                            DeletedItemsOrder.Add(OrderID);
+
+                        DataIn = (Dictionary<string, object>)Data["INFO"];
+
+                        List<Dictionary<string, object>> Delivery = Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }), "Bundle_ID");
+                        List<Dictionary<string, object>> Bundles = Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()) }), "Bundle_ID", "Product_ID", "Quantity");
+                        int UpForDelete = 0;
+                        int Restock = 0;
+                        for (int i = 0; i < Bundles.Count; i++)
+                        {
+                            if (Bundles[i]["Product_ID"].ToString().Equals(ProductID))
+                            {
+                                UpForDelete++;
+                                Restock += (int)Bundles[i]["Quantity"];
+                            }
+                        }
+
+                        if (UpForDelete != Bundles.Count)
+                        {
+                            Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", ProductID) }));
+                        }
+                        else
+                        {
+                            Connection.DeleteData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }));
+                            Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", ProductID) }));
+                        }
+
+                        List<Dictionary<string, object>> ProductEntry = Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", ProductID) }), "Available_Amt");
+                        Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", ProductID) }), ("Available_Amt", ((int)ProductEntry[0]["Available_Amt"] + Restock).ToString()));
+                    }
+                    WindowData.UpdateUserHistory(this, Stat.GetIDNumber(), "User deleted: " + String.Join(", ", DeletedItemsProduct) + "\n\tFrom Orders:\n\t|[" + String.Join(", ", DeletedItemsOrder) + "]");
+                    MessageBox.Show("Deletion Complete");
+                    SetWindow(MainForm.WindowType.Product, DataIn);
+                }
+                else
+                {
+                    if (Stat.HasAbility(StatusType.Action.CanDeleteDelivery))
+                        MessageBox.Show("User does not have access to this ability");
+                    else
+                        MessageBox.Show("Incorrect Password");
+                }
+            });
+        }
+
+        public void SetPropertiesWindow(int Index)
+        {
+            ProductProperties.SelectTab(Index);
         }
 
         public void FillCompanyDisplay(Dictionary<string, object> ListItems)

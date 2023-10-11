@@ -68,6 +68,7 @@
             this.DeliveryInfo = new System.Windows.Forms.RichTextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.ProductInfo = new System.Windows.Forms.RichTextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
@@ -78,13 +79,51 @@
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.ProductImage = new System.Windows.Forms.Panel();
+            this.splitContainer10 = new System.Windows.Forms.SplitContainer();
             this.groupBox34 = new System.Windows.Forms.GroupBox();
+            this.splitContainer11 = new System.Windows.Forms.SplitContainer();
+            this.ProductOptionList = new System.Windows.Forms.FlowLayoutPanel();
+            this.splitContainer12 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer13 = new System.Windows.Forms.SplitContainer();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.ProductAmount = new System.Windows.Forms.TextBox();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.ProductPassword = new System.Windows.Forms.TextBox();
+            this.SaveProduct = new System.Windows.Forms.Button();
             this.ProductBack = new System.Windows.Forms.Button();
-            this.ProductEdit = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.splitContainer17 = new System.Windows.Forms.SplitContainer();
+            this.groupBox28 = new System.Windows.Forms.GroupBox();
+            this.ProductName = new System.Windows.Forms.TextBox();
+            this.ProductDescript = new System.Windows.Forms.RichTextBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.PricingText = new System.Windows.Forms.RichTextBox();
+            this.ProductProperties = new System.Windows.Forms.TabControl();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.splitContainer14 = new System.Windows.Forms.SplitContainer();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.SupplierSearch = new System.Windows.Forms.TextBox();
+            this.SupplierList = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox24 = new System.Windows.Forms.GroupBox();
+            this.ProductPrice = new System.Windows.Forms.TextBox();
+            this.splitContainer15 = new System.Windows.Forms.SplitContainer();
+            this.groupBox25 = new System.Windows.Forms.GroupBox();
+            this.ReservedLable = new System.Windows.Forms.Label();
+            this.groupBox29 = new System.Windows.Forms.GroupBox();
+            this.PrepTime = new System.Windows.Forms.TextBox();
+            this.groupBox26 = new System.Windows.Forms.GroupBox();
+            this.splitContainer16 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer18 = new System.Windows.Forms.SplitContainer();
+            this.groupBox27 = new System.Windows.Forms.GroupBox();
+            this.referenceSearch = new System.Windows.Forms.TextBox();
+            this.DeleteRef = new System.Windows.Forms.Button();
+            this.ReferencedOrdersList = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.tabPage10 = new System.Windows.Forms.TabPage();
             this.EditDisplay = new System.Windows.Forms.TabPage();
             this.EditBack = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -150,6 +189,7 @@
             this.tabPage2.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.ProductDisplay.SuspendLayout();
@@ -166,9 +206,59 @@
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer10)).BeginInit();
+            this.splitContainer10.Panel2.SuspendLayout();
+            this.splitContainer10.SuspendLayout();
             this.groupBox34.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer11)).BeginInit();
+            this.splitContainer11.Panel1.SuspendLayout();
+            this.splitContainer11.Panel2.SuspendLayout();
+            this.splitContainer11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).BeginInit();
+            this.splitContainer12.Panel1.SuspendLayout();
+            this.splitContainer12.Panel2.SuspendLayout();
+            this.splitContainer12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer13)).BeginInit();
+            this.splitContainer13.Panel1.SuspendLayout();
+            this.splitContainer13.Panel2.SuspendLayout();
+            this.splitContainer13.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            this.groupBox16.SuspendLayout();
             this.groupBox9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer17)).BeginInit();
+            this.splitContainer17.Panel1.SuspendLayout();
+            this.splitContainer17.Panel2.SuspendLayout();
+            this.splitContainer17.SuspendLayout();
+            this.groupBox28.SuspendLayout();
             this.groupBox10.SuspendLayout();
+            this.ProductProperties.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer14)).BeginInit();
+            this.splitContainer14.Panel1.SuspendLayout();
+            this.splitContainer14.Panel2.SuspendLayout();
+            this.splitContainer14.SuspendLayout();
+            this.groupBox17.SuspendLayout();
+            this.tabPage8.SuspendLayout();
+            this.groupBox18.SuspendLayout();
+            this.tableLayoutPanel11.SuspendLayout();
+            this.groupBox24.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer15)).BeginInit();
+            this.splitContainer15.Panel1.SuspendLayout();
+            this.splitContainer15.Panel2.SuspendLayout();
+            this.splitContainer15.SuspendLayout();
+            this.groupBox25.SuspendLayout();
+            this.groupBox29.SuspendLayout();
+            this.groupBox26.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer16)).BeginInit();
+            this.splitContainer16.Panel1.SuspendLayout();
+            this.splitContainer16.Panel2.SuspendLayout();
+            this.splitContainer16.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer18)).BeginInit();
+            this.splitContainer18.Panel1.SuspendLayout();
+            this.splitContainer18.Panel2.SuspendLayout();
+            this.splitContainer18.SuspendLayout();
+            this.groupBox27.SuspendLayout();
             this.EditDisplay.SuspendLayout();
             this.OrderingDisplay.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -722,6 +812,7 @@
             // groupBox6
             // 
             this.groupBox6.BackColor = System.Drawing.Color.Black;
+            this.groupBox6.Controls.Add(this.ProductInfo);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox6.ForeColor = System.Drawing.Color.White;
             this.groupBox6.Location = new System.Drawing.Point(5, 5);
@@ -730,6 +821,18 @@
             this.groupBox6.TabIndex = 0;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Product";
+            // 
+            // ProductInfo
+            // 
+            this.ProductInfo.BackColor = System.Drawing.Color.Black;
+            this.ProductInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductInfo.ForeColor = System.Drawing.SystemColors.Window;
+            this.ProductInfo.Location = new System.Drawing.Point(3, 23);
+            this.ProductInfo.Name = "ProductInfo";
+            this.ProductInfo.ReadOnly = true;
+            this.ProductInfo.Size = new System.Drawing.Size(569, 301);
+            this.ProductInfo.TabIndex = 0;
+            this.ProductInfo.Text = "";
             // 
             // tabPage4
             // 
@@ -791,7 +894,6 @@
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.IsSplitterFixed = true;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.splitContainer3.Name = "splitContainer3";
@@ -805,7 +907,7 @@
             this.splitContainer3.Panel2.Controls.Add(this.groupBox10);
             this.splitContainer3.Size = new System.Drawing.Size(967, 576);
             this.splitContainer3.SplitterDistance = 732;
-            this.splitContainer3.SplitterWidth = 5;
+            this.splitContainer3.SplitterWidth = 10;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -843,7 +945,7 @@
             // 
             // splitContainer5.Panel2
             // 
-            this.splitContainer5.Panel2.Controls.Add(this.groupBox34);
+            this.splitContainer5.Panel2.Controls.Add(this.splitContainer10);
             this.splitContainer5.Size = new System.Drawing.Size(732, 258);
             this.splitContainer5.SplitterDistance = 487;
             this.splitContainer5.SplitterWidth = 5;
@@ -874,47 +976,175 @@
             this.ProductImage.Size = new System.Drawing.Size(481, 230);
             this.ProductImage.TabIndex = 0;
             // 
+            // splitContainer10
+            // 
+            this.splitContainer10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer10.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer10.IsSplitterFixed = true;
+            this.splitContainer10.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer10.Name = "splitContainer10";
+            this.splitContainer10.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer10.Panel2
+            // 
+            this.splitContainer10.Panel2.Controls.Add(this.groupBox34);
+            this.splitContainer10.Size = new System.Drawing.Size(240, 258);
+            this.splitContainer10.SplitterDistance = 60;
+            this.splitContainer10.TabIndex = 1;
+            // 
             // groupBox34
             // 
-            this.groupBox34.Controls.Add(this.ProductBack);
-            this.groupBox34.Controls.Add(this.ProductEdit);
+            this.groupBox34.Controls.Add(this.splitContainer11);
+            this.groupBox34.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox34.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox34.Location = new System.Drawing.Point(3, 143);
+            this.groupBox34.Location = new System.Drawing.Point(0, 0);
             this.groupBox34.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox34.Name = "groupBox34";
             this.groupBox34.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox34.Size = new System.Drawing.Size(102, 111);
+            this.groupBox34.Size = new System.Drawing.Size(240, 194);
             this.groupBox34.TabIndex = 0;
             this.groupBox34.TabStop = false;
             this.groupBox34.Text = "Options";
+            // 
+            // splitContainer11
+            // 
+            this.splitContainer11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer11.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer11.IsSplitterFixed = true;
+            this.splitContainer11.Location = new System.Drawing.Point(3, 24);
+            this.splitContainer11.Name = "splitContainer11";
+            this.splitContainer11.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer11.Panel1
+            // 
+            this.splitContainer11.Panel1.Controls.Add(this.ProductOptionList);
+            // 
+            // splitContainer11.Panel2
+            // 
+            this.splitContainer11.Panel2.Controls.Add(this.splitContainer12);
+            this.splitContainer11.Size = new System.Drawing.Size(234, 166);
+            this.splitContainer11.SplitterDistance = 62;
+            this.splitContainer11.TabIndex = 2;
+            // 
+            // ProductOptionList
+            // 
+            this.ProductOptionList.AutoScroll = true;
+            this.ProductOptionList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ProductOptionList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductOptionList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.ProductOptionList.Location = new System.Drawing.Point(0, 0);
+            this.ProductOptionList.Name = "ProductOptionList";
+            this.ProductOptionList.Size = new System.Drawing.Size(234, 62);
+            this.ProductOptionList.TabIndex = 0;
+            this.ProductOptionList.WrapContents = false;
+            // 
+            // splitContainer12
+            // 
+            this.splitContainer12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer12.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer12.IsSplitterFixed = true;
+            this.splitContainer12.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer12.Name = "splitContainer12";
+            // 
+            // splitContainer12.Panel1
+            // 
+            this.splitContainer12.Panel1.Controls.Add(this.splitContainer13);
+            // 
+            // splitContainer12.Panel2
+            // 
+            this.splitContainer12.Panel2.Controls.Add(this.SaveProduct);
+            this.splitContainer12.Panel2.Controls.Add(this.ProductBack);
+            this.splitContainer12.Size = new System.Drawing.Size(234, 100);
+            this.splitContainer12.SplitterDistance = 136;
+            this.splitContainer12.TabIndex = 2;
+            // 
+            // splitContainer13
+            // 
+            this.splitContainer13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer13.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer13.Name = "splitContainer13";
+            this.splitContainer13.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer13.Panel1
+            // 
+            this.splitContainer13.Panel1.Controls.Add(this.groupBox15);
+            // 
+            // splitContainer13.Panel2
+            // 
+            this.splitContainer13.Panel2.Controls.Add(this.groupBox16);
+            this.splitContainer13.Size = new System.Drawing.Size(136, 100);
+            this.splitContainer13.SplitterDistance = 49;
+            this.splitContainer13.SplitterWidth = 1;
+            this.splitContainer13.TabIndex = 1;
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.ProductAmount);
+            this.groupBox15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox15.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox15.Location = new System.Drawing.Point(0, 0);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(136, 49);
+            this.groupBox15.TabIndex = 0;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "Total Amount";
+            // 
+            // ProductAmount
+            // 
+            this.ProductAmount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductAmount.Location = new System.Drawing.Point(3, 23);
+            this.ProductAmount.Name = "ProductAmount";
+            this.ProductAmount.Size = new System.Drawing.Size(130, 27);
+            this.ProductAmount.TabIndex = 0;
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.ProductPassword);
+            this.groupBox16.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox16.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox16.Location = new System.Drawing.Point(0, 0);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(136, 50);
+            this.groupBox16.TabIndex = 0;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "Password";
+            // 
+            // ProductPassword
+            // 
+            this.ProductPassword.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductPassword.Location = new System.Drawing.Point(3, 23);
+            this.ProductPassword.Name = "ProductPassword";
+            this.ProductPassword.PasswordChar = '*';
+            this.ProductPassword.Size = new System.Drawing.Size(130, 27);
+            this.ProductPassword.TabIndex = 0;
+            // 
+            // SaveProduct
+            // 
+            this.SaveProduct.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.SaveProduct.Location = new System.Drawing.Point(3, 29);
+            this.SaveProduct.Name = "SaveProduct";
+            this.SaveProduct.Size = new System.Drawing.Size(86, 29);
+            this.SaveProduct.TabIndex = 2;
+            this.SaveProduct.Text = "Save";
+            this.SaveProduct.UseVisualStyleBackColor = true;
+            this.SaveProduct.Click += new System.EventHandler(this.SaveProduct_Click);
             // 
             // ProductBack
             // 
             this.ProductBack.BackColor = System.Drawing.Color.Transparent;
             this.ProductBack.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ProductBack.Location = new System.Drawing.Point(7, 68);
+            this.ProductBack.Location = new System.Drawing.Point(3, 65);
             this.ProductBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ProductBack.Name = "ProductBack";
             this.ProductBack.Size = new System.Drawing.Size(86, 31);
             this.ProductBack.TabIndex = 1;
             this.ProductBack.Text = "Back";
             this.ProductBack.UseVisualStyleBackColor = false;
-            // 
-            // ProductEdit
-            // 
-            this.ProductEdit.BackColor = System.Drawing.Color.Transparent;
-            this.ProductEdit.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ProductEdit.Location = new System.Drawing.Point(7, 29);
-            this.ProductEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ProductEdit.Name = "ProductEdit";
-            this.ProductEdit.Size = new System.Drawing.Size(86, 31);
-            this.ProductEdit.TabIndex = 0;
-            this.ProductEdit.Text = "Edit";
-            this.ProductEdit.UseVisualStyleBackColor = false;
+            this.ProductBack.Click += new System.EventHandler(this.ProductBack_Click);
             // 
             // groupBox9
             // 
-            this.groupBox9.Controls.Add(this.richTextBox1);
+            this.groupBox9.Controls.Add(this.splitContainer17);
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox9.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox9.Location = new System.Drawing.Point(0, 0);
@@ -926,45 +1156,420 @@
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Details";
             // 
-            // richTextBox1
+            // splitContainer17
             // 
-            this.richTextBox1.BackColor = System.Drawing.SystemColors.MenuText;
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.ForeColor = System.Drawing.SystemColors.Window;
-            this.richTextBox1.Location = new System.Drawing.Point(3, 24);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(726, 285);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "Desc about product";
+            this.splitContainer17.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer17.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer17.IsSplitterFixed = true;
+            this.splitContainer17.Location = new System.Drawing.Point(3, 24);
+            this.splitContainer17.Name = "splitContainer17";
+            this.splitContainer17.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer17.Panel1
+            // 
+            this.splitContainer17.Panel1.Controls.Add(this.groupBox28);
+            // 
+            // splitContainer17.Panel2
+            // 
+            this.splitContainer17.Panel2.Controls.Add(this.ProductDescript);
+            this.splitContainer17.Size = new System.Drawing.Size(726, 285);
+            this.splitContainer17.SplitterDistance = 62;
+            this.splitContainer17.TabIndex = 1;
+            // 
+            // groupBox28
+            // 
+            this.groupBox28.Controls.Add(this.ProductName);
+            this.groupBox28.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox28.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox28.Location = new System.Drawing.Point(0, 0);
+            this.groupBox28.Name = "groupBox28";
+            this.groupBox28.Size = new System.Drawing.Size(726, 62);
+            this.groupBox28.TabIndex = 0;
+            this.groupBox28.TabStop = false;
+            this.groupBox28.Text = "Name";
+            // 
+            // ProductName
+            // 
+            this.ProductName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductName.Location = new System.Drawing.Point(3, 23);
+            this.ProductName.Name = "ProductName";
+            this.ProductName.Size = new System.Drawing.Size(720, 27);
+            this.ProductName.TabIndex = 0;
+            // 
+            // ProductDescript
+            // 
+            this.ProductDescript.BackColor = System.Drawing.SystemColors.MenuText;
+            this.ProductDescript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductDescript.ForeColor = System.Drawing.SystemColors.Window;
+            this.ProductDescript.Location = new System.Drawing.Point(0, 0);
+            this.ProductDescript.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ProductDescript.Name = "ProductDescript";
+            this.ProductDescript.Size = new System.Drawing.Size(726, 219);
+            this.ProductDescript.TabIndex = 0;
+            this.ProductDescript.Text = "Desc about product";
             // 
             // groupBox10
             // 
-            this.groupBox10.Controls.Add(this.PricingText);
+            this.groupBox10.Controls.Add(this.ProductProperties);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox10.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox10.Location = new System.Drawing.Point(0, 0);
             this.groupBox10.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox10.Size = new System.Drawing.Size(230, 576);
+            this.groupBox10.Size = new System.Drawing.Size(225, 576);
             this.groupBox10.TabIndex = 0;
             this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Pricing";
+            this.groupBox10.Text = "Properties";
             // 
-            // PricingText
+            // ProductProperties
             // 
-            this.PricingText.BackColor = System.Drawing.SystemColors.MenuText;
-            this.PricingText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PricingText.ForeColor = System.Drawing.SystemColors.Window;
-            this.PricingText.Location = new System.Drawing.Point(3, 24);
-            this.PricingText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PricingText.Name = "PricingText";
-            this.PricingText.ReadOnly = true;
-            this.PricingText.Size = new System.Drawing.Size(224, 548);
-            this.PricingText.TabIndex = 0;
-            this.PricingText.Text = "";
+            this.ProductProperties.Alignment = System.Windows.Forms.TabAlignment.Right;
+            this.ProductProperties.Controls.Add(this.tabPage6);
+            this.ProductProperties.Controls.Add(this.tabPage7);
+            this.ProductProperties.Controls.Add(this.tabPage8);
+            this.ProductProperties.Controls.Add(this.tabPage9);
+            this.ProductProperties.Controls.Add(this.tabPage10);
+            this.ProductProperties.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductProperties.ItemSize = new System.Drawing.Size(1, 1);
+            this.ProductProperties.Location = new System.Drawing.Point(3, 24);
+            this.ProductProperties.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ProductProperties.Multiline = true;
+            this.ProductProperties.Name = "ProductProperties";
+            this.ProductProperties.Padding = new System.Drawing.Point(0, 0);
+            this.ProductProperties.SelectedIndex = 0;
+            this.ProductProperties.Size = new System.Drawing.Size(219, 548);
+            this.ProductProperties.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.ProductProperties.TabIndex = 2;
+            this.ProductProperties.TabStop = false;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.BackColor = System.Drawing.Color.Black;
+            this.tabPage6.Controls.Add(this.panel3);
+            this.tabPage6.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage6.Location = new System.Drawing.Point(4, 4);
+            this.tabPage6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(210, 540);
+            this.tabPage6.TabIndex = 6;
+            this.tabPage6.Text = "tabPage6";
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.White;
+            this.panel3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel3.BackgroundImage")));
+            this.panel3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(210, 540);
+            this.panel3.TabIndex = 0;
+            // 
+            // tabPage7
+            // 
+            this.tabPage7.BackColor = System.Drawing.Color.Black;
+            this.tabPage7.Controls.Add(this.splitContainer14);
+            this.tabPage7.ForeColor = System.Drawing.Color.Black;
+            this.tabPage7.Location = new System.Drawing.Point(4, 4);
+            this.tabPage7.Margin = new System.Windows.Forms.Padding(0);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(5);
+            this.tabPage7.Size = new System.Drawing.Size(210, 540);
+            this.tabPage7.TabIndex = 0;
+            // 
+            // splitContainer14
+            // 
+            this.splitContainer14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer14.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer14.IsSplitterFixed = true;
+            this.splitContainer14.Location = new System.Drawing.Point(5, 5);
+            this.splitContainer14.Name = "splitContainer14";
+            this.splitContainer14.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer14.Panel1
+            // 
+            this.splitContainer14.Panel1.Controls.Add(this.groupBox17);
+            // 
+            // splitContainer14.Panel2
+            // 
+            this.splitContainer14.Panel2.Controls.Add(this.SupplierList);
+            this.splitContainer14.Size = new System.Drawing.Size(200, 530);
+            this.splitContainer14.SplitterDistance = 53;
+            this.splitContainer14.SplitterWidth = 1;
+            this.splitContainer14.TabIndex = 1;
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.Controls.Add(this.SupplierSearch);
+            this.groupBox17.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox17.ForeColor = System.Drawing.Color.White;
+            this.groupBox17.Location = new System.Drawing.Point(0, 0);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(200, 53);
+            this.groupBox17.TabIndex = 0;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "Search";
+            // 
+            // SupplierSearch
+            // 
+            this.SupplierSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SupplierSearch.Location = new System.Drawing.Point(3, 23);
+            this.SupplierSearch.Name = "SupplierSearch";
+            this.SupplierSearch.Size = new System.Drawing.Size(194, 27);
+            this.SupplierSearch.TabIndex = 0;
+            this.SupplierSearch.TextChanged += new System.EventHandler(this.SupplierSearch_TextChanged);
+            // 
+            // SupplierList
+            // 
+            this.SupplierList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SupplierList.Location = new System.Drawing.Point(0, 0);
+            this.SupplierList.Name = "SupplierList";
+            this.SupplierList.Size = new System.Drawing.Size(200, 476);
+            this.SupplierList.TabIndex = 0;
+            // 
+            // tabPage8
+            // 
+            this.tabPage8.BackColor = System.Drawing.Color.Black;
+            this.tabPage8.Controls.Add(this.groupBox18);
+            this.tabPage8.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage8.Location = new System.Drawing.Point(4, 4);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(5);
+            this.tabPage8.Size = new System.Drawing.Size(210, 540);
+            this.tabPage8.TabIndex = 7;
+            this.tabPage8.Text = "tabPage8";
+            // 
+            // groupBox18
+            // 
+            this.groupBox18.Controls.Add(this.tableLayoutPanel11);
+            this.groupBox18.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox18.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox18.Location = new System.Drawing.Point(5, 5);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(200, 530);
+            this.groupBox18.TabIndex = 0;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "Product Info";
+            // 
+            // tableLayoutPanel11
+            // 
+            this.tableLayoutPanel11.ColumnCount = 1;
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel11.Controls.Add(this.groupBox24, 0, 0);
+            this.tableLayoutPanel11.Controls.Add(this.splitContainer15, 0, 1);
+            this.tableLayoutPanel11.Controls.Add(this.groupBox26, 0, 2);
+            this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 23);
+            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
+            this.tableLayoutPanel11.RowCount = 3;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 112F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(194, 504);
+            this.tableLayoutPanel11.TabIndex = 0;
+            // 
+            // groupBox24
+            // 
+            this.groupBox24.Controls.Add(this.ProductPrice);
+            this.groupBox24.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox24.Location = new System.Drawing.Point(3, 3);
+            this.groupBox24.Name = "groupBox24";
+            this.groupBox24.Size = new System.Drawing.Size(188, 64);
+            this.groupBox24.TabIndex = 0;
+            this.groupBox24.TabStop = false;
+            this.groupBox24.Text = "$Price";
+            // 
+            // ProductPrice
+            // 
+            this.ProductPrice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductPrice.Location = new System.Drawing.Point(3, 23);
+            this.ProductPrice.Name = "ProductPrice";
+            this.ProductPrice.Size = new System.Drawing.Size(182, 27);
+            this.ProductPrice.TabIndex = 0;
+            // 
+            // splitContainer15
+            // 
+            this.splitContainer15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer15.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer15.Location = new System.Drawing.Point(3, 73);
+            this.splitContainer15.Name = "splitContainer15";
+            this.splitContainer15.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer15.Panel1
+            // 
+            this.splitContainer15.Panel1.Controls.Add(this.groupBox25);
+            // 
+            // splitContainer15.Panel2
+            // 
+            this.splitContainer15.Panel2.Controls.Add(this.groupBox29);
+            this.splitContainer15.Size = new System.Drawing.Size(188, 106);
+            this.splitContainer15.SplitterDistance = 43;
+            this.splitContainer15.SplitterWidth = 1;
+            this.splitContainer15.TabIndex = 1;
+            // 
+            // groupBox25
+            // 
+            this.groupBox25.Controls.Add(this.ReservedLable);
+            this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox25.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox25.Location = new System.Drawing.Point(0, 0);
+            this.groupBox25.Name = "groupBox25";
+            this.groupBox25.Size = new System.Drawing.Size(188, 43);
+            this.groupBox25.TabIndex = 0;
+            this.groupBox25.TabStop = false;
+            this.groupBox25.Text = "Reserved Amt:";
+            // 
+            // ReservedLable
+            // 
+            this.ReservedLable.AutoSize = true;
+            this.ReservedLable.BackColor = System.Drawing.Color.Transparent;
+            this.ReservedLable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReservedLable.Location = new System.Drawing.Point(3, 23);
+            this.ReservedLable.Name = "ReservedLable";
+            this.ReservedLable.Size = new System.Drawing.Size(73, 20);
+            this.ReservedLable.TabIndex = 0;
+            this.ReservedLable.Text = "lReserved";
+            // 
+            // groupBox29
+            // 
+            this.groupBox29.Controls.Add(this.PrepTime);
+            this.groupBox29.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox29.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox29.Location = new System.Drawing.Point(0, 0);
+            this.groupBox29.Name = "groupBox29";
+            this.groupBox29.Size = new System.Drawing.Size(188, 62);
+            this.groupBox29.TabIndex = 0;
+            this.groupBox29.TabStop = false;
+            this.groupBox29.Text = "Prep Time";
+            // 
+            // PrepTime
+            // 
+            this.PrepTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PrepTime.Location = new System.Drawing.Point(3, 23);
+            this.PrepTime.Name = "PrepTime";
+            this.PrepTime.Size = new System.Drawing.Size(182, 27);
+            this.PrepTime.TabIndex = 0;
+            // 
+            // groupBox26
+            // 
+            this.groupBox26.Controls.Add(this.splitContainer16);
+            this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox26.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox26.Location = new System.Drawing.Point(3, 185);
+            this.groupBox26.Name = "groupBox26";
+            this.groupBox26.Size = new System.Drawing.Size(188, 316);
+            this.groupBox26.TabIndex = 2;
+            this.groupBox26.TabStop = false;
+            this.groupBox26.Text = "Referenced Orders";
+            // 
+            // splitContainer16
+            // 
+            this.splitContainer16.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer16.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer16.IsSplitterFixed = true;
+            this.splitContainer16.Location = new System.Drawing.Point(3, 23);
+            this.splitContainer16.Name = "splitContainer16";
+            this.splitContainer16.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer16.Panel1
+            // 
+            this.splitContainer16.Panel1.Controls.Add(this.splitContainer18);
+            // 
+            // splitContainer16.Panel2
+            // 
+            this.splitContainer16.Panel2.Controls.Add(this.ReferencedOrdersList);
+            this.splitContainer16.Size = new System.Drawing.Size(182, 290);
+            this.splitContainer16.SplitterDistance = 111;
+            this.splitContainer16.TabIndex = 1;
+            // 
+            // splitContainer18
+            // 
+            this.splitContainer18.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer18.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer18.IsSplitterFixed = true;
+            this.splitContainer18.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer18.Name = "splitContainer18";
+            this.splitContainer18.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer18.Panel1
+            // 
+            this.splitContainer18.Panel1.Controls.Add(this.groupBox27);
+            // 
+            // splitContainer18.Panel2
+            // 
+            this.splitContainer18.Panel2.Controls.Add(this.DeleteRef);
+            this.splitContainer18.Size = new System.Drawing.Size(182, 111);
+            this.splitContainer18.SplitterDistance = 60;
+            this.splitContainer18.TabIndex = 0;
+            // 
+            // groupBox27
+            // 
+            this.groupBox27.Controls.Add(this.referenceSearch);
+            this.groupBox27.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox27.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox27.Location = new System.Drawing.Point(0, 0);
+            this.groupBox27.Name = "groupBox27";
+            this.groupBox27.Size = new System.Drawing.Size(182, 60);
+            this.groupBox27.TabIndex = 0;
+            this.groupBox27.TabStop = false;
+            this.groupBox27.Text = "Search";
+            // 
+            // referenceSearch
+            // 
+            this.referenceSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.referenceSearch.Location = new System.Drawing.Point(3, 23);
+            this.referenceSearch.Name = "referenceSearch";
+            this.referenceSearch.Size = new System.Drawing.Size(176, 27);
+            this.referenceSearch.TabIndex = 0;
+            this.referenceSearch.TextChanged += new System.EventHandler(this.referenceSearch_TextChanged);
+            // 
+            // DeleteRef
+            // 
+            this.DeleteRef.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DeleteRef.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.DeleteRef.Location = new System.Drawing.Point(0, 0);
+            this.DeleteRef.Name = "DeleteRef";
+            this.DeleteRef.Size = new System.Drawing.Size(182, 47);
+            this.DeleteRef.TabIndex = 0;
+            this.DeleteRef.Text = "Delete In Order";
+            this.DeleteRef.UseVisualStyleBackColor = true;
+            this.DeleteRef.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // ReferencedOrdersList
+            // 
+            this.ReferencedOrdersList.AutoScroll = true;
+            this.ReferencedOrdersList.AutoSize = true;
+            this.ReferencedOrdersList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReferencedOrdersList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.ReferencedOrdersList.Location = new System.Drawing.Point(0, 0);
+            this.ReferencedOrdersList.Name = "ReferencedOrdersList";
+            this.ReferencedOrdersList.Size = new System.Drawing.Size(182, 175);
+            this.ReferencedOrdersList.TabIndex = 0;
+            this.ReferencedOrdersList.WrapContents = false;
+            // 
+            // tabPage9
+            // 
+            this.tabPage9.BackColor = System.Drawing.Color.Black;
+            this.tabPage9.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage9.Location = new System.Drawing.Point(4, 4);
+            this.tabPage9.Name = "tabPage9";
+            this.tabPage9.Padding = new System.Windows.Forms.Padding(5);
+            this.tabPage9.Size = new System.Drawing.Size(210, 540);
+            this.tabPage9.TabIndex = 8;
+            this.tabPage9.Text = "tabPage9";
+            // 
+            // tabPage10
+            // 
+            this.tabPage10.BackColor = System.Drawing.Color.Black;
+            this.tabPage10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage10.Location = new System.Drawing.Point(4, 4);
+            this.tabPage10.Name = "tabPage10";
+            this.tabPage10.Padding = new System.Windows.Forms.Padding(5);
+            this.tabPage10.Size = new System.Drawing.Size(210, 540);
+            this.tabPage10.TabIndex = 9;
+            this.tabPage10.Text = "tabPage10";
             // 
             // EditDisplay
             // 
@@ -1450,6 +2055,7 @@
             this.tabPage2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.ProductDisplay.ResumeLayout(false);
@@ -1466,9 +2072,68 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
             this.splitContainer5.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
+            this.splitContainer10.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer10)).EndInit();
+            this.splitContainer10.ResumeLayout(false);
             this.groupBox34.ResumeLayout(false);
+            this.splitContainer11.Panel1.ResumeLayout(false);
+            this.splitContainer11.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer11)).EndInit();
+            this.splitContainer11.ResumeLayout(false);
+            this.splitContainer12.Panel1.ResumeLayout(false);
+            this.splitContainer12.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).EndInit();
+            this.splitContainer12.ResumeLayout(false);
+            this.splitContainer13.Panel1.ResumeLayout(false);
+            this.splitContainer13.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer13)).EndInit();
+            this.splitContainer13.ResumeLayout(false);
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox15.PerformLayout();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
             this.groupBox9.ResumeLayout(false);
+            this.splitContainer17.Panel1.ResumeLayout(false);
+            this.splitContainer17.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer17)).EndInit();
+            this.splitContainer17.ResumeLayout(false);
+            this.groupBox28.ResumeLayout(false);
+            this.groupBox28.PerformLayout();
             this.groupBox10.ResumeLayout(false);
+            this.ProductProperties.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage7.ResumeLayout(false);
+            this.splitContainer14.Panel1.ResumeLayout(false);
+            this.splitContainer14.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer14)).EndInit();
+            this.splitContainer14.ResumeLayout(false);
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
+            this.groupBox18.ResumeLayout(false);
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.groupBox24.ResumeLayout(false);
+            this.groupBox24.PerformLayout();
+            this.splitContainer15.Panel1.ResumeLayout(false);
+            this.splitContainer15.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer15)).EndInit();
+            this.splitContainer15.ResumeLayout(false);
+            this.groupBox25.ResumeLayout(false);
+            this.groupBox25.PerformLayout();
+            this.groupBox29.ResumeLayout(false);
+            this.groupBox29.PerformLayout();
+            this.groupBox26.ResumeLayout(false);
+            this.splitContainer16.Panel1.ResumeLayout(false);
+            this.splitContainer16.Panel2.ResumeLayout(false);
+            this.splitContainer16.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer16)).EndInit();
+            this.splitContainer16.ResumeLayout(false);
+            this.splitContainer18.Panel1.ResumeLayout(false);
+            this.splitContainer18.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer18)).EndInit();
+            this.splitContainer18.ResumeLayout(false);
+            this.groupBox27.ResumeLayout(false);
+            this.groupBox27.PerformLayout();
             this.EditDisplay.ResumeLayout(false);
             this.EditDisplay.PerformLayout();
             this.OrderingDisplay.ResumeLayout(false);
@@ -1538,7 +2203,7 @@
         private GroupBox groupBox9;
         private GroupBox groupBox10;
         private Panel ProductImage;
-        private RichTextBox richTextBox1;
+        private RichTextBox ProductDescript;
         private Label label4;
         private TableLayoutPanel tableLayoutPanel4;
         private TableLayoutPanel tableLayoutPanel5;
@@ -1562,8 +2227,6 @@
         private Label label1;
         private GroupBox groupBox34;
         private Button ProductBack;
-        private Button ProductEdit;
-        private RichTextBox PricingText;
         private Button EditBack;
         private GroupBox Maingroup;
         private Button LogoutBtn;
@@ -1598,5 +2261,46 @@
         private TableLayoutPanel tableLayoutPanel10;
         private GroupBox groupBox13;
         private GroupBox groupBox14;
+        private RichTextBox ProductInfo;
+        private SplitContainer splitContainer10;
+        private SplitContainer splitContainer11;
+        private FlowLayoutPanel ProductOptionList;
+        private SplitContainer splitContainer12;
+        private SplitContainer splitContainer13;
+        private GroupBox groupBox15;
+        private TextBox ProductAmount;
+        private Button SaveProduct;
+        private TabControl ProductProperties;
+        private TabPage tabPage6;
+        private Panel panel3;
+        private TabPage tabPage7;
+        private TabPage tabPage8;
+        private TabPage tabPage9;
+        private TabPage tabPage10;
+        private FlowLayoutPanel SupplierList;
+        private SplitContainer splitContainer14;
+        private GroupBox groupBox17;
+        private TextBox SupplierSearch;
+        private GroupBox groupBox18;
+        private TableLayoutPanel tableLayoutPanel11;
+        private GroupBox groupBox24;
+        private TextBox ProductPrice;
+        private SplitContainer splitContainer15;
+        private Button DeleteRef;
+        private GroupBox groupBox25;
+        private Label ReservedLable;
+        private GroupBox groupBox26;
+        private FlowLayoutPanel ReferencedOrdersList;
+        private SplitContainer splitContainer16;
+        private GroupBox groupBox27;
+        private TextBox referenceSearch;
+        private SplitContainer splitContainer17;
+        private GroupBox groupBox28;
+        private TextBox ProductName;
+        private GroupBox groupBox29;
+        private TextBox PrepTime;
+        private SplitContainer splitContainer18;
+        private GroupBox groupBox16;
+        private TextBox ProductPassword;
     }
 }
