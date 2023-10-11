@@ -362,7 +362,7 @@ namespace Database_Control
                         DataIn = (Dictionary<string, object>)Data["INFO"];
 
                         List<Dictionary<string, object>> Delivery = Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }), "Bundle_ID");
-                        List<Dictionary<string, object>> Bundles = Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()) }), "Bundle_ID", "Product_ID", "Quantity");
+                        List<Dictionary<string, object>> Bundles = Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()) }), "Bundle_ID", "Product_ID", "Quantity", "Delivered");
                         int UpForDelete = 0;
                         int Restock = 0;
                         for (int i = 0; i < Bundles.Count; i++)
@@ -370,7 +370,7 @@ namespace Database_Control
                             if (Bundles[i]["Product_ID"].ToString().Equals(ProductID))
                             {
                                 UpForDelete++;
-                                Restock += (int)Bundles[i]["Quantity"];
+                                Restock += ((int)Bundles[i]["Delivered"] == 0 ?(int)Bundles[i]["Quantity"] : 0);
                             }
                         }
 
