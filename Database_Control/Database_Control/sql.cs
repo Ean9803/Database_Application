@@ -11,16 +11,19 @@ namespace Database_Control
     {
         private SqlConnection com;
 
-        public SQL(string Database, string Username, string Password)
+        public bool Connect(string Database, string Username, string Password)
         {
+            if (com != null)
+                com.Close();
             try
             {
                 com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True;MultipleActiveResultSets=true");
                 com.Open();
+                return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error opening Connection! " + ex.Message);
+                return false;
             }
         }
 

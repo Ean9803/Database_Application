@@ -381,7 +381,7 @@ namespace Database_Control
             List<Dictionary<string, object>> ProductInfo = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", ID.ToString()) }), "History");
             if (ProductInfo.Count > 0)
             {
-                Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", ID.ToString()) }), ("History", ProductInfo[0]["History"] + "\n[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "]: " + Log));
+                Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", ID.ToString()) }), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: " + Log + "\n" + ProductInfo[0]["History"]));
             }
         }
 
@@ -696,34 +696,41 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name", "Username");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name", "Username", "Position", "History", "Salesman_ID");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
                                     {
-                                        AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
-                                            OnClick: (object? sender, EventArgs e) =>
-                                            {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
-                                                if (Status.HasAbility(StatusType.Action.CanUpdateEmployee))
+                                        if (!item["Salesman_ID"].ToString().Equals(Status.GetIDNumber().ToString()))
+                                        {
+                                            AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
+                                                OnClick: (object? sender, EventArgs e) =>
                                                 {
-                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal);
-                                                }
-                                                if (Status.HasAbility(StatusType.Action.CanDeleteEmployee))
+                                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                    if (Status.HasAbility(StatusType.Action.CanUpdateEmployee))
+                                                    {
+                                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal);
+                                                    }
+                                                    if (Status.HasAbility(StatusType.Action.CanDeleteEmployee))
+                                                    {
+                                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
+                                                    }
+                                                    Form.SetDetailPanel(MainForm.PanelDetail.Employee);
+                                                    Form.FillEmployeeDisplay(item);
+                                                }, UnClick: () =>
                                                 {
-                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
-                                                }
-                                                Form.SetDetailPanel(MainForm.PanelDetail.Employee);
-                                                Form.FillEmployeeDisplay(item);
-                                            }, UnClick: () =>
-                                            {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
-                                                if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
-                                                {
-                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal);
-                                                }
-                                                Form.SetDetailPanel(MainForm.PanelDetail.None);
-                                            });
+                                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                    if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
+                                                    {
+                                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
+                                                        (object? sender, EventArgs Event) =>
+                                                        {
+                                                            Form.SetWindow(MainForm.WindowType.Employee, null);
+                                                        });
+                                                    }
+                                                    Form.SetDetailPanel(MainForm.PanelDetail.None);
+                                                });
+                                        }
                                     }
                                 }
                                 else
@@ -731,7 +738,11 @@ namespace Database_Control
                                     DeleteAllConents(Form.GetList(MainForm.List.ControlList));
                                     if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
                                     {
-                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal);
+                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
+                                        (object? sender, EventArgs Event) =>
+                                        {
+                                            Form.SetWindow(MainForm.WindowType.Employee, null);
+                                        });
                                     }
                                     Form.SetDetailPanel(MainForm.PanelDetail.None);
                                 }

@@ -9,20 +9,48 @@ namespace Database_Control
     public partial class MainForm : Form
     {
         public SQL Connection { get; internal set; }
+        public string FileName = "DataBaseOptions.options";
+        public string[] Servers = new string[] { "GameStation\\SQLEXPRESS" };
+
         public MainForm()
         {
-            Connection = new SQL("GameStation\\SQLEXPRESS", "root", "root");
-            InitializeComponent();
-
-            if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
+            Connection = new SQL();
+            string DataBase = "";
+            bool Quit = false;
+            if (!File.Exists(Application.StartupPath + FileName))
             {
-                Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("Security", int.MaxValue));
+                File.WriteAllText(Application.StartupPath + FileName, String.Join("\n", Servers));
             }
 
-            LogoutBtn.Visible = false;
+            do
+            {
+                CreateServerDialog((string Text) => { DataBase = Text; }, () => { Quit = true; }, Application.StartupPath + FileName);
+            } while (!Connection.Connect(DataBase, "root", "root") && !Quit);
 
-            if (AutoLogin)
-                LoginBtn_Click(this, EventArgs.Empty);
+            InitializeComponent();
+            if (!Quit)
+            {
+                if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
+                {
+                    Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("Security", int.MaxValue));
+                }
+
+                LogoutBtn.Visible = false;
+
+                if (AutoLogin)
+                    LoginBtn_Click(this, EventArgs.Empty);
+            }
+            else
+            {
+                this.Close();
+            }
+        }
+
+        public static void CreateServerDialog(InputField.InputEnd EndAction, Action QuitAction, string File)
+        {
+            InitForm ServerForm = new InitForm(EndAction, QuitAction, File);
+
+            ServerForm.ShowDialog();
         }
 
         private WindowData DisplayControl;
@@ -510,7 +538,12 @@ namespace Database_Control
 
         public void FillEmployeeDisplay(Dictionary<string, object> ListItems)
         {
-
+            EmployeeInfo.Clear();
+            EmployeeInfo.AppendText("Employee: " + ListItems["Name"].ToString() + "\n\n");
+            EmployeeInfo.AppendText("Position: " + ListItems["Position"].ToString() + "\n\n");
+            EmployeeInfo.AppendText("[USERNAME]: " + ListItems["Username"].ToString() + "\n");
+            EmployeeInfo.AppendText("-----------------[USER HISTORY]-----------------\n");
+            EmployeeInfo.AppendText(ListItems["History"].ToString());
         }
     }
 }
