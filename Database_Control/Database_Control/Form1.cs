@@ -213,6 +213,20 @@ namespace Database_Control
                 DeliveryInfo.AppendText("Order Created by: " + Employee[0]["Name"].ToString() + " | Current Position: " + Employee[0]["Position"].ToString() + "\n");
             else
                 DeliveryInfo.AppendText("Order Created by: [EMPLOYEE NOT FOUND]\n");
+            List<Dictionary<string, object>> Bundles = Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", ListItems["Bundle_ID"].ToString()) }), "Product_ID", "Delivered", "Quantity");
+            List<Dictionary<string, object>> Products;
+            List<Dictionary<string, object>> Company;
+            DateTime CreationDate = DateTime.ParseExact(ListItems["CreationDate"].ToString(), "dd/MM/yyyy",
+                                       System.Globalization.CultureInfo.InvariantCulture);
+            DeliveryInfo.AppendText("-------------[ORDER CONENTS]-------------\n");
+            DeliveryInfo.AppendText(string.Format("\t|{0,15}|{1,10}|{2,10}|{3,11}|{4,12}|\n", "Name(Quantity)", "Price($)", "Supplier", "[DELIVERED]", "[DUE DATE]"));
+            foreach (var item in Bundles)
+            {
+                Products = Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }), "Name", "Price", "Time", "Supplier");
+                Company = Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", Products[0]["Supplier"].ToString()) }), "Name");
+                DeliveryInfo.AppendText(string.Format("\t|{0,15}|{1,10}|{2,10}|{3,11}|{4,12}|\n", (Products[0]["Name"].ToString() + "(" + item["Quantity"].ToString() + ")"),
+                    Products[0]["Price"].ToString(), Company[0]["Name"].ToString(), ((int)item["Delivered"] == 1 ? "[YES]" : "[NO]"), (CreationDate.AddDays((int)Products[0]["Time"]).ToString("dd/MM/yyyy"))));
+            }
             DeliveryInfo.AppendText("[MEMO]:\n");
             DeliveryInfo.AppendText(ListItems["Memo"].ToString() + "\n");
             DeliveryInfo.AppendText("[ORDER HISTORY]:\n");
@@ -271,6 +285,8 @@ namespace Database_Control
             List<Dictionary<string, object>> Comp = Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", ListItems["Supplier"].ToString()) }), "Name");
             ProductInfo.AppendText("Supplier: " + Comp[0]["Name"].ToString() + "\n\n");
             ProductInfo.AppendText("Description:\n" + ListItems["Description"].ToString());
+            DeliveryInfo.AppendText("[PRODUCT HISTORY]:\n");
+            DeliveryInfo.AppendText(ListItems["History"].ToString());
         }
 
         public void SetReferencedNum(string Num)
@@ -484,7 +500,12 @@ namespace Database_Control
 
         public void FillCompanyDisplay(Dictionary<string, object> ListItems)
         {
-
+            CompanyInfo.Clear();
+            CompanyInfo.AppendText("Name: " + ListItems["Name"].ToString() + "\n");
+            CompanyInfo.AppendText("\n[CONTACT INFO]:\n");
+            CompanyInfo.AppendText("Phone: " + ListItems["Phone"].ToString() + "\n");
+            CompanyInfo.AppendText("Email: " + ListItems["Email"].ToString() + "\n");
+            CompanyInfo.AppendText("\nDescription:\n" + ListItems["Description"].ToString() + "\n");
         }
 
         public void FillEmployeeDisplay(Dictionary<string, object> ListItems)

@@ -602,7 +602,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "Image");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "Image", "History");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -934,15 +934,18 @@ namespace Database_Control
                                 if (Company.Count > 0)
                                 {
                                     Dictionary<string, object> Comp = Company[0].Item2();
-                                    Form.Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), ("Name", Form.GetProductName()),
-                                        ("Description", Form.GetProductDesc()), ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), 
-                                        ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]));
                                     string CompName = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", Comp["Company_ID"].ToString()) }), "Name")[0]["Name"].ToString();
-                                    UpdateUserHistory(Form, Status.GetIDNumber(), "User updated product: " + Form.GetProductName() +
-                                        "\n\t|Price: " + Form.GetProductPrice() +
-                                        "\n\t|Time: " + Form.GetPrepTime() +
-                                        "\n\t|Available: " + ((int)(Form.GetTotalAmount() - reservedAmount)).ToString() +
-                                        "\n\t|Supplier: " + CompName);
+                                    string Profile = "\n\t|Price: " + Form.GetProductPrice() +
+                                                     "\n\t|Time: " + Form.GetPrepTime() +
+                                                     "\n\t|Available: " + ((int)(Form.GetTotalAmount() - reservedAmount)).ToString() +
+                                                     "\n\t|Supplier: " + CompName;
+                                    UpdateUserHistory(Form, Status.GetIDNumber(), "User updated product: " + Form.GetProductName() + Profile);
+                                    string HistData = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] Modified by: " + Status.GetName() + ", position: " + Status.GetPosition();
+
+                                    Form.Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), ("Name", Form.GetProductName()),
+                                        ("Description", Form.GetProductDesc()), ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()),
+                                        ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]), ("History", HistData + Profile + "\n" + DataIn["History"].ToString()));
+
                                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                 }
                                 else
@@ -986,14 +989,17 @@ namespace Database_Control
                                         ProductID = Rand.Next(int.MinValue, int.MaxValue);
                                     }
                                     Dictionary<string, object> Comp = Company[0].Item2();
-                                    Form.Connection.InsertData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID", ProductID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
-                                        ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]));
                                     string CompName = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", Comp["Company_ID"].ToString()) }), "Name")[0]["Name"].ToString();
-                                    UpdateUserHistory(Form, Status.GetIDNumber(), "User created product: " + Form.GetProductName() +
-                                        "\n\t|Price: " + Form.GetProductPrice() +
-                                        "\n\t|Time: " + Form.GetPrepTime() +
-                                        "\n\t|Available: " + ((int)(Form.GetTotalAmount() - reservedAmount)).ToString() +
-                                        "\n\t|Supplier: " + CompName);
+                                    string Profile = "\n\t|Price: " + Form.GetProductPrice() +
+                                                     "\n\t|Time: " + Form.GetPrepTime() +
+                                                     "\n\t|Available: " + ((int)(Form.GetTotalAmount() - reservedAmount)).ToString() +
+                                                     "\n\t|Supplier: " + CompName;
+                                    UpdateUserHistory(Form, Status.GetIDNumber(), "User created product: " + Form.GetProductName() + Profile);
+                                    string HistData = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] Created by: " + Status.GetName() + ", position: " + Status.GetPosition();
+                                    Form.Connection.InsertData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID", ProductID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
+                                        ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]),
+                                        ("History", HistData + Profile + "\n" + DataIn["History"].ToString()));
+
                                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                 }
                                 else
@@ -1364,7 +1370,7 @@ namespace Database_Control
                             Stat = 2;
                         }
                     }
-                    Form.Connection.UpdateData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", DataIn["Order_ID"].ToString()) }), ("Memo", Form.GetMemo()), ("History", DataIn["History"] + "\n" + HistData), ("Status", Stat));
+                    Form.Connection.UpdateData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", DataIn["Order_ID"].ToString()) }), ("Memo", Form.GetMemo()), ("History", HistData + DataIn["History"]), ("Status", Stat));
                     Dictionary<string, object> Subject = (Dictionary<string, object>)Company[0].Item2();
                     UpdateUserHistory(Form, Status.GetIDNumber(), "User updated delivery to: " + Subject["Name"].ToString() + Log);
                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });

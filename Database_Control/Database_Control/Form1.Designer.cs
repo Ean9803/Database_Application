@@ -167,6 +167,7 @@
             this.splitContainer8 = new System.Windows.Forms.SplitContainer();
             this.LogoutBtn = new System.Windows.Forms.Button();
             this.TopUI = new System.Windows.Forms.FlowLayoutPanel();
+            this.CompanyInfo = new System.Windows.Forms.RichTextBox();
             this.MainDisplay.SuspendLayout();
             this.LoginDisplay.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -202,6 +203,7 @@
             this.tabPage3.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.ProductDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
@@ -322,7 +324,7 @@
             this.MainDisplay.Name = "MainDisplay";
             this.MainDisplay.Padding = new System.Drawing.Point(0, 0);
             this.MainDisplay.SelectedIndex = 0;
-            this.MainDisplay.Size = new System.Drawing.Size(976, 584);
+            this.MainDisplay.Size = new System.Drawing.Size(1126, 584);
             this.MainDisplay.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.MainDisplay.TabIndex = 0;
             this.MainDisplay.TabStop = false;
@@ -527,7 +529,7 @@
             this.DeliveryDisplay.Location = new System.Drawing.Point(4, 4);
             this.DeliveryDisplay.Margin = new System.Windows.Forms.Padding(0);
             this.DeliveryDisplay.Name = "DeliveryDisplay";
-            this.DeliveryDisplay.Size = new System.Drawing.Size(967, 576);
+            this.DeliveryDisplay.Size = new System.Drawing.Size(1117, 576);
             this.DeliveryDisplay.TabIndex = 0;
             // 
             // splitContainer6
@@ -546,7 +548,7 @@
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer6.Size = new System.Drawing.Size(967, 576);
+            this.splitContainer6.Size = new System.Drawing.Size(1117, 576);
             this.splitContainer6.SplitterDistance = 90;
             this.splitContainer6.SplitterWidth = 1;
             this.splitContainer6.TabIndex = 1;
@@ -558,7 +560,7 @@
             this.groupBox2.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(967, 90);
+            this.groupBox2.Size = new System.Drawing.Size(1117, 90);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Groups";
@@ -568,7 +570,7 @@
             this.OptionsList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OptionsList.Location = new System.Drawing.Point(3, 23);
             this.OptionsList.Name = "OptionsList";
-            this.OptionsList.Size = new System.Drawing.Size(961, 64);
+            this.OptionsList.Size = new System.Drawing.Size(1111, 64);
             this.OptionsList.TabIndex = 0;
             // 
             // splitContainer1
@@ -587,7 +589,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(967, 485);
+            this.splitContainer1.Size = new System.Drawing.Size(1117, 485);
             this.splitContainer1.SplitterDistance = 366;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 0;
@@ -638,7 +640,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Details);
-            this.splitContainer2.Size = new System.Drawing.Size(600, 485);
+            this.splitContainer2.Size = new System.Drawing.Size(750, 485);
             this.splitContainer2.SplitterDistance = 107;
             this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 0;
@@ -652,7 +654,7 @@
             this.ControlPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ControlPanel.Size = new System.Drawing.Size(600, 107);
+            this.ControlPanel.Size = new System.Drawing.Size(750, 107);
             this.ControlPanel.TabIndex = 0;
             this.ControlPanel.TabStop = false;
             this.ControlPanel.Text = "Control Panel";
@@ -671,7 +673,7 @@
             this.tableLayoutPanel9.RowCount = 1;
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(594, 79);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(744, 79);
             this.tableLayoutPanel9.TabIndex = 1;
             // 
             // groupBox3
@@ -681,7 +683,7 @@
             this.groupBox3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(112, 73);
+            this.groupBox3.Size = new System.Drawing.Size(142, 73);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Search";
@@ -691,7 +693,7 @@
             this.ItemSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ItemSearch.Location = new System.Drawing.Point(3, 23);
             this.ItemSearch.Name = "ItemSearch";
-            this.ItemSearch.Size = new System.Drawing.Size(106, 27);
+            this.ItemSearch.Size = new System.Drawing.Size(136, 27);
             this.ItemSearch.TabIndex = 0;
             this.ItemSearch.TextChanged += new System.EventHandler(this.ItemSearch_TextChanged);
             // 
@@ -700,9 +702,9 @@
             this.groupBox4.Controls.Add(this.ItemOptionPanel);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox4.Location = new System.Drawing.Point(121, 3);
+            this.groupBox4.Location = new System.Drawing.Point(151, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(470, 73);
+            this.groupBox4.Size = new System.Drawing.Size(590, 73);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Options";
@@ -713,7 +715,7 @@
             this.ItemOptionPanel.Location = new System.Drawing.Point(3, 23);
             this.ItemOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ItemOptionPanel.Name = "ItemOptionPanel";
-            this.ItemOptionPanel.Size = new System.Drawing.Size(464, 47);
+            this.ItemOptionPanel.Size = new System.Drawing.Size(584, 47);
             this.ItemOptionPanel.TabIndex = 0;
             // 
             // Details
@@ -725,7 +727,7 @@
             this.Details.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Details.Name = "Details";
             this.Details.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Details.Size = new System.Drawing.Size(600, 373);
+            this.Details.Size = new System.Drawing.Size(750, 373);
             this.Details.TabIndex = 0;
             this.Details.TabStop = false;
             this.Details.Text = "Details";
@@ -746,7 +748,7 @@
             this.DetailTabs.Name = "DetailTabs";
             this.DetailTabs.Padding = new System.Drawing.Point(0, 0);
             this.DetailTabs.SelectedIndex = 0;
-            this.DetailTabs.Size = new System.Drawing.Size(594, 345);
+            this.DetailTabs.Size = new System.Drawing.Size(744, 345);
             this.DetailTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.DetailTabs.TabIndex = 1;
             this.DetailTabs.TabStop = false;
@@ -804,6 +806,7 @@
             this.DeliveryInfo.BackColor = System.Drawing.SystemColors.InfoText;
             this.DeliveryInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DeliveryInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DeliveryInfo.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.DeliveryInfo.ForeColor = System.Drawing.SystemColors.Window;
             this.DeliveryInfo.Location = new System.Drawing.Point(3, 23);
             this.DeliveryInfo.Name = "DeliveryInfo";
@@ -811,7 +814,7 @@
             this.DeliveryInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.DeliveryInfo.Size = new System.Drawing.Size(569, 301);
             this.DeliveryInfo.TabIndex = 0;
-            this.DeliveryInfo.Text = "";
+            this.DeliveryInfo.Text = "\n";
             // 
             // tabPage3
             // 
@@ -842,6 +845,7 @@
             // 
             this.ProductInfo.BackColor = System.Drawing.Color.Black;
             this.ProductInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductInfo.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ProductInfo.ForeColor = System.Drawing.SystemColors.Window;
             this.ProductInfo.Location = new System.Drawing.Point(3, 23);
             this.ProductInfo.Name = "ProductInfo";
@@ -858,17 +862,18 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 4);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(5);
-            this.tabPage4.Size = new System.Drawing.Size(585, 337);
+            this.tabPage4.Size = new System.Drawing.Size(735, 337);
             this.tabPage4.TabIndex = 8;
             this.tabPage4.Text = "tabPage4";
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.CompanyInfo);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox7.ForeColor = System.Drawing.Color.White;
             this.groupBox7.Location = new System.Drawing.Point(5, 5);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(575, 327);
+            this.groupBox7.Size = new System.Drawing.Size(725, 327);
             this.groupBox7.TabIndex = 0;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Company";
@@ -1192,6 +1197,7 @@
             // 
             this.ProductDescript.BackColor = System.Drawing.SystemColors.MenuText;
             this.ProductDescript.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductDescript.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ProductDescript.ForeColor = System.Drawing.SystemColors.Window;
             this.ProductDescript.Location = new System.Drawing.Point(0, 0);
             this.ProductDescript.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -2080,7 +2086,7 @@
             this.Maingroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Maingroup.Name = "Maingroup";
             this.Maingroup.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Maingroup.Size = new System.Drawing.Size(982, 653);
+            this.Maingroup.Size = new System.Drawing.Size(1132, 653);
             this.Maingroup.TabIndex = 1;
             this.Maingroup.TabStop = false;
             // 
@@ -2100,7 +2106,7 @@
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.MainDisplay);
-            this.splitContainer7.Size = new System.Drawing.Size(976, 625);
+            this.splitContainer7.Size = new System.Drawing.Size(1126, 625);
             this.splitContainer7.SplitterDistance = 40;
             this.splitContainer7.SplitterWidth = 1;
             this.splitContainer7.TabIndex = 1;
@@ -2119,7 +2125,7 @@
             // splitContainer8.Panel2
             // 
             this.splitContainer8.Panel2.Controls.Add(this.TopUI);
-            this.splitContainer8.Size = new System.Drawing.Size(976, 40);
+            this.splitContainer8.Size = new System.Drawing.Size(1126, 40);
             this.splitContainer8.SplitterDistance = 100;
             this.splitContainer8.SplitterWidth = 1;
             this.splitContainer8.TabIndex = 1;
@@ -2143,8 +2149,21 @@
             this.TopUI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TopUI.Location = new System.Drawing.Point(0, 0);
             this.TopUI.Name = "TopUI";
-            this.TopUI.Size = new System.Drawing.Size(875, 40);
+            this.TopUI.Size = new System.Drawing.Size(1025, 40);
             this.TopUI.TabIndex = 0;
+            // 
+            // CompanyInfo
+            // 
+            this.CompanyInfo.BackColor = System.Drawing.SystemColors.MenuText;
+            this.CompanyInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CompanyInfo.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.CompanyInfo.ForeColor = System.Drawing.SystemColors.Window;
+            this.CompanyInfo.Location = new System.Drawing.Point(3, 23);
+            this.CompanyInfo.Name = "CompanyInfo";
+            this.CompanyInfo.ReadOnly = true;
+            this.CompanyInfo.Size = new System.Drawing.Size(719, 301);
+            this.CompanyInfo.TabIndex = 0;
+            this.CompanyInfo.Text = "";
             // 
             // MainForm
             // 
@@ -2152,12 +2171,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(982, 653);
+            this.ClientSize = new System.Drawing.Size(1132, 653);
             this.Controls.Add(this.Maingroup);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MinimumSize = new System.Drawing.Size(1000, 700);
+            this.MinimumSize = new System.Drawing.Size(1150, 700);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -2201,6 +2220,7 @@
             this.tabPage3.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.ProductDisplay.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
@@ -2464,5 +2484,6 @@
         private GroupBox groupBox33;
         private MaskedTextBox CompanyPhone;
         private TextBox CompanyEmail;
+        private RichTextBox CompanyInfo;
     }
 }
