@@ -74,3 +74,4 @@ C:\Users\irobo\OneDrive\Documents\Github\Database_Application\Database_Control\D
 C:\Users\irobo\OneDrive\Documents\Github\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\Database_Control.genruntimeconfig.cache
 C:\Users\irobo\OneDrive\Documents\Github\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\ref\Database_Control.dll
 C:\Users\irobo\OneDrive\Documents\Github\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\Database_Control.InitForm.resources
+C:\Users\irobo\Documents\GitHub\Database_Application\Database_Control\Database_Control\obj\Debug\net6.0-windows\Database_Control.InitForm.resources

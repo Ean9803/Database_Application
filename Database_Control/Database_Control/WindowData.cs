@@ -696,7 +696,7 @@ namespace Database_Control
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
                                 List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]",
                                     (Status.HasAbility(StatusType.Action.CanSeeEmployee) ? ("", new (string, string)[0]) : ("Salesman_ID=@ID", new (string, string)[] { ("@ID", Status.GetIDNumber().ToString()) })),
-                                    "Name", "Username", "Position", "History", "Salesman_ID");
+                                    "Name", "Username", "Position", "History", "Salesman_ID", "Password", "Image");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -797,7 +797,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Image", "Password");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Image");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -1315,7 +1315,7 @@ namespace Database_Control
                             Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), "History")[0]["History"].ToString();
 
                             Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Position", Position),
-                                ("Name", Form.GetProductName()), ("History", History));
+                                ("Name", Form.GetProductName()), ("History", History), ("Image", ""));
 
                             if (((int)DataIn["Salesman_ID"] == Status.GetIDNumber()))
                                 Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Password", Form.GetEmployeePass()));
@@ -1359,8 +1359,8 @@ namespace Database_Control
                                 string Position = Status.FindMatch(Actions);
                                 string History = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] User Created by: " + Status.GetName() + ", position: " + Status.GetPosition();
 
-                                Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Position", Position), ("Name", Form.GetProductName()),
-                                    ("Username", Form.GetEmployeeUser()), ("History", History), ("Password", Form.GetEmployeePass()));
+                                Form.Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", Position), ("Name", Form.GetProductName()),
+                                    ("Username", Form.GetEmployeeUser()), ("History", History), ("Password", Form.GetEmployeePass()), ("Image", ""));
 
                                 UpdateUserHistory(Form, Status.GetIDNumber(), "User Created user: " + Form.GetProductName() + "(" + Form.GetEmployeeUser() + " | " + Position + ")");
                                 Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });

@@ -11,7 +11,7 @@ namespace Database_Control
     {
         private SqlConnection com;
 
-        public bool Connect(string Database, string Username, string Password)
+        public bool Connect(string Database, string Username, string Password, out Exception? Ex)
         {
             if (com != null)
                 com.Close();
@@ -19,10 +19,12 @@ namespace Database_Control
             {
                 com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True;MultipleActiveResultSets=true");
                 com.Open();
+                Ex = null;
                 return true;
             }
             catch (Exception ex)
             {
+                Ex = ex;
                 return false;
             }
         }

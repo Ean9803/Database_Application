@@ -10,14 +10,14 @@ namespace Database_Control
     {
         public SQL Connection { get; internal set; }
         public string FileName = "DataBaseOptions.options";
-        public string[] Servers = new string[] { "GameStation\\SQLEXPRESS" };
+        public string[] Servers = new string[] { "GameStation\\SQLEXPRESS", "DESKTOP-E\\SQLEXPRESS" };
 
         public MainForm()
         {
             Connection = new SQL();
             string DataBase = "";
             bool Quit = false;
-
+            Exception? E = null;
             do
             {
                 if (!File.Exists(Application.StartupPath + FileName))
@@ -38,8 +38,13 @@ namespace Database_Control
                     File.AppendAllText(Application.StartupPath + FileName, "\n" + String.Join("\n", Add));
                 }
 
+                if (E != null)
+                {
+                    MessageBox.Show(E.Message);
+                }
+
                 CreateServerDialog((string Text) => { DataBase = Text; }, () => { Quit = true; }, Application.StartupPath + FileName);
-            } while (!Connection.Connect(DataBase, "root", "root") && !Quit);
+            } while (!Connection.Connect(DataBase, "root", "root", out E) && !Quit);
 
             InitializeComponent();
             if (!Quit)
@@ -254,9 +259,9 @@ namespace Database_Control
         public void FillDeliveryDisplay(Dictionary<string, object> ListItems)
         {
             DeliveryInfo.Clear();
-            DeliveryInfo.AppendText("Order ID: " + ListItems["Order_ID"].ToString() + 
+            DeliveryInfo.AppendText("Order ID: " + ListItems["Order_ID"].ToString() +
                 "\n--------------------------------------\n" +
-                "Order Status: " + WindowData.GetOrderStatus((int)ListItems["Status"]) + 
+                "Order Status: " + WindowData.GetOrderStatus((int)ListItems["Status"]) +
                 "\n--------------------------------------\n" +
                 "Order creation date: " + ListItems["CreationDate"].ToString());
             List<Dictionary<string, object>> Employee = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", ListItems["Salesman_ID"].ToString()) }), "Name", "Username", "Position");
@@ -372,7 +377,7 @@ namespace Database_Control
 
         public int GetPrepTime()
         {
-            if(int.TryParse(PrepTime.Text, out int Result))
+            if (int.TryParse(PrepTime.Text, out int Result))
             {
                 return Math.Max(Result, 0);
             }
@@ -494,7 +499,7 @@ namespace Database_Control
                             if (Bundles[i]["Product_ID"].ToString().Equals(ProductID))
                             {
                                 UpForDelete++;
-                                Restock += ((int)Bundles[i]["Delivered"] == 0 ?(int)Bundles[i]["Quantity"] : 0);
+                                Restock += ((int)Bundles[i]["Delivered"] == 0 ? (int)Bundles[i]["Quantity"] : 0);
                             }
                         }
 
@@ -567,7 +572,7 @@ namespace Database_Control
         {
             if (string.IsNullOrEmpty(CompanyEmail.Text))
                 return (true, "");
-            if(IsValidEmail(CompanyEmail.Text))
+            if (IsValidEmail(CompanyEmail.Text))
             {
                 return (true, CompanyEmail.Text);
             }
