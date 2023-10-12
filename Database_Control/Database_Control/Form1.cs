@@ -17,13 +17,27 @@ namespace Database_Control
             Connection = new SQL();
             string DataBase = "";
             bool Quit = false;
-            if (!File.Exists(Application.StartupPath + FileName))
-            {
-                File.WriteAllText(Application.StartupPath + FileName, String.Join("\n", Servers));
-            }
 
             do
             {
+                if (!File.Exists(Application.StartupPath + FileName))
+                {
+                    File.WriteAllText(Application.StartupPath + FileName, String.Join("\n", Servers));
+                }
+                else
+                {
+                    List<string> Contents = new List<string>(File.ReadAllLines(Application.StartupPath + FileName));
+                    List<string> Add = new List<string>();
+                    foreach (var item in Servers)
+                    {
+                        if (!Contents.Contains(item))
+                        {
+                            Add.Add(item);
+                        }
+                    }
+                    File.AppendAllText(Application.StartupPath + FileName, "\n" + String.Join("\n", Add));
+                }
+
                 CreateServerDialog((string Text) => { DataBase = Text; }, () => { Quit = true; }, Application.StartupPath + FileName);
             } while (!Connection.Connect(DataBase, "root", "root") && !Quit);
 

@@ -14,11 +14,18 @@ namespace Database_Control
     {
         InputField.InputEnd EndAction;
         Action QuitAction;
+        string OptionsFilePath;
         public InitForm(InputField.InputEnd EndAction, Action QuitAction, string FilePath)
         {
             InitializeComponent();
-            string[] Options = File.ReadAllLines(FilePath);
-            ServerOptions.Items.AddRange(Options);
+            List<string> Options = new List<string>(File.ReadAllLines(FilePath));
+            for (int i = Options.Count - 1; i >= 0; i--)
+            {
+                if (string.IsNullOrEmpty(Options[i]))
+                    Options.RemoveAt(i);
+            }
+            OptionsFilePath = FilePath;
+            ServerOptions.Items.AddRange(Options.ToArray());
             this.FilePath.Text = FilePath;
             this.EndAction = EndAction;
             this.QuitAction = QuitAction;
@@ -44,6 +51,13 @@ namespace Database_Control
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
 
+        }
+
+        private void RESET_Click(object sender, EventArgs e)
+        {
+            File.Delete(OptionsFilePath);
+            ServerOptions.Text = "";
+            this.Close();
         }
     }
 }
