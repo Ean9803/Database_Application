@@ -85,8 +85,6 @@
             this.ProductOptionList = new System.Windows.Forms.FlowLayoutPanel();
             this.splitContainer12 = new System.Windows.Forms.SplitContainer();
             this.splitContainer13 = new System.Windows.Forms.SplitContainer();
-            this.groupBox15 = new System.Windows.Forms.GroupBox();
-            this.ProductAmount = new System.Windows.Forms.TextBox();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.ProductPassword = new System.Windows.Forms.TextBox();
             this.SaveProduct = new System.Windows.Forms.Button();
@@ -108,13 +106,6 @@
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.groupBox18 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox24 = new System.Windows.Forms.GroupBox();
-            this.ProductPrice = new System.Windows.Forms.TextBox();
-            this.splitContainer15 = new System.Windows.Forms.SplitContainer();
-            this.groupBox25 = new System.Windows.Forms.GroupBox();
-            this.ReservedLable = new System.Windows.Forms.Label();
-            this.groupBox29 = new System.Windows.Forms.GroupBox();
-            this.PrepTime = new System.Windows.Forms.TextBox();
             this.groupBox26 = new System.Windows.Forms.GroupBox();
             this.splitContainer16 = new System.Windows.Forms.SplitContainer();
             this.splitContainer18 = new System.Windows.Forms.SplitContainer();
@@ -122,8 +113,28 @@
             this.referenceSearch = new System.Windows.Forms.TextBox();
             this.DeleteRef = new System.Windows.Forms.Button();
             this.ReferencedOrdersList = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage11 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox29 = new System.Windows.Forms.GroupBox();
+            this.PrepTime = new System.Windows.Forms.TextBox();
+            this.groupBox24 = new System.Windows.Forms.GroupBox();
+            this.ProductPrice = new System.Windows.Forms.TextBox();
+            this.tabPage12 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.ProductAmount = new System.Windows.Forms.TextBox();
+            this.groupBox25 = new System.Windows.Forms.GroupBox();
+            this.ReservedLable = new System.Windows.Forms.Label();
             this.tabPage9 = new System.Windows.Forms.TabPage();
-            this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.groupBox30 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox32 = new System.Windows.Forms.GroupBox();
+            this.CompanyPhone = new System.Windows.Forms.MaskedTextBox();
+            this.groupBox33 = new System.Windows.Forms.GroupBox();
+            this.CompanyEmail = new System.Windows.Forms.TextBox();
+            this.tabPage13 = new System.Windows.Forms.TabPage();
+            this.tabPage14 = new System.Windows.Forms.TabPage();
             this.EditDisplay = new System.Windows.Forms.TabPage();
             this.EditBack = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -219,10 +230,8 @@
             this.splitContainer12.Panel2.SuspendLayout();
             this.splitContainer12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer13)).BeginInit();
-            this.splitContainer13.Panel1.SuspendLayout();
             this.splitContainer13.Panel2.SuspendLayout();
             this.splitContainer13.SuspendLayout();
-            this.groupBox15.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer17)).BeginInit();
@@ -242,13 +251,6 @@
             this.tabPage8.SuspendLayout();
             this.groupBox18.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
-            this.groupBox24.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer15)).BeginInit();
-            this.splitContainer15.Panel1.SuspendLayout();
-            this.splitContainer15.Panel2.SuspendLayout();
-            this.splitContainer15.SuspendLayout();
-            this.groupBox25.SuspendLayout();
-            this.groupBox29.SuspendLayout();
             this.groupBox26.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer16)).BeginInit();
             this.splitContainer16.Panel1.SuspendLayout();
@@ -259,6 +261,20 @@
             this.splitContainer18.Panel2.SuspendLayout();
             this.splitContainer18.SuspendLayout();
             this.groupBox27.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage11.SuspendLayout();
+            this.tableLayoutPanel12.SuspendLayout();
+            this.groupBox29.SuspendLayout();
+            this.groupBox24.SuspendLayout();
+            this.tabPage12.SuspendLayout();
+            this.tableLayoutPanel13.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            this.groupBox25.SuspendLayout();
+            this.tabPage9.SuspendLayout();
+            this.groupBox30.SuspendLayout();
+            this.tableLayoutPanel14.SuspendLayout();
+            this.groupBox32.SuspendLayout();
+            this.groupBox33.SuspendLayout();
             this.EditDisplay.SuspendLayout();
             this.OrderingDisplay.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -1065,10 +1081,6 @@
             this.splitContainer13.Name = "splitContainer13";
             this.splitContainer13.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer13.Panel1
-            // 
-            this.splitContainer13.Panel1.Controls.Add(this.groupBox15);
-            // 
             // splitContainer13.Panel2
             // 
             this.splitContainer13.Panel2.Controls.Add(this.groupBox16);
@@ -1076,26 +1088,6 @@
             this.splitContainer13.SplitterDistance = 49;
             this.splitContainer13.SplitterWidth = 1;
             this.splitContainer13.TabIndex = 1;
-            // 
-            // groupBox15
-            // 
-            this.groupBox15.Controls.Add(this.ProductAmount);
-            this.groupBox15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox15.ForeColor = System.Drawing.SystemColors.Control;
-            this.groupBox15.Location = new System.Drawing.Point(0, 0);
-            this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(136, 49);
-            this.groupBox15.TabIndex = 0;
-            this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Total Amount";
-            // 
-            // ProductAmount
-            // 
-            this.ProductAmount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ProductAmount.Location = new System.Drawing.Point(3, 23);
-            this.ProductAmount.Name = "ProductAmount";
-            this.ProductAmount.Size = new System.Drawing.Size(130, 27);
-            this.ProductAmount.TabIndex = 0;
             // 
             // groupBox16
             // 
@@ -1229,7 +1221,8 @@
             this.ProductProperties.Controls.Add(this.tabPage7);
             this.ProductProperties.Controls.Add(this.tabPage8);
             this.ProductProperties.Controls.Add(this.tabPage9);
-            this.ProductProperties.Controls.Add(this.tabPage10);
+            this.ProductProperties.Controls.Add(this.tabPage13);
+            this.ProductProperties.Controls.Add(this.tabPage14);
             this.ProductProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ProductProperties.ItemSize = new System.Drawing.Size(1, 1);
             this.ProductProperties.Location = new System.Drawing.Point(3, 24);
@@ -1357,109 +1350,26 @@
             // 
             this.tableLayoutPanel11.ColumnCount = 1;
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Controls.Add(this.groupBox24, 0, 0);
-            this.tableLayoutPanel11.Controls.Add(this.splitContainer15, 0, 1);
-            this.tableLayoutPanel11.Controls.Add(this.groupBox26, 0, 2);
+            this.tableLayoutPanel11.Controls.Add(this.groupBox26, 0, 1);
+            this.tableLayoutPanel11.Controls.Add(this.tabControl1, 0, 0);
             this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 23);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
-            this.tableLayoutPanel11.RowCount = 3;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 112F));
+            this.tableLayoutPanel11.RowCount = 2;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 213F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel11.Size = new System.Drawing.Size(194, 504);
             this.tableLayoutPanel11.TabIndex = 0;
-            // 
-            // groupBox24
-            // 
-            this.groupBox24.Controls.Add(this.ProductPrice);
-            this.groupBox24.ForeColor = System.Drawing.SystemColors.Control;
-            this.groupBox24.Location = new System.Drawing.Point(3, 3);
-            this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Size = new System.Drawing.Size(188, 64);
-            this.groupBox24.TabIndex = 0;
-            this.groupBox24.TabStop = false;
-            this.groupBox24.Text = "$Price";
-            // 
-            // ProductPrice
-            // 
-            this.ProductPrice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ProductPrice.Location = new System.Drawing.Point(3, 23);
-            this.ProductPrice.Name = "ProductPrice";
-            this.ProductPrice.Size = new System.Drawing.Size(182, 27);
-            this.ProductPrice.TabIndex = 0;
-            // 
-            // splitContainer15
-            // 
-            this.splitContainer15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer15.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer15.Location = new System.Drawing.Point(3, 73);
-            this.splitContainer15.Name = "splitContainer15";
-            this.splitContainer15.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer15.Panel1
-            // 
-            this.splitContainer15.Panel1.Controls.Add(this.groupBox25);
-            // 
-            // splitContainer15.Panel2
-            // 
-            this.splitContainer15.Panel2.Controls.Add(this.groupBox29);
-            this.splitContainer15.Size = new System.Drawing.Size(188, 106);
-            this.splitContainer15.SplitterDistance = 43;
-            this.splitContainer15.SplitterWidth = 1;
-            this.splitContainer15.TabIndex = 1;
-            // 
-            // groupBox25
-            // 
-            this.groupBox25.Controls.Add(this.ReservedLable);
-            this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox25.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox25.Location = new System.Drawing.Point(0, 0);
-            this.groupBox25.Name = "groupBox25";
-            this.groupBox25.Size = new System.Drawing.Size(188, 43);
-            this.groupBox25.TabIndex = 0;
-            this.groupBox25.TabStop = false;
-            this.groupBox25.Text = "Reserved Amt:";
-            // 
-            // ReservedLable
-            // 
-            this.ReservedLable.AutoSize = true;
-            this.ReservedLable.BackColor = System.Drawing.Color.Transparent;
-            this.ReservedLable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ReservedLable.Location = new System.Drawing.Point(3, 23);
-            this.ReservedLable.Name = "ReservedLable";
-            this.ReservedLable.Size = new System.Drawing.Size(73, 20);
-            this.ReservedLable.TabIndex = 0;
-            this.ReservedLable.Text = "lReserved";
-            // 
-            // groupBox29
-            // 
-            this.groupBox29.Controls.Add(this.PrepTime);
-            this.groupBox29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox29.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox29.Location = new System.Drawing.Point(0, 0);
-            this.groupBox29.Name = "groupBox29";
-            this.groupBox29.Size = new System.Drawing.Size(188, 62);
-            this.groupBox29.TabIndex = 0;
-            this.groupBox29.TabStop = false;
-            this.groupBox29.Text = "Prep Time";
-            // 
-            // PrepTime
-            // 
-            this.PrepTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PrepTime.Location = new System.Drawing.Point(3, 23);
-            this.PrepTime.Name = "PrepTime";
-            this.PrepTime.Size = new System.Drawing.Size(182, 27);
-            this.PrepTime.TabIndex = 0;
             // 
             // groupBox26
             // 
             this.groupBox26.Controls.Add(this.splitContainer16);
             this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox26.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.groupBox26.Location = new System.Drawing.Point(3, 185);
+            this.groupBox26.Location = new System.Drawing.Point(3, 216);
             this.groupBox26.Name = "groupBox26";
-            this.groupBox26.Size = new System.Drawing.Size(188, 316);
+            this.groupBox26.Size = new System.Drawing.Size(188, 285);
             this.groupBox26.TabIndex = 2;
             this.groupBox26.TabStop = false;
             this.groupBox26.Text = "Referenced Orders";
@@ -1480,7 +1390,7 @@
             // splitContainer16.Panel2
             // 
             this.splitContainer16.Panel2.Controls.Add(this.ReferencedOrdersList);
-            this.splitContainer16.Size = new System.Drawing.Size(182, 290);
+            this.splitContainer16.Size = new System.Drawing.Size(182, 259);
             this.splitContainer16.SplitterDistance = 111;
             this.splitContainer16.TabIndex = 1;
             // 
@@ -1545,13 +1455,168 @@
             this.ReferencedOrdersList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.ReferencedOrdersList.Location = new System.Drawing.Point(0, 0);
             this.ReferencedOrdersList.Name = "ReferencedOrdersList";
-            this.ReferencedOrdersList.Size = new System.Drawing.Size(182, 175);
+            this.ReferencedOrdersList.Size = new System.Drawing.Size(182, 144);
             this.ReferencedOrdersList.TabIndex = 0;
             this.ReferencedOrdersList.WrapContents = false;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+            this.tabControl1.Controls.Add(this.tabPage11);
+            this.tabControl1.Controls.Add(this.tabPage12);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.HotTrack = true;
+            this.tabControl1.Location = new System.Drawing.Point(3, 3);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(188, 207);
+            this.tabControl1.TabIndex = 3;
+            // 
+            // tabPage11
+            // 
+            this.tabPage11.BackColor = System.Drawing.Color.Black;
+            this.tabPage11.Controls.Add(this.tableLayoutPanel12);
+            this.tabPage11.ForeColor = System.Drawing.Color.Black;
+            this.tabPage11.Location = new System.Drawing.Point(4, 32);
+            this.tabPage11.Name = "tabPage11";
+            this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage11.Size = new System.Drawing.Size(180, 171);
+            this.tabPage11.TabIndex = 0;
+            this.tabPage11.Text = "Process";
+            // 
+            // tableLayoutPanel12
+            // 
+            this.tableLayoutPanel12.ColumnCount = 1;
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel12.Controls.Add(this.groupBox29, 0, 1);
+            this.tableLayoutPanel12.Controls.Add(this.groupBox24, 0, 0);
+            this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel12.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
+            this.tableLayoutPanel12.RowCount = 2;
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(174, 165);
+            this.tableLayoutPanel12.TabIndex = 0;
+            // 
+            // groupBox29
+            // 
+            this.groupBox29.Controls.Add(this.PrepTime);
+            this.groupBox29.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox29.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox29.Location = new System.Drawing.Point(3, 85);
+            this.groupBox29.Name = "groupBox29";
+            this.groupBox29.Size = new System.Drawing.Size(168, 77);
+            this.groupBox29.TabIndex = 0;
+            this.groupBox29.TabStop = false;
+            this.groupBox29.Text = "Prep Time";
+            // 
+            // PrepTime
+            // 
+            this.PrepTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PrepTime.Location = new System.Drawing.Point(3, 23);
+            this.PrepTime.Name = "PrepTime";
+            this.PrepTime.Size = new System.Drawing.Size(162, 27);
+            this.PrepTime.TabIndex = 0;
+            // 
+            // groupBox24
+            // 
+            this.groupBox24.Controls.Add(this.ProductPrice);
+            this.groupBox24.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox24.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox24.Location = new System.Drawing.Point(3, 3);
+            this.groupBox24.Name = "groupBox24";
+            this.groupBox24.Size = new System.Drawing.Size(168, 76);
+            this.groupBox24.TabIndex = 0;
+            this.groupBox24.TabStop = false;
+            this.groupBox24.Text = "$Price";
+            // 
+            // ProductPrice
+            // 
+            this.ProductPrice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductPrice.Location = new System.Drawing.Point(3, 23);
+            this.ProductPrice.Name = "ProductPrice";
+            this.ProductPrice.Size = new System.Drawing.Size(162, 27);
+            this.ProductPrice.TabIndex = 0;
+            // 
+            // tabPage12
+            // 
+            this.tabPage12.BackColor = System.Drawing.Color.Black;
+            this.tabPage12.Controls.Add(this.tableLayoutPanel13);
+            this.tabPage12.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage12.Location = new System.Drawing.Point(4, 32);
+            this.tabPage12.Name = "tabPage12";
+            this.tabPage12.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage12.Size = new System.Drawing.Size(180, 171);
+            this.tabPage12.TabIndex = 1;
+            this.tabPage12.Text = "Stock";
+            // 
+            // tableLayoutPanel13
+            // 
+            this.tableLayoutPanel13.ColumnCount = 1;
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel13.Controls.Add(this.groupBox15, 0, 0);
+            this.tableLayoutPanel13.Controls.Add(this.groupBox25, 0, 1);
+            this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel13.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
+            this.tableLayoutPanel13.RowCount = 2;
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(174, 165);
+            this.tableLayoutPanel13.TabIndex = 0;
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.ProductAmount);
+            this.groupBox15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox15.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox15.Location = new System.Drawing.Point(3, 3);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(168, 76);
+            this.groupBox15.TabIndex = 0;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "Total Amount";
+            // 
+            // ProductAmount
+            // 
+            this.ProductAmount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ProductAmount.Location = new System.Drawing.Point(3, 23);
+            this.ProductAmount.Name = "ProductAmount";
+            this.ProductAmount.Size = new System.Drawing.Size(162, 27);
+            this.ProductAmount.TabIndex = 0;
+            // 
+            // groupBox25
+            // 
+            this.groupBox25.Controls.Add(this.ReservedLable);
+            this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox25.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox25.Location = new System.Drawing.Point(3, 85);
+            this.groupBox25.Name = "groupBox25";
+            this.groupBox25.Size = new System.Drawing.Size(168, 77);
+            this.groupBox25.TabIndex = 0;
+            this.groupBox25.TabStop = false;
+            this.groupBox25.Text = "Reserved Amt:";
+            // 
+            // ReservedLable
+            // 
+            this.ReservedLable.AutoSize = true;
+            this.ReservedLable.BackColor = System.Drawing.Color.Transparent;
+            this.ReservedLable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReservedLable.Location = new System.Drawing.Point(3, 23);
+            this.ReservedLable.Name = "ReservedLable";
+            this.ReservedLable.Size = new System.Drawing.Size(73, 20);
+            this.ReservedLable.TabIndex = 0;
+            this.ReservedLable.Text = "lReserved";
             // 
             // tabPage9
             // 
             this.tabPage9.BackColor = System.Drawing.Color.Black;
+            this.tabPage9.Controls.Add(this.groupBox30);
             this.tabPage9.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.tabPage9.Location = new System.Drawing.Point(4, 4);
             this.tabPage9.Name = "tabPage9";
@@ -1560,16 +1625,95 @@
             this.tabPage9.TabIndex = 8;
             this.tabPage9.Text = "tabPage9";
             // 
-            // tabPage10
+            // groupBox30
             // 
-            this.tabPage10.BackColor = System.Drawing.Color.Black;
-            this.tabPage10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.tabPage10.Location = new System.Drawing.Point(4, 4);
-            this.tabPage10.Name = "tabPage10";
-            this.tabPage10.Padding = new System.Windows.Forms.Padding(5);
-            this.tabPage10.Size = new System.Drawing.Size(210, 540);
-            this.tabPage10.TabIndex = 9;
-            this.tabPage10.Text = "tabPage10";
+            this.groupBox30.Controls.Add(this.tableLayoutPanel14);
+            this.groupBox30.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox30.ForeColor = System.Drawing.Color.White;
+            this.groupBox30.Location = new System.Drawing.Point(5, 5);
+            this.groupBox30.Name = "groupBox30";
+            this.groupBox30.Size = new System.Drawing.Size(200, 530);
+            this.groupBox30.TabIndex = 0;
+            this.groupBox30.TabStop = false;
+            this.groupBox30.Text = "Contact";
+            // 
+            // tableLayoutPanel14
+            // 
+            this.tableLayoutPanel14.ColumnCount = 1;
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel14.Controls.Add(this.groupBox32, 0, 0);
+            this.tableLayoutPanel14.Controls.Add(this.groupBox33, 0, 1);
+            this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel14.Location = new System.Drawing.Point(3, 23);
+            this.tableLayoutPanel14.Name = "tableLayoutPanel14";
+            this.tableLayoutPanel14.RowCount = 3;
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(194, 504);
+            this.tableLayoutPanel14.TabIndex = 0;
+            // 
+            // groupBox32
+            // 
+            this.groupBox32.Controls.Add(this.CompanyPhone);
+            this.groupBox32.ForeColor = System.Drawing.Color.White;
+            this.groupBox32.Location = new System.Drawing.Point(3, 3);
+            this.groupBox32.Name = "groupBox32";
+            this.groupBox32.Size = new System.Drawing.Size(188, 94);
+            this.groupBox32.TabIndex = 0;
+            this.groupBox32.TabStop = false;
+            this.groupBox32.Text = "Main Phone";
+            // 
+            // CompanyPhone
+            // 
+            this.CompanyPhone.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CompanyPhone.Location = new System.Drawing.Point(3, 23);
+            this.CompanyPhone.Mask = "(999) 000-0000";
+            this.CompanyPhone.Name = "CompanyPhone";
+            this.CompanyPhone.RejectInputOnFirstFailure = true;
+            this.CompanyPhone.Size = new System.Drawing.Size(182, 27);
+            this.CompanyPhone.TabIndex = 0;
+            // 
+            // groupBox33
+            // 
+            this.groupBox33.Controls.Add(this.CompanyEmail);
+            this.groupBox33.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox33.ForeColor = System.Drawing.Color.White;
+            this.groupBox33.Location = new System.Drawing.Point(3, 103);
+            this.groupBox33.Name = "groupBox33";
+            this.groupBox33.Size = new System.Drawing.Size(188, 94);
+            this.groupBox33.TabIndex = 1;
+            this.groupBox33.TabStop = false;
+            this.groupBox33.Text = "Main Email";
+            // 
+            // CompanyEmail
+            // 
+            this.CompanyEmail.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CompanyEmail.Location = new System.Drawing.Point(3, 23);
+            this.CompanyEmail.Name = "CompanyEmail";
+            this.CompanyEmail.Size = new System.Drawing.Size(182, 27);
+            this.CompanyEmail.TabIndex = 0;
+            // 
+            // tabPage13
+            // 
+            this.tabPage13.BackColor = System.Drawing.Color.Black;
+            this.tabPage13.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage13.Location = new System.Drawing.Point(4, 4);
+            this.tabPage13.Name = "tabPage13";
+            this.tabPage13.Size = new System.Drawing.Size(210, 540);
+            this.tabPage13.TabIndex = 10;
+            this.tabPage13.Text = "tabPage13";
+            // 
+            // tabPage14
+            // 
+            this.tabPage14.BackColor = System.Drawing.Color.Black;
+            this.tabPage14.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage14.Location = new System.Drawing.Point(4, 4);
+            this.tabPage14.Name = "tabPage14";
+            this.tabPage14.Size = new System.Drawing.Size(210, 540);
+            this.tabPage14.TabIndex = 11;
+            this.tabPage14.Text = "tabPage14";
             // 
             // EditDisplay
             // 
@@ -2084,12 +2228,9 @@
             this.splitContainer12.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer12)).EndInit();
             this.splitContainer12.ResumeLayout(false);
-            this.splitContainer13.Panel1.ResumeLayout(false);
             this.splitContainer13.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer13)).EndInit();
             this.splitContainer13.ResumeLayout(false);
-            this.groupBox15.ResumeLayout(false);
-            this.groupBox15.PerformLayout();
             this.groupBox16.ResumeLayout(false);
             this.groupBox16.PerformLayout();
             this.groupBox9.ResumeLayout(false);
@@ -2112,16 +2253,6 @@
             this.tabPage8.ResumeLayout(false);
             this.groupBox18.ResumeLayout(false);
             this.tableLayoutPanel11.ResumeLayout(false);
-            this.groupBox24.ResumeLayout(false);
-            this.groupBox24.PerformLayout();
-            this.splitContainer15.Panel1.ResumeLayout(false);
-            this.splitContainer15.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer15)).EndInit();
-            this.splitContainer15.ResumeLayout(false);
-            this.groupBox25.ResumeLayout(false);
-            this.groupBox25.PerformLayout();
-            this.groupBox29.ResumeLayout(false);
-            this.groupBox29.PerformLayout();
             this.groupBox26.ResumeLayout(false);
             this.splitContainer16.Panel1.ResumeLayout(false);
             this.splitContainer16.Panel2.ResumeLayout(false);
@@ -2134,6 +2265,26 @@
             this.splitContainer18.ResumeLayout(false);
             this.groupBox27.ResumeLayout(false);
             this.groupBox27.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage11.ResumeLayout(false);
+            this.tableLayoutPanel12.ResumeLayout(false);
+            this.groupBox29.ResumeLayout(false);
+            this.groupBox29.PerformLayout();
+            this.groupBox24.ResumeLayout(false);
+            this.groupBox24.PerformLayout();
+            this.tabPage12.ResumeLayout(false);
+            this.tableLayoutPanel13.ResumeLayout(false);
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox15.PerformLayout();
+            this.groupBox25.ResumeLayout(false);
+            this.groupBox25.PerformLayout();
+            this.tabPage9.ResumeLayout(false);
+            this.groupBox30.ResumeLayout(false);
+            this.tableLayoutPanel14.ResumeLayout(false);
+            this.groupBox32.ResumeLayout(false);
+            this.groupBox32.PerformLayout();
+            this.groupBox33.ResumeLayout(false);
+            this.groupBox33.PerformLayout();
             this.EditDisplay.ResumeLayout(false);
             this.EditDisplay.PerformLayout();
             this.OrderingDisplay.ResumeLayout(false);
@@ -2276,7 +2427,6 @@
         private TabPage tabPage7;
         private TabPage tabPage8;
         private TabPage tabPage9;
-        private TabPage tabPage10;
         private FlowLayoutPanel SupplierList;
         private SplitContainer splitContainer14;
         private GroupBox groupBox17;
@@ -2285,7 +2435,6 @@
         private TableLayoutPanel tableLayoutPanel11;
         private GroupBox groupBox24;
         private TextBox ProductPrice;
-        private SplitContainer splitContainer15;
         private Button DeleteRef;
         private GroupBox groupBox25;
         private Label ReservedLable;
@@ -2302,5 +2451,18 @@
         private SplitContainer splitContainer18;
         private GroupBox groupBox16;
         private TextBox ProductPassword;
+        private TabControl tabControl1;
+        private TabPage tabPage11;
+        private TableLayoutPanel tableLayoutPanel12;
+        private TabPage tabPage12;
+        private TableLayoutPanel tableLayoutPanel13;
+        private TabPage tabPage13;
+        private TabPage tabPage14;
+        private GroupBox groupBox30;
+        private TableLayoutPanel tableLayoutPanel14;
+        private GroupBox groupBox32;
+        private GroupBox groupBox33;
+        private MaskedTextBox CompanyPhone;
+        private TextBox CompanyEmail;
     }
 }

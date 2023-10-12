@@ -2,6 +2,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System;
 using Microsoft.VisualBasic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Database_Control
 {
@@ -26,15 +27,46 @@ namespace Database_Control
 
         private WindowData DisplayControl;
         private StatusType Stat;
-        public enum WindowType { Login, Delivery, Product, Edit, Ordering }
 
-        public void SetWindow(WindowType Type, Dictionary<string, object> DataIn)
+        public class WindowProfile
+        {
+            private int Window;
+            public int Tab { internal set; get; }
+
+            public WindowProfile(int Window, int Tab)
+            {
+                this.Window = Window;
+                this.Tab = Tab;
+            }
+
+            public override bool Equals([NotNullWhen(true)] object? obj)
+            {
+                return (obj as WindowProfile)?.Window == this.Window;
+            }
+
+            public override int GetHashCode()
+            {
+                return this.Window;
+            }
+        }
+        public class WindowType
+        {
+            public static readonly WindowProfile Login = new WindowProfile(0, 0);
+            public static readonly WindowProfile Delivery = new WindowProfile(1, 1);
+            public static readonly WindowProfile Product = new WindowProfile(2, 2);
+            public static readonly WindowProfile Company = new WindowProfile(3, 2);
+            public static readonly WindowProfile Employee = new WindowProfile(4, 2);
+            public static readonly WindowProfile Ordering = new WindowProfile(5, 4);
+        }
+        //public enum WindowType { Login, Delivery, Product, Company, Ordering }
+
+        public void SetWindow(WindowProfile Type, Dictionary<string, object> DataIn)
         {
             if (DisplayControl != null)
             {
                 if (DisplayControl.OpenWindow(Type, DataIn))
                 {
-                    MainDisplay.SelectTab((int)Type);
+                    MainDisplay.SelectTab(Type.Tab);
                 }
             }
             else
@@ -404,6 +436,50 @@ namespace Database_Control
         public void SetPropertiesWindow(int Index)
         {
             ProductProperties.SelectTab(Index);
+        }
+
+        public void SetPhone(string Phone)
+        {
+            CompanyPhone.Text = Phone;
+        }
+
+        public void SetEmail(string Email)
+        {
+            CompanyEmail.Text = Email;
+        }
+
+        public string GetPhone()
+        {
+            return CompanyPhone.Text;
+        }
+
+        private bool IsValidEmail(string eMail)
+        {
+            bool Result = false;
+
+            try
+            {
+                var eMailValidator = new System.Net.Mail.MailAddress(eMail);
+
+                Result = (eMail.LastIndexOf(".") > eMail.LastIndexOf("@"));
+            }
+            catch
+            {
+                Result = false;
+            };
+
+            return Result;
+        }
+
+        public (bool, string) GetEmail()
+        {
+            if (string.IsNullOrEmpty(CompanyEmail.Text))
+                return (true, "");
+            if(IsValidEmail(CompanyEmail.Text))
+            {
+                return (true, CompanyEmail.Text);
+            }
+            return (false, "");
         }
 
         public void FillCompanyDisplay(Dictionary<string, object> ListItems)

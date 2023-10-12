@@ -16,16 +16,17 @@ namespace Database_Control
         public delegate Dictionary<string, object> CollectionReturn();
         public delegate List<(bool, Control)> CreateButonConent();
 
-        private Dictionary<MainForm.WindowType, NewWindowState> Windows = new Dictionary<MainForm.WindowType, NewWindowState>()
+        private Dictionary<MainForm.WindowProfile, NewWindowState> Windows = new Dictionary<MainForm.WindowProfile, NewWindowState>()
         {
             { MainForm.WindowType.Login, OpenLogin },
             { MainForm.WindowType.Delivery, OpenDelivery },
             { MainForm.WindowType.Product, OpenProduct },
-            { MainForm.WindowType.Edit, OpenEdit },
+            { MainForm.WindowType.Company, OpenCompany },
+            { MainForm.WindowType.Employee, OpenEmployee },
             { MainForm.WindowType.Ordering, OpenOrdering },
         };
 
-        public bool OpenWindow(MainForm.WindowType Type, Dictionary<string, object> DataIn)
+        public bool OpenWindow(MainForm.WindowProfile Type, Dictionary<string, object> DataIn)
         {
             if (Windows.ContainsKey(Type))
             {
@@ -308,6 +309,22 @@ namespace Database_Control
             }
         }
 
+        private static void SelectItem(FlowLayoutPanel list, string Item)
+        {
+            List<(double, int)> Sorted = new List<(double, int)>();
+            for (int i = 0; i < list.Controls.Count; i++)
+            {
+                string Title = list.Controls[i].Controls[0].Text.Substring(list.Controls[i].Controls[0].Text.IndexOf(':') + 1).Trim();
+                double Percent = CalculateSimilarity(Title, Item);
+                Sorted.Add((Percent, i));
+            }
+            Sorted.Sort((x, y) => { return (x.Item1 == y.Item1 ? 0 : MathF.Sign((float)(y.Item1 - x.Item1))); });
+            if (Sorted.Count > 0)
+            {
+                SelectItem(list, Sorted[0].Item2);
+            }
+        }
+
         public static void SortItems(FlowLayoutPanel list, string Text)
         {
             List<(double, Control)> Sorted = new List<(double, Control)>();
@@ -368,6 +385,102 @@ namespace Database_Control
             }
         }
 
+        private static void DeleteDelivery(MainForm Form, StatusType Status, Dictionary<string, object> item)
+        {
+            List<Dictionary<string, object>> OrderBundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", item["Bundle_ID"].ToString()) }), "Product_ID", "Quantity", "Delivered");
+            List<Dictionary<string, object>> ProductInfo;
+            List<string> RestoredProducts = new List<string>();
+            List<string> NonRestoredProducts = new List<string>();
+            foreach (var itemProduct in OrderBundles)
+            {
+                ProductInfo = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", itemProduct["Product_ID"].ToString()) }), "Available_Amt", "Name");
+                if ((int)itemProduct["Delivered"] == 0)
+                {
+                    Form.Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", itemProduct["Product_ID"].ToString()) }),
+                        ("Available_Amt", (((int)ProductInfo[0]["Available_Amt"]) + ((int)itemProduct["Quantity"])).ToString()));
+                    RestoredProducts.Add(ProductInfo[0]["Name"].ToString() + "(" + ProductInfo[0]["Available_Amt"].ToString() + ")");
+                }
+                else
+                {
+                    NonRestoredProducts.Add(ProductInfo[0]["Name"].ToString() + "(" + ProductInfo[0]["Available_Amt"].ToString() + ")");
+                }
+            }
+            ProductInfo = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Name");
+            Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", item["Bundle_ID"].ToString()) }));
+            Form.Connection.DeleteData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", item["Order_ID"].ToString()) }));
+            UpdateUserHistory(Form, Status.GetIDNumber(), "User deleted order: " + item["Order_ID"].ToString() +
+                "\n\t|Restored: [" + String.Join(", ", RestoredProducts) + "]" +
+                "\n\t|Not Restored: [" + String.Join(", ", NonRestoredProducts) + "]" +
+                "\n\t|To be delivered to: " + ProductInfo[0]["Name"].ToString() +
+                "\n\t|Created on: " + item["CreationDate"].ToString());
+        }
+
+        private static void DeleteProduct(MainForm Form, StatusType Status, Dictionary<string, object> item)
+        {
+            List<Dictionary<string, object>> Included = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }), "Bundle_ID");
+            List<string> DeletedItemsProduct = new List<string>();
+            List<string> DeletedItemsOrder = new List<string>();
+            foreach (var Bundle in Included)
+            {
+                string OrderID = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Bundle["Bundle_ID"].ToString()) }), "Order_ID")[0]["Order_ID"].ToString();
+
+                if (!DeletedItemsProduct.Contains(item["Name"].ToString()))
+                    DeletedItemsProduct.Add(item["Name"].ToString());
+
+                if (!DeletedItemsOrder.Contains(OrderID))
+                    DeletedItemsOrder.Add(OrderID);
+
+                List<Dictionary<string, object>> Delivery = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }), "Bundle_ID");
+                List<Dictionary<string, object>> Bundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()) }), "Bundle_ID", "Product_ID");
+                int UpForDelete = 0;
+                for (int i = 0; i < Bundles.Count; i++)
+                {
+                    if (Bundles[i]["Product_ID"].ToString().Equals(item["Product_ID"]))
+                    {
+                        UpForDelete++;
+                    }
+                }
+
+                if (UpForDelete != Bundles.Count)
+                {
+                    Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
+                }
+                else
+                {
+                    Form.Connection.DeleteData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }));
+                    Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
+                }
+            }
+
+            Form.Connection.DeleteData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }));
+
+            UpdateUserHistory(Form, Status.GetIDNumber(), "User deleted: " + String.Join(", ", DeletedItemsProduct) + "\n\tAffected Orders:\n\t|[" + String.Join(", ", DeletedItemsOrder) + "]");
+        }
+
+        private static void DeleteCompany(MainForm Form, StatusType Status, Dictionary<string, object> item)
+        {
+            List<Dictionary<string, object>> Deliveries = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Bundle_ID", "Order_ID", "Status", "Company_ID", "Salesman_ID", "History", "Memo", "CreationDate");
+            List<Dictionary<string, object>> Products = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Supplier=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "Image");
+            List<string> DeletedItemsOrder = new List<string>();
+            List<string> DeletedItemsProduct = new List<string>();
+
+            foreach (var Deliver in Deliveries)
+            {
+                DeleteDelivery(Form, Status, Deliver);
+                DeletedItemsOrder.Add(Deliver["Order_ID"].ToString());
+            }
+            foreach (var Product in Products)
+            {
+                DeleteProduct(Form, Status, Product);
+                DeletedItemsProduct.Add(Product["Name"].ToString());
+            }
+            Form.Connection.DeleteData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }));
+
+            UpdateUserHistory(Form, Status.GetIDNumber(), "User deleted company: " + item["Name"].ToString() +
+            "\n\tAffected Orders:\n\t|[" + String.Join(", ", DeletedItemsOrder) + "]" +
+            "\n\tAffected Products:\n\t|[" + String.Join(", ", DeletedItemsProduct) + "]");
+        }
+
         private static bool OpenDelivery(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
             if (DataIn == null)
@@ -418,32 +531,7 @@ namespace Database_Control
                                                         {
                                                             if (Text.Equals(Status.GetPass()))
                                                             {
-                                                                List<Dictionary<string, object>> OrderBundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", item["Bundle_ID"].ToString()) }), "Product_ID", "Quantity", "Delivered");
-                                                                List<Dictionary<string, object>> ProductInfo;
-                                                                List<string> RestoredProducts = new List<string>();
-                                                                List<string> NonRestoredProducts = new List<string>();
-                                                                foreach (var itemProduct in OrderBundles)
-                                                                {
-                                                                    ProductInfo = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", itemProduct["Product_ID"].ToString()) }), "Available_Amt", "Name");
-                                                                    if ((int)itemProduct["Delivered"] == 0)
-                                                                    {
-                                                                        Form.Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", itemProduct["Product_ID"].ToString()) }),
-                                                                            ("Available_Amt", (((int)ProductInfo[0]["Available_Amt"]) + ((int)itemProduct["Quantity"])).ToString()));
-                                                                        RestoredProducts.Add(ProductInfo[0]["Name"].ToString() + "(" + ProductInfo[0]["Available_Amt"].ToString() + ")");
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        NonRestoredProducts.Add(ProductInfo[0]["Name"].ToString() + "(" + ProductInfo[0]["Available_Amt"].ToString() + ")");
-                                                                    }
-                                                                }
-                                                                ProductInfo = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Name");
-                                                                Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", item["Bundle_ID"].ToString()) }));
-                                                                Form.Connection.DeleteData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", item["Order_ID"].ToString()) }));
-                                                                UpdateUserHistory(Form, Status.GetIDNumber(), "User deleted order: " + item["Order_ID"].ToString() +
-                                                                    "\n\t|Restored: [" + String.Join(", ", RestoredProducts) + "]" +
-                                                                    "\n\t|Not Restored: [" + String.Join(", ", NonRestoredProducts) + "]" +
-                                                                    "\n\t|To be delivered to: " + ProductInfo[0]["Name"].ToString() +
-                                                                    "\n\t|Created on: " + item["CreationDate"].ToString());
+                                                                DeleteDelivery(Form, Status, item);
                                                                 Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                                                 MessageBox.Show("Deleted Order");
                                                             }
@@ -501,7 +589,10 @@ namespace Database_Control
                                     }
                                     Form.SetDetailPanel(MainForm.PanelDetail.None);
                                 }
-
+                                if (DataIn.ContainsKey("SEARCH"))
+                                {
+                                    SortItems(Form.GetList(MainForm.List.OrderList), DataIn["SEARCH"].ToString());
+                                }
                                 SelectItem(Form.GetList(MainForm.List.OrderList), 0);
                             },
                             SelectionGroup: "OptionSelect");
@@ -514,7 +605,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "Image");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -536,48 +627,11 @@ namespace Database_Control
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal,
                                                     (object? sender, EventArgs e) =>
                                                     {
-                                                        WindowData.CreateDeleteDialog("Enter Password To Delete Links", (string Text) =>
+                                                        CreateDeleteDialog("Enter Password To Delete Links", (string Text) =>
                                                         {
                                                             if (Text.Equals(Status.GetPass()))
                                                             {
-                                                                List<Dictionary<string, object>> Included = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }), "Bundle_ID");
-                                                                List<string> DeletedItemsProduct = new List<string>();
-                                                                List<string> DeletedItemsOrder = new List<string>();
-                                                                foreach (var Bundle in Included)
-                                                                {
-                                                                    string OrderID = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Bundle["Bundle_ID"].ToString()) }), "Order_ID")[0]["Order_ID"].ToString();
-
-                                                                    if (!DeletedItemsProduct.Contains(item["Name"].ToString()))
-                                                                        DeletedItemsProduct.Add(item["Name"].ToString());
-
-                                                                    if (!DeletedItemsOrder.Contains(OrderID))
-                                                                        DeletedItemsOrder.Add(OrderID);
-
-                                                                    List<Dictionary<string, object>> Delivery = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }), "Bundle_ID");
-                                                                    List<Dictionary<string, object>> Bundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()) }), "Bundle_ID", "Product_ID");
-                                                                    int UpForDelete = 0;
-                                                                    for (int i = 0; i < Bundles.Count; i++)
-                                                                    {
-                                                                        if (Bundles[i]["Product_ID"].ToString().Equals(item["Product_ID"]))
-                                                                        {
-                                                                            UpForDelete++;
-                                                                        }
-                                                                    }
-
-                                                                    if (UpForDelete != Bundles.Count)
-                                                                    {
-                                                                        Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        Form.Connection.DeleteData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }));
-                                                                        Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
-                                                                    }
-                                                                }
-
-                                                                Form.Connection.DeleteData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }));
-
-                                                                UpdateUserHistory(Form, Status.GetIDNumber(), "User deleted: " + String.Join(", ", DeletedItemsProduct) + "\n\tAffected Orders:\n\t|[" + String.Join(", ", DeletedItemsOrder) + "]");
+                                                                DeleteProduct(Form, Status, item);
                                                                 Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                                                 MessageBox.Show("Deletion of product Complete");
                                                             }
@@ -629,7 +683,10 @@ namespace Database_Control
                                     }
                                     Form.SetDetailPanel(MainForm.PanelDetail.None);
                                 }
-
+                                if (DataIn.ContainsKey("SEARCH"))
+                                {
+                                    SortItems(Form.GetList(MainForm.List.OrderList), DataIn["SEARCH"].ToString());
+                                }
                                 SelectItem(Form.GetList(MainForm.List.OrderList), 0);
                             },
                             SelectionGroup: "OptionSelect");
@@ -694,7 +751,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Image");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -703,22 +760,46 @@ namespace Database_Control
                                             OnClick: (object? sender, EventArgs e) =>
                                             {
                                                 DeleteAllConents(Form.GetList(MainForm.List.ControlList));
-                                                if (Status.HasAbility(StatusType.Action.CanUpdateDelivery))
+                                                if (Status.HasAbility(StatusType.Action.CanUpdateCompany))
                                                 {
-                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal);
+                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal,
+                                                    (object? sender, EventArgs Event) =>
+                                                    {
+                                                        Form.SetWindow(MainForm.WindowType.Company, item);
+                                                    });
                                                 }
-                                                if (Status.HasAbility(StatusType.Action.CanDeleteDelivery))
+                                                if (Status.HasAbility(StatusType.Action.CanDeleteCompany))
                                                 {
-                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
+                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal,
+                                                    (object? sender, EventArgs Event) =>
+                                                    {
+                                                        CreateDeleteDialog("Enter Password To Delete Company", (string Text) =>
+                                                        {
+                                                            if (Text.Equals(Status.GetPass()))
+                                                            {
+                                                                DeleteCompany(Form, Status, item);
+                                                                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                                                                MessageBox.Show("Deletion of company Complete");
+                                                            }
+                                                            else
+                                                            {
+                                                                MessageBox.Show("Incorrect Password");
+                                                            }
+                                                        });
+                                                    });
                                                 }
                                                 Form.SetDetailPanel(MainForm.PanelDetail.Company);
                                                 Form.FillCompanyDisplay(item);
                                             }, UnClick: () =>
                                             {
                                                 DeleteAllConents(Form.GetList(MainForm.List.ControlList));
-                                                if (Status.HasAbility(StatusType.Action.CanCreateDelivery))
+                                                if (Status.HasAbility(StatusType.Action.CanCreateCompany))
                                                 {
-                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal);
+                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
+                                                    (object? sender, EventArgs Event) =>
+                                                    {
+                                                        Form.SetWindow(MainForm.WindowType.Company, null);
+                                                    });
                                                 }
                                                 Form.SetDetailPanel(MainForm.PanelDetail.None);
                                             });
@@ -727,9 +808,13 @@ namespace Database_Control
                                 else
                                 {
                                     DeleteAllConents(Form.GetList(MainForm.List.ControlList));
-                                    if (Status.HasAbility(StatusType.Action.CanCreateDelivery))
+                                    if (Status.HasAbility(StatusType.Action.CanCreateCompany))
                                     {
-                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal);
+                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
+                                        (object? sender, EventArgs Event) =>
+                                        {
+                                            Form.SetWindow(MainForm.WindowType.Company, null);
+                                        });
                                     }
                                     Form.SetDetailPanel(MainForm.PanelDetail.None);
                                 }
@@ -738,7 +823,7 @@ namespace Database_Control
                             },
                             SelectionGroup: "OptionSelect");
                 }
-                SelectItem(Form.GetList(MainForm.List.ListDisplay), 0);
+                SelectItem(Form.GetList(MainForm.List.ListDisplay), DataIn.ContainsKey("PAGE") ? DataIn["PAGE"].ToString() : "Delivery");
             }
 
             return true;
@@ -760,6 +845,7 @@ namespace Database_Control
             AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Properties", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.SetPropertiesWindow(2); });
             AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { MessageBox.Show("This picks a pic"); });
 
+            
             SetSelectionGroup("SupplierSelect", (1, 1), Color.Orchid);
             List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID");
             (string, int) SelectComp = ("", -1);
@@ -854,6 +940,12 @@ namespace Database_Control
                                     Form.Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), ("Name", Form.GetProductName()),
                                         ("Description", Form.GetProductDesc()), ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), 
                                         ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]));
+                                    string CompName = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", Comp["Company_ID"].ToString()) }), "Name")[0]["Name"].ToString();
+                                    UpdateUserHistory(Form, Status.GetIDNumber(), "User updated product: " + Form.GetProductName() +
+                                        "\n\t|Price: " + Form.GetProductPrice() +
+                                        "\n\t|Time: " + Form.GetPrepTime() +
+                                        "\n\t|Available: " + ((int)(Form.GetTotalAmount() - reservedAmount)).ToString() +
+                                        "\n\t|Supplier: " + CompName);
                                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                 }
                                 else
@@ -899,6 +991,12 @@ namespace Database_Control
                                     Dictionary<string, object> Comp = Company[0].Item2();
                                     Form.Connection.InsertData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID", ProductID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
                                         ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]));
+                                    string CompName = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", Comp["Company_ID"].ToString()) }), "Name")[0]["Name"].ToString();
+                                    UpdateUserHistory(Form, Status.GetIDNumber(), "User created product: " + Form.GetProductName() +
+                                        "\n\t|Price: " + Form.GetProductPrice() +
+                                        "\n\t|Time: " + Form.GetPrepTime() +
+                                        "\n\t|Available: " + ((int)(Form.GetTotalAmount() - reservedAmount)).ToString() +
+                                        "\n\t|Supplier: " + CompName);
                                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                 }
                                 else
@@ -927,7 +1025,180 @@ namespace Database_Control
             return true;
         }
 
-        private static bool OpenEdit(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
+        private static bool OpenCompany(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
+        {
+            DeleteAllConents(Form.GetList(MainForm.List.ProductItemList));
+
+            Form.resetPass();
+            Form.SetPropertiesWindow(0);
+            Form.SetProductName("", false);
+            Form.SetEmail("");
+            Form.SetPhone("");
+
+            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Contact Info", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.SetPropertiesWindow(3); });
+            if (Status.HasAbility(StatusType.Action.CanSeeDelivey))
+            {
+                AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Current Orders", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) =>
+                {
+                    Form.SetPropertiesWindow(1);
+
+                    DeleteAllConents(Form.GetList(MainForm.List.ProductSupplier));
+                    SetSelectionGroup("CompanyAttributeSelect", (0, 1), Color.Green);
+                    if (DataIn != null)
+                    {
+                        AddNewConentItem(Form.GetList(MainForm.List.ProductSupplier), "OPEN ITEM", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) =>
+                        {
+                            List<(Control, CollectionReturn)> Att = GetSelectedObjects("CompanyAttributeSelect");
+                            if (Att.Count > 0)
+                            {
+                                Dictionary<string, object> Comp = Att[0].Item2();
+                                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" }, { "SEARCH", Comp["SEARCH"] }, { "PAGE", "Delivery" } });
+                            }
+                        });
+
+                        List<Dictionary<string, object>> Orders = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "Order_ID", "Status");
+                        foreach (var item in Orders)
+                        {
+                            AddNewConentItem(Form.GetList(MainForm.List.ProductSupplier), "Order_ID: " + item["Order_ID"].ToString(), Flow: Direction.vertical, SelectionGroup: "CompanyAttributeSelect",
+                            Content: () =>
+                            {
+                                List<(bool, Control)> Controls = new List<(bool, Control)>();
+                                Label L = new Label();
+                                L.Text = "Order Status: " + GetOrderStatus((int)item["Status"]);
+                                L.Location = new Point(5, 20);
+                                L.Size = new Size(350, 30);
+                                L.ForeColor = Color.Black;
+                                Controls.Add((true, L));
+                                return Controls;
+                            }, Return: () =>
+                            {
+                                return new Dictionary<string, object>() { { "SEARCH", item["Order_ID"].ToString() } };
+                            });
+                        }
+                    }
+                });
+            }
+            if (Status.HasAbility(StatusType.Action.CanSeeProduct))
+            {
+                AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Current Products", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) =>
+                {
+                    Form.SetPropertiesWindow(1);
+
+                    DeleteAllConents(Form.GetList(MainForm.List.ProductSupplier));
+                    SetSelectionGroup("CompanyAttributeSelect", (0, 1), Color.Green);
+                    if (DataIn != null)
+                    {
+                        AddNewConentItem(Form.GetList(MainForm.List.ProductSupplier), "OPEN ITEM", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) =>
+                        {
+                            List<(Control, CollectionReturn)> Att = GetSelectedObjects("CompanyAttributeSelect");
+                            if (Att.Count > 0)
+                            {
+                                Dictionary<string, object> Comp = Att[0].Item2();
+                                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" }, { "SEARCH", Comp["SEARCH"] }, { "PAGE", "Product" } });
+                            }
+                        });
+
+                        List<Dictionary<string, object>> Orders = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Supplier=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "Name", "Available_Amt");
+                        foreach (var item in Orders)
+                        {
+                            AddNewConentItem(Form.GetList(MainForm.List.ProductSupplier), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "CompanyAttributeSelect",
+                            Content: () =>
+                            {
+                                List<(bool, Control)> Controls = new List<(bool, Control)>();
+
+                                Label L = new Label();
+                                L.Text = "Amt: " + item["Available_Amt"];
+                                L.Location = new Point(5, 20);
+                                L.Size = new Size(350, 30);
+                                L.ForeColor = Color.Black;
+                                Controls.Add((true, L));
+                                return Controls;
+                            }, Return: () =>
+                            {
+                                return new Dictionary<string, object>() { { "SEARCH", item["Name"].ToString() } };
+                            });
+                        }
+                    }
+                });
+            }
+            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { MessageBox.Show("This picks a pic"); });
+
+            if (DataIn != null)
+            {
+                Form.SetProductDesc(DataIn["Description"].ToString(), false);
+                Form.SetProductName(DataIn["Name"].ToString(), false);
+                Form.SetEmail(DataIn["Email"].ToString());
+                Form.SetPhone(DataIn["Phone"].ToString());
+            }
+            else
+            {
+                Form.SetProductDesc("[Enter Company Description]", false);
+            }
+
+            Action SaveAction;
+
+            if (DataIn != null)
+            {
+                SaveAction = () =>
+                {
+                    if (!string.IsNullOrEmpty(Form.GetProductName()))
+                    {
+                        (bool, string) Em = Form.GetEmail();
+                        if (Em.Item1)
+                        {
+                            Form.Connection.UpdateData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
+                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", ""));
+                            UpdateUserHistory(Form, Status.GetIDNumber(), "User updated company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone());
+                            Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                        }
+                        else
+                        {
+                            MessageBox.Show("Invalid Email");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Enter Name");
+                    }
+                };
+            }
+            else
+            {
+                SaveAction = () =>
+                {
+                    if (!string.IsNullOrEmpty(Form.GetProductName()))
+                    {
+                        (bool, string) Em = Form.GetEmail();
+                        if (Em.Item1)
+                        {
+                            Random Rand = new Random();
+                            int CompanyID = Rand.Next(int.MinValue, int.MaxValue);
+                            while (Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", CompanyID.ToString()) }), "Company_ID").Count != 0)
+                            {
+                                CompanyID = Rand.Next(int.MinValue, int.MaxValue);
+                            }
+                            Form.Connection.InsertData("[Maestro].[dbo].[COMPANIES]", ("Company_ID", CompanyID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
+                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", ""));
+                            UpdateUserHistory(Form, Status.GetIDNumber(), "User created company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone());
+                            Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                        }
+                        else
+                        {
+                            MessageBox.Show("Invalid Email");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Enter Name");
+                    }
+                };
+            }
+            Form.SaveProductAction = SaveAction;
+
+            return true;
+        }
+
+        private static bool OpenEmployee(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
             return true;
         }
