@@ -602,7 +602,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "Image", "History");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "History");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -797,7 +797,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Image");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -889,13 +889,12 @@ namespace Database_Control
 
             AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Supplier", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.SetPropertiesWindow(1); });
             AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Properties", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.SetPropertiesWindow(2); });
-            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { MessageBox.Show("This picks a pic"); });
+            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.OpenImage(); });
 
             
             SetSelectionGroup("SupplierSelect", (1, 1), Color.Orchid);
             List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID");
             (string, int) SelectComp = ("", -1);
-            bool Added = false;
             for (int i = 0; i < ListItems.Count; i++)
             {
                 object CompName = ListItems[i]["Name"];
@@ -923,6 +922,8 @@ namespace Database_Control
             SetSelectionGroup("OrderProductSelect", (0, 1000), Color.Red);
             if (DataIn != null)
             {
+                List<Dictionary<string, object>> ImageData = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), "Image");
+                Form.SetImage(ImageData[0]["Image"].ToString());
                 Form.SetProductDesc(DataIn["Description"].ToString(), false);
                 int TotalAmount = 0;
                 List<Dictionary<string, object>> ProductBundle = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), "Quantity", "Bundle_ID", "Delivered");
@@ -963,6 +964,7 @@ namespace Database_Control
             }
             else
             {
+                Form.SetImage("");
                 Form.SetProductDesc("[Enter Product Description]", false);
                 Form.SetTotalAmount(0);
             }
@@ -993,7 +995,7 @@ namespace Database_Control
 
                                     Form.Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), ("Name", Form.GetProductName()),
                                         ("Description", Form.GetProductDesc()), ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()),
-                                        ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]), ("History", HistData + Profile + "\n" + DataIn["History"].ToString()));
+                                        ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", Form.GetImage()), ("Supplier", Comp["Company_ID"]), ("History", HistData + Profile + "\n" + DataIn["History"].ToString()));
 
                                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                 }
@@ -1046,7 +1048,7 @@ namespace Database_Control
                                     UpdateUserHistory(Form, Status.GetIDNumber(), "User created product: " + Form.GetProductName() + Profile);
                                     string HistData = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] Created by: " + Status.GetName() + ", position: " + Status.GetPosition();
                                     Form.Connection.InsertData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID", ProductID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
-                                        ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", ""), ("Supplier", Comp["Company_ID"]),
+                                        ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", Form.GetImage()), ("Supplier", Comp["Company_ID"]),
                                         ("History", HistData + Profile + "\n" + DataIn["History"].ToString()));
 
                                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
@@ -1173,10 +1175,12 @@ namespace Database_Control
                     }
                 });
             }
-            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { MessageBox.Show("This picks a pic"); });
+            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.OpenImage(); });
 
             if (DataIn != null)
             {
+                List<Dictionary<string, object>> ImageData = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "Image");
+                Form.SetImage(ImageData[0]["Image"].ToString());
                 Form.SetProductDesc(DataIn["Description"].ToString(), false);
                 Form.SetProductName(DataIn["Name"].ToString(), false);
                 Form.SetEmail(DataIn["Email"].ToString());
@@ -1184,6 +1188,7 @@ namespace Database_Control
             }
             else
             {
+                Form.SetImage("");
                 Form.SetProductDesc("[Enter Company Description]", false);
             }
 
@@ -1199,7 +1204,7 @@ namespace Database_Control
                         if (Em.Item1)
                         {
                             Form.Connection.UpdateData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
-                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", ""));
+                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", Form.GetImage()));
                             UpdateUserHistory(Form, Status.GetIDNumber(), "User updated company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone());
                             Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                         }
@@ -1230,7 +1235,7 @@ namespace Database_Control
                                 CompanyID = Rand.Next(int.MinValue, int.MaxValue);
                             }
                             Form.Connection.InsertData("[Maestro].[dbo].[COMPANIES]", ("Company_ID", CompanyID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
-                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", ""));
+                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", Form.GetImage()));
                             UpdateUserHistory(Form, Status.GetIDNumber(), "User created company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone());
                             Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                         }
@@ -1264,7 +1269,7 @@ namespace Database_Control
             Form.SetProductDesc("", true);
 
             AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Properties", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.SetPropertiesWindow(4); });
-            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { MessageBox.Show("This picks a pic"); });
+            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.OpenImage(); });
 
             SetSelectionGroup("Permissions", (0, 1000), Color.Green);
 
@@ -1278,21 +1283,26 @@ namespace Database_Control
                 AddNewConentItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString(), 30, 0, Direction.vertical, SelectionGroup: "Permissions", Return: () => { return new Dictionary<string, object> { { "Value", i } }; });
             }
 
-            foreach (int i in Enum.GetValues(typeof(StatusType.Action)))
-            {
-                if (Status.HasAbility(((StatusType.Action)i)))
-                    SelectItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString());
-            }
-
             if (DataIn != null)
             {
-                Form.SetEmployeePass(DataIn["Password"].ToString(), ((int)DataIn["Salesman_ID"] != Status.GetIDNumber()), true);
+                List<Dictionary<string, object>> ImageData = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@ID", new (string, string)[] { ("@ID", DataIn["Username"].ToString()) }), "Image");
+                Form.SetImage(ImageData[0]["Image"].ToString());
+                Form.SetEmployeePass(DataIn["Password"].ToString(), ((int)DataIn["Salesman_ID"] != Status.GetIDNumber()), (int)DataIn["Salesman_ID"] != Status.GetIDNumber());
                 Form.SetProductName(DataIn["Name"].ToString(), false);
                 Form.SetEmployeeUser(DataIn["Username"].ToString(), false);
                 Form.SetProductDesc("[HISTORY]:\n" + DataIn["History"].ToString(), true);
+
+                List<Dictionary<string, object>> User = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User", new (string, string)[] { ("@User", DataIn["Username"].ToString()) }), "Salesman_ID", "Name", "Position", "Password");
+                StatusType EmpStat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"], (string)User[0]["Name"], (string)User[0]["Position"], (string)User[0]["Password"]);
+                foreach (int i in Enum.GetValues(typeof(StatusType.Action)))
+                {
+                    if (EmpStat.HasAbility(((StatusType.Action)i)))
+                        SelectItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString());
+                }
             }
             else
             {
+                Form.SetImage("");
                 Form.SetEmployeePass("", false, false);
                 Form.SetProductName("", false);
                 Form.SetEmployeeUser("", false);
@@ -1319,7 +1329,7 @@ namespace Database_Control
                             Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), "History")[0]["History"].ToString();
 
                             Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Position", Position),
-                                ("Name", Form.GetProductName()), ("History", History), ("Image", ""));
+                                ("Name", Form.GetProductName()), ("History", History), ("Image", Form.GetImage()));
 
                             if (((int)DataIn["Salesman_ID"] == Status.GetIDNumber()))
                                 Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Password", Form.GetEmployeePass()));
@@ -1364,7 +1374,7 @@ namespace Database_Control
                                 string History = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] User Created by: " + Status.GetName() + ", position: " + Status.GetPosition();
 
                                 Form.Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", Position), ("Name", Form.GetProductName()),
-                                    ("Username", Form.GetEmployeeUser()), ("History", History), ("Password", Form.GetEmployeePass()), ("Image", ""));
+                                    ("Username", Form.GetEmployeeUser()), ("History", History), ("Password", Form.GetEmployeePass()), ("Image", Form.GetImage()));
 
                                 UpdateUserHistory(Form, Status.GetIDNumber(), "User Created user: " + Form.GetProductName() + "(" + Form.GetEmployeeUser() + " | " + Position + ")");
                                 Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });

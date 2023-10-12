@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-class ImageStrinEncoderDecoder
+class ImageStringEncoderDecoder
 {
     public static string encodeImageToString(string filePath)
     {
@@ -14,9 +14,8 @@ class ImageStrinEncoderDecoder
         }
         catch (Exception ex)
         {
-            // modify this to see if you can integrate into UI
-            Console.WriteLine("Error: " + ex.Message);
-            return null;
+            MessageBox.Show("Error: " + ex.Message);
+            return "";
         }
     }
 
@@ -24,6 +23,26 @@ class ImageStrinEncoderDecoder
     {
         byte[] img = Convert.FromBase64String(base64String);
         return img;
+    }
+
+    public static Image GetImage(string Data)
+    {
+        Image newImg;
+        byte[] ImgData = decodeBase64StringToImage(Data);
+        using(MemoryStream ms = new MemoryStream(ImgData, 0, ImgData.Length))
+        {
+            ms.Write(ImgData, 0, ImgData.Length);
+            newImg = Image.FromStream(ms, true);
+        }
+
+        return newImg;
+    }
+
+    public static string ImageBytes(Image image)
+    {
+        MemoryStream ms = new MemoryStream();
+        image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+        return Convert.ToBase64String(ms.ToArray());
     }
 
 }

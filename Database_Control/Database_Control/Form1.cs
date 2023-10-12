@@ -11,6 +11,7 @@ namespace Database_Control
         public SQL Connection { get; internal set; }
         public string FileName = "DataBaseOptions.options";
         public string[] Servers = new string[] { "GameStation\\SQLEXPRESS", "DESKTOP-E\\SQLEXPRESS" };
+        private string DefaultPicture = "";
 
         public MainForm()
         {
@@ -47,6 +48,10 @@ namespace Database_Control
             } while (!Connection.Connect(DataBase, "root", "root", out E) && !Quit);
 
             InitializeComponent();
+
+
+            DefaultPicture = ImageStringEncoderDecoder.ImageBytes(ProductImage.BackgroundImage);
+
             if (!Quit)
             {
                 if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
@@ -341,8 +346,8 @@ namespace Database_Control
             List<Dictionary<string, object>> Comp = Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", ListItems["Supplier"].ToString()) }), "Name");
             ProductInfo.AppendText("Supplier: " + Comp[0]["Name"].ToString() + "\n\n");
             ProductInfo.AppendText("Description:\n" + ListItems["Description"].ToString());
-            DeliveryInfo.AppendText("[PRODUCT HISTORY]:\n");
-            DeliveryInfo.AppendText(ListItems["History"].ToString());
+            ProductInfo.AppendText("[PRODUCT HISTORY]:\n");
+            ProductInfo.AppendText(ListItems["History"].ToString());
         }
 
         public void SetReferencedNum(string Num)
@@ -607,6 +612,33 @@ namespace Database_Control
         private void PermissionsSearch_TextChanged(object sender, EventArgs e)
         {
             WindowData.SortItems(GetList(List.EmployeePermissions), PermissionsSearch.Text);
+        }
+
+        public void OpenImage()
+        {
+            OpenFileDialog FileOpen = new OpenFileDialog();
+            FileOpen.Filter = "Image Files | *.jpg";
+            if (FileOpen.ShowDialog() == DialogResult.OK)
+            {
+                ProductImage.BackgroundImage = Image.FromFile(FileOpen.FileName);
+            }
+        }
+
+        public string GetImage()
+        {
+            return ImageStringEncoderDecoder.ImageBytes(ProductImage.BackgroundImage);
+        }
+
+        public void SetImage(string Data)
+        {
+            if (string.IsNullOrEmpty(Data))
+            {
+                ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(DefaultPicture);
+            }
+            else
+            {
+                ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(Data);
+            }
         }
     }
 }
