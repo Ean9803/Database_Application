@@ -46,7 +46,7 @@ namespace Database_Control
             {
                 if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
                 {
-                    Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("Security", int.MaxValue));
+                    Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through default"));
                 }
 
                 LogoutBtn.Visible = false;
@@ -117,7 +117,7 @@ namespace Database_Control
             }
         }
 
-        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product, UIList, ControlList, ProductItemList, ProductSupplier, ProductReferences }
+        public enum List { OrderList, ListDisplay, OrderDiplay_Company, OrderDisplay_Product, UIList, ControlList, ProductItemList, ProductSupplier, ProductReferences, EmployeePermissions, EmployeePresets }
         public FlowLayoutPanel GetList(List Item)
         {
             switch (Item)
@@ -140,6 +140,10 @@ namespace Database_Control
                     return SupplierList;
                 case List.ProductReferences:
                     return ReferencedOrdersList;
+                case List.EmployeePermissions:
+                    return PermissionsList;
+                case List.EmployeePresets:
+                    return PresetsList;
                 default:
                     return OrderList;
             }
@@ -171,6 +175,11 @@ namespace Database_Control
 
         private void LogoutBtn_Click_1(object sender, EventArgs e)
         {
+            LogOut();
+        }
+
+        public void LogOut()
+        {
             LogoutBtn.Visible = false;
             UserName.Text = "";
             PassWord.Text = "";
@@ -191,7 +200,7 @@ namespace Database_Control
                     string Name = Interaction.InputBox("Enter Employee Name");
                     if (!string.IsNullOrEmpty(Name))
                     {
-                        Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("Security", 0));
+                        Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through login"));
 
                         User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position", "Password");
 
@@ -428,6 +437,31 @@ namespace Database_Control
             return ProductName.Text;
         }
 
+        public void SetEmployeePass(string Name, bool PasswordChar, bool ReadOnly)
+        {
+            EmployeePass.ReadOnly = ReadOnly;
+            EmployeePass.Enabled = !ReadOnly;
+            EmployeePass.PasswordChar = PasswordChar ? '*' : '\0';
+            EmployeePass.Text = Name;
+        }
+
+        public string GetEmployeePass()
+        {
+            return EmployeePass.Text;
+        }
+
+        public void SetEmployeeUser(string Name, bool ReadOnly)
+        {
+            EmployeeUser.ReadOnly = ReadOnly;
+            EmployeeUser.Enabled = !ReadOnly;
+            EmployeeUser.Text = Name;
+        }
+
+        public string GetEmployeeUser()
+        {
+            return EmployeeUser.Text;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             WindowData.CreateDeleteDialog("Enter Password To Delete Links", (string Text) =>
@@ -558,6 +592,16 @@ namespace Database_Control
             EmployeeInfo.AppendText("[USERNAME]: " + ListItems["Username"].ToString() + "\n");
             EmployeeInfo.AppendText("-----------------[USER HISTORY]-----------------\n");
             EmployeeInfo.AppendText(ListItems["History"].ToString());
+        }
+
+        private void PresetsSearch_TextChanged(object sender, EventArgs e)
+        {
+            WindowData.SortItems(GetList(List.EmployeePresets), PresetsSearch.Text);
+        }
+
+        private void PermissionsSearch_TextChanged(object sender, EventArgs e)
+        {
+            WindowData.SortItems(GetList(List.EmployeePermissions), PermissionsSearch.Text);
         }
     }
 }

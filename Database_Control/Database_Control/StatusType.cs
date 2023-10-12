@@ -131,6 +131,35 @@ namespace Database_Control
             }
         };
 
+        public string[] GetPresets()
+        {
+            return Defaults.Keys.ToArray();
+        }
+
+        public string FindMatch(List<Action> ActionItems)
+        {
+            int Match = 0;
+            foreach (var item in Defaults)
+            {
+                if (item.Value.Length == ActionItems.Count)
+                {
+                    Match = 0;
+                    foreach (var Perm in item.Value)
+                    {
+                        if (ActionItems.Contains(Perm))
+                        {
+                            Match++;
+                        }
+                    }
+                    if (Match == item.Value.Length)
+                    {
+                        return item.Key;
+                    }
+                }
+            }
+            return CreateStat(ActionItems.ToArray()).ToString();
+        }
+
         public enum Action { CanSeeDelivey, CanSeeProduct, CanSeeEmployee, CanSeeCompany, CanUpdateDelivery, CanCreateDelivery, CanDeleteDelivery, CanUpdateProduct, CanCreateProduct, CanDeleteProduct, CanUpdateEmployee, CanCreateEmployee, CanDeleteEmployee, CanUpdateCompany, CanCreateCompany, CanDeleteCompany }
 
         public bool HasAbility(Action action)

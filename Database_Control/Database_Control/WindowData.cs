@@ -689,48 +689,87 @@ namespace Database_Control
                             SelectionGroup: "OptionSelect");
                 }
 
-                if (Status.HasAbility(StatusType.Action.CanSeeEmployee))
-                {
-                    AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Employee", Flow: Direction.horizontal, Size: 100,
+                AddNewConentItem(Form.GetList(MainForm.List.ListDisplay), "Employee", Flow: Direction.horizontal, Size: 100,
                             OnClick: (object? sender, EventArgs e) =>
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("", null), "Name", "Username", "Position", "History", "Salesman_ID");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]",
+                                    (Status.HasAbility(StatusType.Action.CanSeeEmployee) ? ("", new (string, string)[0]) : ("Salesman_ID=@ID", new (string, string)[] { ("@ID", Status.GetIDNumber().ToString()) })),
+                                    "Name", "Username", "Position", "History", "Salesman_ID");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
                                     {
-                                        if (!item["Salesman_ID"].ToString().Equals(Status.GetIDNumber().ToString()))
-                                        {
-                                            AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
-                                                OnClick: (object? sender, EventArgs e) =>
+                                        AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
+                                            OnClick: (object? sender, EventArgs e) =>
+                                            {
+                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                if (Status.HasAbility(StatusType.Action.CanUpdateEmployee))
                                                 {
-                                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
-                                                    if (Status.HasAbility(StatusType.Action.CanUpdateEmployee))
+                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal,
+                                                    (object? sender, EventArgs Event) =>
                                                     {
-                                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal);
-                                                    }
-                                                    if (Status.HasAbility(StatusType.Action.CanDeleteEmployee))
-                                                    {
-                                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal);
-                                                    }
-                                                    Form.SetDetailPanel(MainForm.PanelDetail.Employee);
-                                                    Form.FillEmployeeDisplay(item);
-                                                }, UnClick: () =>
+                                                        Form.SetWindow(MainForm.WindowType.Employee, item);
+                                                    });
+                                                }
+                                                if (Status.HasAbility(StatusType.Action.CanDeleteEmployee))
                                                 {
-                                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
-                                                    if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
+                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Delete", 100, 0, Direction.horizontal,
+                                                    (object? sender, EventArgs E) =>
                                                     {
-                                                        AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
-                                                        (object? sender, EventArgs Event) =>
+                                                        CreateDeleteDialog("Enter Password To Delete Employee", (string Text) =>
                                                         {
-                                                            Form.SetWindow(MainForm.WindowType.Employee, null);
+                                                            if (Text.Equals(Status.GetPass()))
+                                                            {
+                                                                Form.Connection.DeleteData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", item["Salesman_ID"].ToString()) }));
+                                                                if ((int)item["Salesman_ID"] == Status.GetIDNumber())
+                                                                {
+                                                                    Form.LogOut();
+                                                                    MessageBox.Show("Self Deletion, Goodbye");
+                                                                }
+                                                                else
+                                                                {
+                                                                    UpdateUserHistory(Form, Status.GetIDNumber(), "User deleted Employee: " + item["Name"].ToString() + " | Position: " + item["Position"].ToString());
+                                                                    Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                                                                    MessageBox.Show("Deletion of Employee Complete");
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                MessageBox.Show("Incorrect Password");
+                                                            }
                                                         });
-                                                    }
-                                                    Form.SetDetailPanel(MainForm.PanelDetail.None);
-                                                });
-                                        }
+                                                    });
+                                                }
+                                                Form.SetDetailPanel(MainForm.PanelDetail.Employee);
+                                                Form.FillEmployeeDisplay(item);
+                                            }, UnClick: () =>
+                                            {
+                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
+                                                {
+                                                    AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
+                                                    (object? sender, EventArgs Event) =>
+                                                    {
+                                                        Form.SetWindow(MainForm.WindowType.Employee, null);
+                                                    });
+                                                }
+                                                Form.SetDetailPanel(MainForm.PanelDetail.None);
+                                            }, Content: () =>
+                                            {
+                                                List<(bool, Control)> Items = new List<(bool, Control)>();
+                                                if (item["Salesman_ID"].ToString().Equals(Status.GetIDNumber().ToString()))
+                                                {
+                                                    Label L = new Label();
+                                                    L.Text = "[SELF]";
+                                                    L.Location = new Point(5, 20);
+                                                    L.Size = new Size(350, 30);
+                                                    L.ForeColor = Color.Black;
+                                                    Items.Add((true, L));
+                                                }
+                                                return Items;
+                                            });
                                     }
                                 }
                                 else
@@ -750,7 +789,6 @@ namespace Database_Control
                                 SelectItem(Form.GetList(MainForm.List.OrderList), 0);
                             },
                             SelectionGroup: "OptionSelect");
-                }
 
                 if (Status.HasAbility(StatusType.Action.CanSeeCompany))
                 {
@@ -759,7 +797,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Image");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Image", "Password");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -1214,6 +1252,135 @@ namespace Database_Control
 
         private static bool OpenEmployee(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
+            DeleteAllConents(Form.GetList(MainForm.List.ProductItemList));
+            DeleteAllConents(Form.GetList(MainForm.List.EmployeePermissions));
+            DeleteAllConents(Form.GetList(MainForm.List.EmployeePresets));
+            Form.resetPass();
+            if (DataIn == null)
+                Form.SetPropertiesWindow(0);
+            else
+                Form.SetPropertiesWindow(4);
+            Form.SetProductName("", true);
+            Form.SetProductDesc("", true);
+
+            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Properties", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { Form.SetPropertiesWindow(4); });
+            AddNewConentItem(Form.GetList(MainForm.List.ProductItemList), "Set Picture", Offset: 0, Size: 25, Flow: Direction.vertical, OnClick: (object? sender, EventArgs Args) => { MessageBox.Show("This picks a pic"); });
+
+            SetSelectionGroup("Permissions", (0, 1000), Color.Green);
+
+            foreach (var item in Status.GetPresets())
+            {
+                AddNewConentItem(Form.GetList(MainForm.List.EmployeePresets), item, 30, 0, Direction.vertical);
+            }
+
+            foreach (int i in Enum.GetValues(typeof(StatusType.Action)))
+            {
+                AddNewConentItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString(), 30, 0, Direction.vertical, SelectionGroup: "Permissions", Return: () => { return new Dictionary<string, object> { { "Value", i } }; });
+                if (Status.HasAbility(((StatusType.Action)i)))
+                    SelectItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString());
+            }
+
+            if (DataIn != null)
+            {
+                Form.SetEmployeePass(DataIn["Password"].ToString(), ((int)DataIn["Salesman_ID"] != Status.GetIDNumber()), true);
+                Form.SetProductName(DataIn["Name"].ToString(), false);
+                Form.SetEmployeeUser(DataIn["Username"].ToString(), false);
+                Form.SetProductDesc("[HISTORY]:\n" + DataIn["History"].ToString(), true);
+            }
+            else
+            {
+                Form.SetEmployeePass("", false, false);
+                Form.SetProductName("", false);
+                Form.SetEmployeeUser("", false);
+            }
+
+            Action SaveAction;
+
+            if (DataIn != null)
+            {
+                SaveAction = () =>
+                {
+                    if (!string.IsNullOrEmpty(Form.GetProductName()))
+                    {
+                        if (!string.IsNullOrEmpty(Form.GetEmployeeUser()) && Form.GetEmployeePass().Length >= 10)
+                        {
+                            List<(Control, CollectionReturn)> Perms = GetSelectedObjects("Permissions");
+                            List<StatusType.Action> Actions = new List<StatusType.Action>();
+                            foreach (var item in Perms)
+                            {
+                                Actions.Add((StatusType.Action)((int)item.Item2()["Value"]));
+                            }
+                            string Position = Status.FindMatch(Actions);
+                            string History = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] User Modified by: " + Status.GetName() + ", position: " + Status.GetPosition() + "\n" +
+                            Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), "History")[0]["History"].ToString();
+
+                            Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Position", Position),
+                                ("Name", Form.GetProductName()), ("History", History));
+
+                            if (((int)DataIn["Salesman_ID"] == Status.GetIDNumber()))
+                                Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Password", Form.GetEmployeePass()));
+
+                            UpdateUserHistory(Form, Status.GetIDNumber(), "User updated user: " + DataIn["Name"].ToString() + "(" + DataIn["Username"].ToString() + " | " + DataIn["Position"].ToString() + ")" +
+                                "\n\t=> " + Form.GetProductName() + "(" + Form.GetEmployeeUser() + " | " + Position + ")");
+                            Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please enter " + (string.IsNullOrEmpty(Form.GetEmployeeUser()) ? ("a valid Username " + (Form.GetEmployeePass().Length < 10 ? "and " : "")) : "") + (Form.GetEmployeePass().Length < 10 ? "a Password with 10 or more characters" : ""));
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Enter Employee Name");
+                    }
+                };
+            }
+            else
+            {
+                SaveAction = () =>
+                {
+                    if (!string.IsNullOrEmpty(Form.GetProductName()))
+                    {
+                        if (!string.IsNullOrEmpty(Form.GetEmployeeUser()) && Form.GetEmployeePass().Length >= 10)
+                        {
+                            List<Dictionary<string, object>> User = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User", new (string, string)[] { ("@User", Form.GetEmployeeUser()) }), "Salesman_ID");
+                            if (User.Count > 0)
+                            {
+                                MessageBox.Show("Username taken, please pick another");
+                            }
+                            else
+                            {
+                                List<(Control, CollectionReturn)> Perms = GetSelectedObjects("Permissions");
+                                List<StatusType.Action> Actions = new List<StatusType.Action>();
+                                foreach (var item in Perms)
+                                {
+                                    Actions.Add((StatusType.Action)((int)item.Item2()["Value"]));
+                                }
+                                string Position = Status.FindMatch(Actions);
+                                string History = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] User Created by: " + Status.GetName() + ", position: " + Status.GetPosition();
+
+                                Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", DataIn["Salesman_ID"].ToString()) }), ("Position", Position), ("Name", Form.GetProductName()),
+                                    ("Username", Form.GetEmployeeUser()), ("History", History), ("Password", Form.GetEmployeePass()));
+
+                                UpdateUserHistory(Form, Status.GetIDNumber(), "User Created user: " + Form.GetProductName() + "(" + Form.GetEmployeeUser() + " | " + Position + ")");
+                                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please enter " + (string.IsNullOrEmpty(Form.GetEmployeeUser()) ? ("a valid Username " + (Form.GetEmployeePass().Length < 10 ? "and " : "")) : "") + (Form.GetEmployeePass().Length < 10 ? "a Password with 10 or more characters" : ""));
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Enter Employee Name");
+                    }
+                };
+            }
+
+
+            Form.SaveProductAction = SaveAction;
+
             return true;
         }
 

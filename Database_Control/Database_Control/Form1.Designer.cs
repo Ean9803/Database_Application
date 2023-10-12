@@ -136,6 +136,21 @@
             this.groupBox33 = new System.Windows.Forms.GroupBox();
             this.CompanyEmail = new System.Windows.Forms.TextBox();
             this.tabPage13 = new System.Windows.Forms.TabPage();
+            this.groupBox35 = new System.Windows.Forms.GroupBox();
+            this.splitContainer15 = new System.Windows.Forms.SplitContainer();
+            this.groupBox36 = new System.Windows.Forms.GroupBox();
+            this.EmployeePass = new System.Windows.Forms.TextBox();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.splitContainer19 = new System.Windows.Forms.SplitContainer();
+            this.groupBox37 = new System.Windows.Forms.GroupBox();
+            this.PermissionsSearch = new System.Windows.Forms.TextBox();
+            this.PermissionsList = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabPage15 = new System.Windows.Forms.TabPage();
+            this.splitContainer20 = new System.Windows.Forms.SplitContainer();
+            this.groupBox38 = new System.Windows.Forms.GroupBox();
+            this.PresetsSearch = new System.Windows.Forms.TextBox();
+            this.PresetsList = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage14 = new System.Windows.Forms.TabPage();
             this.EditDisplay = new System.Windows.Forms.TabPage();
             this.EditBack = new System.Windows.Forms.Button();
@@ -169,6 +184,10 @@
             this.splitContainer8 = new System.Windows.Forms.SplitContainer();
             this.LogoutBtn = new System.Windows.Forms.Button();
             this.TopUI = new System.Windows.Forms.FlowLayoutPanel();
+            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox39 = new System.Windows.Forms.GroupBox();
+            this.groupBox40 = new System.Windows.Forms.GroupBox();
+            this.EmployeeUser = new System.Windows.Forms.TextBox();
             this.MainDisplay.SuspendLayout();
             this.LoginDisplay.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -279,6 +298,26 @@
             this.tableLayoutPanel14.SuspendLayout();
             this.groupBox32.SuspendLayout();
             this.groupBox33.SuspendLayout();
+            this.tabPage13.SuspendLayout();
+            this.groupBox35.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer15)).BeginInit();
+            this.splitContainer15.Panel1.SuspendLayout();
+            this.splitContainer15.Panel2.SuspendLayout();
+            this.splitContainer15.SuspendLayout();
+            this.groupBox36.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer19)).BeginInit();
+            this.splitContainer19.Panel1.SuspendLayout();
+            this.splitContainer19.Panel2.SuspendLayout();
+            this.splitContainer19.SuspendLayout();
+            this.groupBox37.SuspendLayout();
+            this.tabPage15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer20)).BeginInit();
+            this.splitContainer20.Panel1.SuspendLayout();
+            this.splitContainer20.Panel2.SuspendLayout();
+            this.splitContainer20.SuspendLayout();
+            this.groupBox38.SuspendLayout();
             this.EditDisplay.SuspendLayout();
             this.OrderingDisplay.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -308,6 +347,9 @@
             this.splitContainer8.Panel1.SuspendLayout();
             this.splitContainer8.Panel2.SuspendLayout();
             this.splitContainer8.SuspendLayout();
+            this.tableLayoutPanel15.SuspendLayout();
+            this.groupBox39.SuspendLayout();
+            this.groupBox40.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainDisplay
@@ -1732,12 +1774,205 @@
             // tabPage13
             // 
             this.tabPage13.BackColor = System.Drawing.Color.Black;
+            this.tabPage13.Controls.Add(this.groupBox35);
             this.tabPage13.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.tabPage13.Location = new System.Drawing.Point(4, 4);
             this.tabPage13.Name = "tabPage13";
             this.tabPage13.Size = new System.Drawing.Size(247, 540);
             this.tabPage13.TabIndex = 10;
             this.tabPage13.Text = "tabPage13";
+            // 
+            // groupBox35
+            // 
+            this.groupBox35.Controls.Add(this.splitContainer15);
+            this.groupBox35.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox35.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox35.Location = new System.Drawing.Point(0, 0);
+            this.groupBox35.Name = "groupBox35";
+            this.groupBox35.Size = new System.Drawing.Size(247, 540);
+            this.groupBox35.TabIndex = 0;
+            this.groupBox35.TabStop = false;
+            this.groupBox35.Text = "Employee";
+            // 
+            // splitContainer15
+            // 
+            this.splitContainer15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer15.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer15.IsSplitterFixed = true;
+            this.splitContainer15.Location = new System.Drawing.Point(3, 23);
+            this.splitContainer15.Name = "splitContainer15";
+            this.splitContainer15.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer15.Panel1
+            // 
+            this.splitContainer15.Panel1.Controls.Add(this.groupBox36);
+            // 
+            // splitContainer15.Panel2
+            // 
+            this.splitContainer15.Panel2.Controls.Add(this.tabControl2);
+            this.splitContainer15.Size = new System.Drawing.Size(241, 514);
+            this.splitContainer15.SplitterDistance = 143;
+            this.splitContainer15.TabIndex = 0;
+            // 
+            // groupBox36
+            // 
+            this.groupBox36.Controls.Add(this.tableLayoutPanel15);
+            this.groupBox36.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox36.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox36.Location = new System.Drawing.Point(0, 0);
+            this.groupBox36.Name = "groupBox36";
+            this.groupBox36.Size = new System.Drawing.Size(241, 143);
+            this.groupBox36.TabIndex = 0;
+            this.groupBox36.TabStop = false;
+            this.groupBox36.Text = "Employee Login";
+            // 
+            // EmployeePass
+            // 
+            this.EmployeePass.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EmployeePass.Location = new System.Drawing.Point(3, 23);
+            this.EmployeePass.Name = "EmployeePass";
+            this.EmployeePass.PasswordChar = '*';
+            this.EmployeePass.Size = new System.Drawing.Size(223, 27);
+            this.EmployeePass.TabIndex = 0;
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage10);
+            this.tabControl2.Controls.Add(this.tabPage15);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl2.Location = new System.Drawing.Point(0, 0);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(241, 367);
+            this.tabControl2.TabIndex = 0;
+            // 
+            // tabPage10
+            // 
+            this.tabPage10.BackColor = System.Drawing.Color.Black;
+            this.tabPage10.Controls.Add(this.splitContainer19);
+            this.tabPage10.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage10.Location = new System.Drawing.Point(4, 29);
+            this.tabPage10.Name = "tabPage10";
+            this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage10.Size = new System.Drawing.Size(233, 334);
+            this.tabPage10.TabIndex = 0;
+            this.tabPage10.Text = "Permissions";
+            // 
+            // splitContainer19
+            // 
+            this.splitContainer19.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer19.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer19.Name = "splitContainer19";
+            this.splitContainer19.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer19.Panel1
+            // 
+            this.splitContainer19.Panel1.Controls.Add(this.groupBox37);
+            // 
+            // splitContainer19.Panel2
+            // 
+            this.splitContainer19.Panel2.Controls.Add(this.PermissionsList);
+            this.splitContainer19.Size = new System.Drawing.Size(227, 328);
+            this.splitContainer19.SplitterDistance = 48;
+            this.splitContainer19.TabIndex = 0;
+            // 
+            // groupBox37
+            // 
+            this.groupBox37.Controls.Add(this.PermissionsSearch);
+            this.groupBox37.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox37.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox37.Location = new System.Drawing.Point(0, 0);
+            this.groupBox37.Name = "groupBox37";
+            this.groupBox37.Size = new System.Drawing.Size(227, 48);
+            this.groupBox37.TabIndex = 0;
+            this.groupBox37.TabStop = false;
+            this.groupBox37.Text = "Search";
+            // 
+            // PermissionsSearch
+            // 
+            this.PermissionsSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PermissionsSearch.Location = new System.Drawing.Point(3, 23);
+            this.PermissionsSearch.Name = "PermissionsSearch";
+            this.PermissionsSearch.Size = new System.Drawing.Size(221, 27);
+            this.PermissionsSearch.TabIndex = 0;
+            this.PermissionsSearch.TextChanged += new System.EventHandler(this.PermissionsSearch_TextChanged);
+            // 
+            // PermissionsList
+            // 
+            this.PermissionsList.AutoScroll = true;
+            this.PermissionsList.AutoSize = true;
+            this.PermissionsList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.PermissionsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PermissionsList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.PermissionsList.Location = new System.Drawing.Point(0, 0);
+            this.PermissionsList.Name = "PermissionsList";
+            this.PermissionsList.Size = new System.Drawing.Size(227, 276);
+            this.PermissionsList.TabIndex = 0;
+            this.PermissionsList.WrapContents = false;
+            // 
+            // tabPage15
+            // 
+            this.tabPage15.BackColor = System.Drawing.Color.Black;
+            this.tabPage15.Controls.Add(this.splitContainer20);
+            this.tabPage15.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tabPage15.Location = new System.Drawing.Point(4, 29);
+            this.tabPage15.Name = "tabPage15";
+            this.tabPage15.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage15.Size = new System.Drawing.Size(233, 397);
+            this.tabPage15.TabIndex = 1;
+            this.tabPage15.Text = "Presets";
+            // 
+            // splitContainer20
+            // 
+            this.splitContainer20.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer20.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer20.Name = "splitContainer20";
+            this.splitContainer20.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer20.Panel1
+            // 
+            this.splitContainer20.Panel1.Controls.Add(this.groupBox38);
+            // 
+            // splitContainer20.Panel2
+            // 
+            this.splitContainer20.Panel2.Controls.Add(this.PresetsList);
+            this.splitContainer20.Size = new System.Drawing.Size(227, 391);
+            this.splitContainer20.SplitterDistance = 58;
+            this.splitContainer20.TabIndex = 1;
+            // 
+            // groupBox38
+            // 
+            this.groupBox38.Controls.Add(this.PresetsSearch);
+            this.groupBox38.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox38.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.groupBox38.Location = new System.Drawing.Point(0, 0);
+            this.groupBox38.Name = "groupBox38";
+            this.groupBox38.Size = new System.Drawing.Size(227, 58);
+            this.groupBox38.TabIndex = 0;
+            this.groupBox38.TabStop = false;
+            this.groupBox38.Text = "Search";
+            // 
+            // PresetsSearch
+            // 
+            this.PresetsSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PresetsSearch.Location = new System.Drawing.Point(3, 23);
+            this.PresetsSearch.Name = "PresetsSearch";
+            this.PresetsSearch.Size = new System.Drawing.Size(221, 27);
+            this.PresetsSearch.TabIndex = 0;
+            this.PresetsSearch.TextChanged += new System.EventHandler(this.PresetsSearch_TextChanged);
+            // 
+            // PresetsList
+            // 
+            this.PresetsList.AutoScroll = true;
+            this.PresetsList.AutoSize = true;
+            this.PresetsList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.PresetsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PresetsList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.PresetsList.Location = new System.Drawing.Point(0, 0);
+            this.PresetsList.Name = "PresetsList";
+            this.PresetsList.Size = new System.Drawing.Size(227, 329);
+            this.PresetsList.TabIndex = 0;
+            this.PresetsList.WrapContents = false;
             // 
             // tabPage14
             // 
@@ -2180,6 +2415,55 @@
             this.TopUI.Size = new System.Drawing.Size(1025, 40);
             this.TopUI.TabIndex = 0;
             // 
+            // tableLayoutPanel15
+            // 
+            this.tableLayoutPanel15.ColumnCount = 1;
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel15.Controls.Add(this.groupBox39, 0, 0);
+            this.tableLayoutPanel15.Controls.Add(this.groupBox40, 0, 1);
+            this.tableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel15.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(3, 23);
+            this.tableLayoutPanel15.Name = "tableLayoutPanel15";
+            this.tableLayoutPanel15.RowCount = 2;
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(235, 117);
+            this.tableLayoutPanel15.TabIndex = 0;
+            // 
+            // groupBox39
+            // 
+            this.groupBox39.Controls.Add(this.EmployeeUser);
+            this.groupBox39.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox39.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.groupBox39.Location = new System.Drawing.Point(3, 3);
+            this.groupBox39.Name = "groupBox39";
+            this.groupBox39.Size = new System.Drawing.Size(229, 52);
+            this.groupBox39.TabIndex = 0;
+            this.groupBox39.TabStop = false;
+            this.groupBox39.Text = "Username";
+            // 
+            // groupBox40
+            // 
+            this.groupBox40.Controls.Add(this.EmployeePass);
+            this.groupBox40.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox40.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox40.Location = new System.Drawing.Point(3, 61);
+            this.groupBox40.Name = "groupBox40";
+            this.groupBox40.Size = new System.Drawing.Size(229, 53);
+            this.groupBox40.TabIndex = 1;
+            this.groupBox40.TabStop = false;
+            this.groupBox40.Text = "Password";
+            // 
+            // EmployeeUser
+            // 
+            this.EmployeeUser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EmployeeUser.Location = new System.Drawing.Point(3, 23);
+            this.EmployeeUser.Name = "EmployeeUser";
+            this.EmployeeUser.Size = new System.Drawing.Size(223, 27);
+            this.EmployeeUser.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -2321,6 +2605,30 @@
             this.groupBox32.PerformLayout();
             this.groupBox33.ResumeLayout(false);
             this.groupBox33.PerformLayout();
+            this.tabPage13.ResumeLayout(false);
+            this.groupBox35.ResumeLayout(false);
+            this.splitContainer15.Panel1.ResumeLayout(false);
+            this.splitContainer15.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer15)).EndInit();
+            this.splitContainer15.ResumeLayout(false);
+            this.groupBox36.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage10.ResumeLayout(false);
+            this.splitContainer19.Panel1.ResumeLayout(false);
+            this.splitContainer19.Panel2.ResumeLayout(false);
+            this.splitContainer19.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer19)).EndInit();
+            this.splitContainer19.ResumeLayout(false);
+            this.groupBox37.ResumeLayout(false);
+            this.groupBox37.PerformLayout();
+            this.tabPage15.ResumeLayout(false);
+            this.splitContainer20.Panel1.ResumeLayout(false);
+            this.splitContainer20.Panel2.ResumeLayout(false);
+            this.splitContainer20.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer20)).EndInit();
+            this.splitContainer20.ResumeLayout(false);
+            this.groupBox38.ResumeLayout(false);
+            this.groupBox38.PerformLayout();
             this.EditDisplay.ResumeLayout(false);
             this.EditDisplay.PerformLayout();
             this.OrderingDisplay.ResumeLayout(false);
@@ -2356,6 +2664,11 @@
             this.splitContainer8.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer8)).EndInit();
             this.splitContainer8.ResumeLayout(false);
+            this.tableLayoutPanel15.ResumeLayout(false);
+            this.groupBox39.ResumeLayout(false);
+            this.groupBox39.PerformLayout();
+            this.groupBox40.ResumeLayout(false);
+            this.groupBox40.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2502,5 +2815,24 @@
         private TextBox CompanyEmail;
         private RichTextBox CompanyInfo;
         private RichTextBox EmployeeInfo;
+        private GroupBox groupBox35;
+        private SplitContainer splitContainer15;
+        private GroupBox groupBox36;
+        private TextBox EmployeePass;
+        private TabControl tabControl2;
+        private TabPage tabPage10;
+        private SplitContainer splitContainer19;
+        private GroupBox groupBox37;
+        private TextBox PermissionsSearch;
+        private FlowLayoutPanel PermissionsList;
+        private TabPage tabPage15;
+        private SplitContainer splitContainer20;
+        private GroupBox groupBox38;
+        private TextBox PresetsSearch;
+        private FlowLayoutPanel PresetsList;
+        private TableLayoutPanel tableLayoutPanel15;
+        private GroupBox groupBox39;
+        private TextBox EmployeeUser;
+        private GroupBox groupBox40;
     }
 }
