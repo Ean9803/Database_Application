@@ -1112,7 +1112,7 @@
             // 
             splitContainer11.Panel2.Controls.Add(splitContainer12);
             splitContainer11.Size = new Size(238, 104);
-            splitContainer11.SplitterDistance = 28;
+            splitContainer11.SplitterDistance = 29;
             splitContainer11.SplitterWidth = 3;
             splitContainer11.TabIndex = 2;
             // 
@@ -1125,7 +1125,7 @@
             ProductOptionList.Location = new Point(0, 0);
             ProductOptionList.Margin = new Padding(3, 2, 3, 2);
             ProductOptionList.Name = "ProductOptionList";
-            ProductOptionList.Size = new Size(238, 28);
+            ProductOptionList.Size = new Size(238, 29);
             ProductOptionList.TabIndex = 0;
             ProductOptionList.WrapContents = false;
             // 
@@ -1146,7 +1146,7 @@
             // 
             splitContainer12.Panel2.Controls.Add(SaveProduct);
             splitContainer12.Panel2.Controls.Add(ProductBack);
-            splitContainer12.Size = new Size(238, 73);
+            splitContainer12.Size = new Size(238, 72);
             splitContainer12.SplitterDistance = 140;
             splitContainer12.TabIndex = 2;
             // 
@@ -1161,8 +1161,8 @@
             // splitContainer13.Panel2
             // 
             splitContainer13.Panel2.Controls.Add(groupBox16);
-            splitContainer13.Size = new Size(140, 73);
-            splitContainer13.SplitterDistance = 33;
+            splitContainer13.Size = new Size(140, 72);
+            splitContainer13.SplitterDistance = 32;
             splitContainer13.SplitterWidth = 1;
             splitContainer13.TabIndex = 1;
             // 

@@ -1276,6 +1276,10 @@ namespace Database_Control
             foreach (int i in Enum.GetValues(typeof(StatusType.Action)))
             {
                 AddNewConentItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString(), 30, 0, Direction.vertical, SelectionGroup: "Permissions", Return: () => { return new Dictionary<string, object> { { "Value", i } }; });
+            }
+
+            foreach (int i in Enum.GetValues(typeof(StatusType.Action)))
+            {
                 if (Status.HasAbility(((StatusType.Action)i)))
                     SelectItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString());
             }

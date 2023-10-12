@@ -160,7 +160,7 @@ namespace Database_Control
             DetailTabs.SelectTab((int)Detail);
         }
 
-        private bool AutoLogin = true;
+        private bool AutoLogin = false;
 
         private void LoginBtn_Click(object sender, EventArgs e)
         {
