@@ -431,25 +431,22 @@ namespace Database_Control
                     DeletedItemsOrder.Add(OrderID);
 
                 List<Dictionary<string, object>> Delivery = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }), "Bundle_ID");
-                List<Dictionary<string, object>> Bundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()) }), "Bundle_ID", "Product_ID");
+                List<Dictionary<string, object>> Bundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()) }), "Product_ID");
                 int UpForDelete = 0;
                 for (int i = 0; i < Bundles.Count; i++)
                 {
-                    if (Bundles[i]["Product_ID"].ToString().Equals(item["Product_ID"]))
+                    if (Bundles[i]["Product_ID"].ToString().Equals(item["Product_ID"].ToString()))
                     {
                         UpForDelete++;
                     }
                 }
 
-                if (UpForDelete != Bundles.Count)
-                {
-                    Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
-                }
-                else
+                if (UpForDelete == Bundles.Count)
                 {
                     Form.Connection.DeleteData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", OrderID) }));
-                    Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
                 }
+
+                Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
             }
 
             Form.Connection.DeleteData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }));
