@@ -923,7 +923,7 @@ namespace Database_Control
             if (DataIn != null)
             {
                 List<Dictionary<string, object>> ImageData = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), "Image");
-                Form.SetImage(ImageData[0]["Image"].ToString());
+                Form.SetImage((byte[])ImageData[0]["Image"]);
                 Form.SetProductDesc(DataIn["Description"].ToString(), false);
                 int TotalAmount = 0;
                 List<Dictionary<string, object>> ProductBundle = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), "Quantity", "Bundle_ID", "Delivered");
@@ -964,7 +964,7 @@ namespace Database_Control
             }
             else
             {
-                Form.SetImage("");
+                Form.SetImage(new byte[0]);
                 Form.SetProductDesc("[Enter Product Description]", false);
                 Form.SetTotalAmount(0);
             }
@@ -1180,7 +1180,7 @@ namespace Database_Control
             if (DataIn != null)
             {
                 List<Dictionary<string, object>> ImageData = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "Image");
-                Form.SetImage(ImageData[0]["Image"].ToString());
+                Form.SetImage((byte[])ImageData[0]["Image"]);
                 Form.SetProductDesc(DataIn["Description"].ToString(), false);
                 Form.SetProductName(DataIn["Name"].ToString(), false);
                 Form.SetEmail(DataIn["Email"].ToString());
@@ -1188,7 +1188,7 @@ namespace Database_Control
             }
             else
             {
-                Form.SetImage("");
+                Form.SetImage(new byte[0]);
                 Form.SetProductDesc("[Enter Company Description]", false);
             }
 
@@ -1286,7 +1286,7 @@ namespace Database_Control
             if (DataIn != null)
             {
                 List<Dictionary<string, object>> ImageData = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@ID", new (string, string)[] { ("@ID", DataIn["Username"].ToString()) }), "Image");
-                Form.SetImage(ImageData[0]["Image"].ToString());
+                Form.SetImage((byte[])ImageData[0]["Image"]);
                 Form.SetEmployeePass(DataIn["Password"].ToString(), ((int)DataIn["Salesman_ID"] != Status.GetIDNumber()), (int)DataIn["Salesman_ID"] != Status.GetIDNumber());
                 Form.SetProductName(DataIn["Name"].ToString(), false);
                 Form.SetEmployeeUser(DataIn["Username"].ToString(), false);
@@ -1302,7 +1302,7 @@ namespace Database_Control
             }
             else
             {
-                Form.SetImage("");
+                Form.SetImage(new byte[0]);
                 Form.SetEmployeePass("", false, false);
                 Form.SetProductName("", false);
                 Form.SetEmployeeUser("", false);

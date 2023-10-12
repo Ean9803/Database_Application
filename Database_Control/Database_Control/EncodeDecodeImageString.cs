@@ -25,10 +25,10 @@ class ImageStringEncoderDecoder
         return img;
     }
 
-    public static Image GetImage(string Data)
+    public static Image GetImage(byte[] Data)
     {
         Image newImg;
-        byte[] ImgData = decodeBase64StringToImage(Data);
+        byte[] ImgData = (Data);
         using(MemoryStream ms = new MemoryStream(ImgData, 0, ImgData.Length))
         {
             ms.Write(ImgData, 0, ImgData.Length);
@@ -38,11 +38,11 @@ class ImageStringEncoderDecoder
         return newImg;
     }
 
-    public static string ImageBytes(Image image)
+    public static byte[] ImageBytes(Image image)
     {
         MemoryStream ms = new MemoryStream();
         image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-        return Convert.ToBase64String(ms.ToArray());
+        return ms.ToArray();
     }
 
 }

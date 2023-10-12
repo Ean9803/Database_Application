@@ -1112,7 +1112,7 @@
             // 
             splitContainer11.Panel2.Controls.Add(splitContainer12);
             splitContainer11.Size = new Size(238, 104);
-            splitContainer11.SplitterDistance = 41;
+            splitContainer11.SplitterDistance = 42;
             splitContainer11.SplitterWidth = 3;
             splitContainer11.TabIndex = 2;
             // 
@@ -1125,7 +1125,7 @@
             ProductOptionList.Location = new Point(0, 0);
             ProductOptionList.Margin = new Padding(3, 2, 3, 2);
             ProductOptionList.Name = "ProductOptionList";
-            ProductOptionList.Size = new Size(238, 41);
+            ProductOptionList.Size = new Size(238, 42);
             ProductOptionList.TabIndex = 0;
             ProductOptionList.WrapContents = false;
             // 
@@ -1146,7 +1146,7 @@
             // 
             splitContainer12.Panel2.Controls.Add(SaveProduct);
             splitContainer12.Panel2.Controls.Add(ProductBack);
-            splitContainer12.Size = new Size(238, 60);
+            splitContainer12.Size = new Size(238, 59);
             splitContainer12.SplitterDistance = 140;
             splitContainer12.TabIndex = 2;
             // 
@@ -1161,7 +1161,7 @@
             // splitContainer13.Panel2
             // 
             splitContainer13.Panel2.Controls.Add(groupBox16);
-            splitContainer13.Size = new Size(140, 60);
+            splitContainer13.Size = new Size(140, 59);
             splitContainer13.SplitterDistance = 25;
             splitContainer13.SplitterWidth = 1;
             splitContainer13.TabIndex = 1;
@@ -1175,7 +1175,7 @@
             groupBox16.Margin = new Padding(3, 2, 3, 2);
             groupBox16.Name = "groupBox16";
             groupBox16.Padding = new Padding(3, 2, 3, 2);
-            groupBox16.Size = new Size(140, 34);
+            groupBox16.Size = new Size(140, 33);
             groupBox16.TabIndex = 0;
             groupBox16.TabStop = false;
             groupBox16.Text = "Password";

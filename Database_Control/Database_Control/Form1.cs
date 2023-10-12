@@ -11,7 +11,7 @@ namespace Database_Control
         public SQL Connection { get; internal set; }
         public string FileName = "DataBaseOptions.options";
         public string[] Servers = new string[] { "GameStation\\SQLEXPRESS", "DESKTOP-E\\SQLEXPRESS" };
-        private string DefaultPicture = "";
+        private byte[] DefaultPicture;
 
         public MainForm()
         {
@@ -56,7 +56,7 @@ namespace Database_Control
             {
                 if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
                 {
-                    Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("Image", ""), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through default"));
+                    Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("Image", DefaultPicture), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through default"));
                 }
 
                 LogoutBtn.Visible = false;
@@ -210,7 +210,7 @@ namespace Database_Control
                     string Name = Interaction.InputBox("Enter Employee Name");
                     if (!string.IsNullOrEmpty(Name))
                     {
-                        Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Image", ""), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through login"));
+                        Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Image", DefaultPicture), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through login"));
 
                         User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position", "Password");
 
@@ -624,14 +624,14 @@ namespace Database_Control
             }
         }
 
-        public string GetImage()
+        public byte[] GetImage()
         {
             return ImageStringEncoderDecoder.ImageBytes(ProductImage.BackgroundImage);
         }
 
-        public void SetImage(string Data)
+        public void SetImage(byte[] Data)
         {
-            if (string.IsNullOrEmpty(Data))
+            if (Data.Length == 0)
             {
                 ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(DefaultPicture);
             }
