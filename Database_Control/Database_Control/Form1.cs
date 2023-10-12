@@ -56,7 +56,7 @@ namespace Database_Control
             {
                 if (Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Position='Admin'", null), "Name").Count == 0)
                 {
-                    Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through default"));
+                    Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Admin"), ("Name", "Admin"), ("Username", "Admin"), ("Password", "Admin"), ("Image", ""), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through default"));
                 }
 
                 LogoutBtn.Visible = false;
@@ -210,7 +210,7 @@ namespace Database_Control
                     string Name = Interaction.InputBox("Enter Employee Name");
                     if (!string.IsNullOrEmpty(Name))
                     {
-                        Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through login"));
+                        Connection.InsertData("[Maestro].[dbo].[EMPLOYEE]", ("Position", "Grunt"), ("Image", ""), ("Name", Name), ("Username", UserName.Text), ("Password", PassWord.Text), ("History", "[" + DateTime.UtcNow.Date.ToString("dd / MM / yyyy") + "]: User Created through login"));
 
                         User = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User AND Password=@Pass", new (string, string)[] { ("@User", UserName.Text), ("@Pass", PassWord.Text) }), "Salesman_ID", "Name", "Position", "Password");
 

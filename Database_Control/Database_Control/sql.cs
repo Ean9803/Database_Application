@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Net.NetworkInformation;
 
 namespace Database_Control
 {
@@ -28,6 +29,56 @@ namespace Database_Control
                 return false;
             }
         }
+        private enum Direction { Reciving, Delivering }
+        private delegate object Process(object Input, Direction Mode);
+        private List<Dictionary<string, Process>> Gate = new List<Dictionary<string, Process>>()
+        {
+            new Dictionary<string, Process>()
+            {
+                {
+                    "@Pass",
+                    ProcessPassword
+                }
+            },
+            new Dictionary<string, Process>()
+            {
+                {
+                    "Password",
+                    ProcessPassword
+                }
+            },
+        };
+
+        private bool HasProcess(string Col, object Val, Direction Dir, out object ValResult)
+        {
+            foreach (var item in Gate)
+            {
+                if (item.ContainsKey(Col))
+                {
+                    ValResult = item[Col](Val, Dir);
+                    return true;
+                }
+            }
+            
+            ValResult = Val;
+            return false;
+        }
+
+        private static object ProcessPassword(object Input, Direction Mode)
+        {
+            if (Mode == Direction.Reciving)
+            {
+                //decode
+                var bytes = Convert.FromBase64String(Input.ToString());
+                return Encoding.UTF8.GetString(bytes).ToString();
+            }
+            else
+            {
+                //encode
+                var bytes = Encoding.UTF8.GetBytes(Input.ToString());
+                return Convert.ToBase64String(bytes).ToString();
+            }
+        }
 
         public void InsertData(string tableName, params (string Col, object Val)[] Data)
         {
@@ -40,6 +91,10 @@ namespace Database_Control
                 {
                     columnsString += Data[i].Col + ",";
                     parameterPlaceholders += $"@param{i},";
+                    if (HasProcess(Data[i].Col, Data[i].Val, Direction.Delivering, out object Result))
+                    {
+                        Data[i].Val = Result;
+                    }
                 }
                 columnsString = columnsString.Substring(0, columnsString.Length - 1);
                 parameterPlaceholders = parameterPlaceholders.Substring(0, parameterPlaceholders.Length - 1);
@@ -71,6 +126,10 @@ namespace Database_Control
                     {
                         for (int i = 0; i < whereClause.WhereParams.Length; i++)
                         {
+                            if (HasProcess(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2, Direction.Delivering, out object Result))
+                            {
+                                whereClause.WhereParams[i].Item2 = Result.ToString();
+                            }
                             cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
                         }
                     }
@@ -92,6 +151,10 @@ namespace Database_Control
                 for (int i = 0; i < Data.Length; i++)
                 {
                     setClause += $"{Data[i].Col} = @param{i},";
+                    if (HasProcess(Data[i].Col, Data[i].Val, Direction.Delivering, out object Result))
+                    {
+                        Data[i].Val = Result;
+                    }
                 }
                 setClause = setClause.Substring(0, setClause.Length - 1);
 
@@ -104,6 +167,10 @@ namespace Database_Control
                     {
                         for (int i = 0; i < whereClause.WhereParams.Length; i++)
                         {
+                            if (HasProcess(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2, Direction.Delivering, out object Result))
+                            {
+                                whereClause.WhereParams[i].Item2 = Result.ToString();
+                            }
                             cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
                         }
                     }
@@ -134,6 +201,10 @@ namespace Database_Control
                     {
                         for (int i = 0; i < whereClause.WhereParams.Length; i++)
                         {
+                            if (HasProcess(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2, Direction.Delivering, out object Result))
+                            {
+                                whereClause.WhereParams[i].Item2 = Result.ToString();
+                            }
                             cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
                         }
                     }
@@ -147,7 +218,12 @@ namespace Database_Control
                             {
                                 Ret[Ret.Count - 1].Add(Cols[i], null);
                             }
-                            Ret[Ret.Count - 1][Cols[i]] = Read.GetValue(i);
+                            object In = Read.GetValue(i);
+                            if (HasProcess(Cols[i], In, Direction.Reciving, out object Result))
+                            {
+                                In = Result;
+                            }
+                            Ret[Ret.Count - 1][Cols[i]] = In;
                         }
                     }
                 }
