@@ -1,29 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\irobo\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj": {}
+    "C:\\Users\\juanj\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj": {}
   },
   "projects": {
-    "C:\\Users\\irobo\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj": {
+    "C:\\Users\\juanj\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\irobo\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj",
+        "projectUniqueName": "C:\\Users\\juanj\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj",
         "projectName": "Database_Control",
-        "projectPath": "C:\\Users\\irobo\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj",
-        "packagesPath": "C:\\Users\\irobo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\irobo\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\obj\\",
+        "projectPath": "C:\\Users\\juanj\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\Database_Control.csproj",
+        "packagesPath": "C:\\Users\\juanj\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\juanj\\Documents\\GitHub\\Database_Application\\Database_Control\\Database_Control\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\irobo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\juanj\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0-windows"
+          "net6.0-windows7.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -44,32 +43,17 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
-          "dependencies": {
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.8.5, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            },
-            "Microsoft.WindowsDesktop.App.WindowsForms": {
-              "privateAssets": "none"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.411\\RuntimeIdentifierGraph.json"
         }
       }
     }
