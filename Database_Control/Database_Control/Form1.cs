@@ -13,6 +13,25 @@ namespace Database_Control
         public string[] Servers = new string[] { "GameStation\\SQLEXPRESS", "DESKTOP-E\\SQLEXPRESS" };
         private byte[] DefaultPicture;
 
+        private void SetCallbacks()
+        {
+            CreateNewUser.Click += CreateNewUser_Click;
+            LoginBtn.Click += LoginBtn_Click;
+            ItemSearch.TextChanged += ItemSearch_TextChanged;
+            SaveProduct.Click += SaveProduct_Click;
+            ProductBack.Click += ProductBack_Click;
+            SupplierSearch.TextChanged += SupplierSearch_TextChanged;
+            referenceSearch.TextChanged += referenceSearch_TextChanged;
+            DeleteRef.Click += button1_Click;
+            PermissionsSearch.TextChanged += PermissionsSearch_TextChanged;
+            PresetsSearch.TextChanged += PresetsSearch_TextChanged;
+            CompanySearch.TextChanged += CompanySearch_TextChanged;
+            CancelOrder.Click += CancelOrder_Click;
+            SaveOrder.Click += SaveOrder_Click;
+            ProductSearch.TextChanged += ProductSearch_TextChanged;
+            LogoutBtn.Click += LogoutBtn_Click_1;
+        }
+
         public MainForm()
         {
             Connection = new SQL();
@@ -48,7 +67,7 @@ namespace Database_Control
             } while (!Connection.Connect(DataBase, "root", "root", out E) && !Quit);
 
             InitializeComponent();
-
+            SetCallbacks();
 
             DefaultPicture = ImageStringEncoderDecoder.ImageBytes(ProductImage.BackgroundImage);
 
@@ -333,23 +352,6 @@ namespace Database_Control
             Memo.Text = MemoString;
         }
 
-        public void FillProductDisplay(Dictionary<string, object> ListItems)
-        {
-            ProductInfo.Clear();
-            ProductInfo.AppendText("Product ID: " + ListItems["Product_ID"].ToString() + " | Name: " + ListItems["Name"].ToString() +
-                "\n--------------------------------------\n" +
-                "Available Amount: " + ListItems["Available_Amt"].ToString() +
-                "\n--------------------------------------\n" +
-                "Price: $" + ListItems["Price"].ToString() +
-                "\n--------------------------------------\n" +
-                "Prep Time: " + ListItems["Time"].ToString() + "\n");
-            List<Dictionary<string, object>> Comp = Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", ListItems["Supplier"].ToString()) }), "Name");
-            ProductInfo.AppendText("Supplier: " + Comp[0]["Name"].ToString() + "\n\n");
-            ProductInfo.AppendText("Description:\n" + ListItems["Description"].ToString());
-            ProductInfo.AppendText("[PRODUCT HISTORY]:\n");
-            ProductInfo.AppendText(ListItems["History"].ToString());
-        }
-
         public void SetReferencedNum(string Num)
         {
             ReservedLable.Text = Num;
@@ -584,6 +586,26 @@ namespace Database_Control
             return (false, "");
         }
 
+        public void FillProductDisplay(Dictionary<string, object> ListItems)
+        {
+            ProductInfo.Clear();
+            ProductInfo.AppendText("Product ID: " + ListItems["Product_ID"].ToString() + " | Name: " + ListItems["Name"].ToString() +
+                "\n--------------------------------------\n" +
+                "Available Amount: " + ListItems["Available_Amt"].ToString() +
+                "\n--------------------------------------\n" +
+                "Price: $" + ListItems["Price"].ToString() +
+                "\n--------------------------------------\n" +
+                "Prep Time: " + ListItems["Time"].ToString() + "\n");
+            List<Dictionary<string, object>> Comp = Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", ListItems["Supplier"].ToString()) }), "Name");
+            ProductInfo.AppendText("Supplier: " + Comp[0]["Name"].ToString() + "\n\n");
+            ProductInfo.AppendText("Description:\n" + ListItems["Description"].ToString());
+            ProductInfo.AppendText("[PRODUCT HISTORY]:\n");
+            ProductInfo.AppendText(ListItems["History"].ToString());
+
+            List<Dictionary<string, object>> ImageGrab = Connection.GetData("[Maestro].[dbo].[PRODUCT]", ("Product_ID=@ID", new (string, string)[] { ("@ID", ListItems["Product_ID"].ToString()) }), "Image");
+            SetImage((byte[])ImageGrab[0]["Image"], Picture.Detail_Product);
+        }
+
         public void FillCompanyDisplay(Dictionary<string, object> ListItems)
         {
             CompanyInfo.Clear();
@@ -592,6 +614,9 @@ namespace Database_Control
             CompanyInfo.AppendText("Phone: " + ListItems["Phone"].ToString() + "\n");
             CompanyInfo.AppendText("Email: " + ListItems["Email"].ToString() + "\n");
             CompanyInfo.AppendText("\nDescription:\n" + ListItems["Description"].ToString() + "\n");
+
+            List<Dictionary<string, object>> ImageGrab = Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", ListItems["Company_ID"].ToString()) }), "Image");
+            SetImage((byte[])ImageGrab[0]["Image"], Picture.Detail_Company);
         }
 
         public void FillEmployeeDisplay(Dictionary<string, object> ListItems)
@@ -602,6 +627,9 @@ namespace Database_Control
             EmployeeInfo.AppendText("[USERNAME]: " + ListItems["Username"].ToString() + "\n");
             EmployeeInfo.AppendText("-----------------[USER HISTORY]-----------------\n");
             EmployeeInfo.AppendText(ListItems["History"].ToString());
+
+            List<Dictionary<string, object>> ImageGrab = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", ListItems["Salesman_ID"].ToString()) }), "Image");
+            SetImage((byte[])ImageGrab[0]["Image"], Picture.Detail_Employee);
         }
 
         private void PresetsSearch_TextChanged(object sender, EventArgs e)
@@ -629,15 +657,27 @@ namespace Database_Control
             return ImageStringEncoderDecoder.ImageBytes(ProductImage.BackgroundImage);
         }
 
-        public void SetImage(byte[] Data)
+        public enum Picture { EditPage, Detail_Product, Detail_Company, Detail_Employee }
+        public void SetImage(byte[] Data, Picture Pic)
         {
-            if (Data.Length == 0)
+            byte[] PicData = Data.Length == 0 ? DefaultPicture : Data;
+
+            switch (Pic)
             {
-                ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(DefaultPicture);
-            }
-            else
-            {
-                ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(Data);
+                case Picture.EditPage:
+                    ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    break;
+                case Picture.Detail_Product:
+                    ProductPic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    break;
+                case Picture.Detail_Company:
+                    CompanyPic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    break;
+                case Picture.Detail_Employee:
+                    EmployeePic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    break;
+                default:
+                    break;
             }
         }
     }
