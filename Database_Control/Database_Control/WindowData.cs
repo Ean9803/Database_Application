@@ -797,7 +797,7 @@ namespace Database_Control
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
                                 DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email");
+                                List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Address");
                                 if (ListItems.Count != 0)
                                 {
                                     foreach (var item in ListItems)
@@ -1049,7 +1049,7 @@ namespace Database_Control
                                     string HistData = "[" + DateTime.UtcNow.Date.ToString("dd/MM/yyyy") + "] Created by: " + Status.GetName() + ", position: " + Status.GetPosition();
                                     Form.Connection.InsertData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID", ProductID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
                                         ("Price", Form.GetProductPrice()), ("Time", Form.GetPrepTime()), ("Available_Amt", (int)(Form.GetTotalAmount() - reservedAmount)), ("Image", Form.GetImage()), ("Supplier", Comp["Company_ID"]),
-                                        ("History", HistData + Profile + "\n" + DataIn["History"].ToString()));
+                                        ("History", HistData + Profile + "\n"));
 
                                     Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                                 }
@@ -1204,8 +1204,8 @@ namespace Database_Control
                         if (Em.Item1)
                         {
                             Form.Connection.UpdateData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
-                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", Form.GetImage()));
-                            UpdateUserHistory(Form, Status.GetIDNumber(), "User updated company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone());
+                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", Form.GetImage()), ("Address", Form.GetAddress()));
+                            UpdateUserHistory(Form, Status.GetIDNumber(), "User updated company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone() + "\n\t|Address: " + Form.GetAddress());
                             Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                         }
                         else
@@ -1235,8 +1235,8 @@ namespace Database_Control
                                 CompanyID = Rand.Next(int.MinValue, int.MaxValue);
                             }
                             Form.Connection.InsertData("[Maestro].[dbo].[COMPANIES]", ("Company_ID", CompanyID), ("Name", Form.GetProductName()), ("Description", Form.GetProductDesc()),
-                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", Form.GetImage()));
-                            UpdateUserHistory(Form, Status.GetIDNumber(), "User created company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone());
+                                            ("Email", Em.Item2), ("Phone", Form.GetPhone()), ("Image", Form.GetImage()), ("Address", Form.GetAddress()));
+                            UpdateUserHistory(Form, Status.GetIDNumber(), "User created company profile: " + Form.GetProductName() + "\n\t|Email: " + Em.Item2 + "\n\t|Phone: " + Form.GetPhone() + "\n\t|Address: " + Form.GetAddress());
                             Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
                         }
                         else

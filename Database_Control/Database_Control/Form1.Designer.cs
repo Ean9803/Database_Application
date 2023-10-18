@@ -148,6 +148,8 @@
             this.CompanyPhone = new System.Windows.Forms.MaskedTextBox();
             this.groupBox33 = new System.Windows.Forms.GroupBox();
             this.CompanyEmail = new System.Windows.Forms.TextBox();
+            this.groupBox44 = new System.Windows.Forms.GroupBox();
+            this.CompanyAddress = new System.Windows.Forms.TextBox();
             this.tabPage13 = new System.Windows.Forms.TabPage();
             this.groupBox35 = new System.Windows.Forms.GroupBox();
             this.splitContainer15 = new System.Windows.Forms.SplitContainer();
@@ -336,6 +338,7 @@
             this.tableLayoutPanel14.SuspendLayout();
             this.groupBox32.SuspendLayout();
             this.groupBox33.SuspendLayout();
+            this.groupBox44.SuspendLayout();
             this.tabPage13.SuspendLayout();
             this.groupBox35.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer15)).BeginInit();
@@ -1339,7 +1342,7 @@
             // 
             this.splitContainer12.Panel2.Controls.Add(this.tableLayoutPanel16);
             this.splitContainer12.Size = new System.Drawing.Size(273, 81);
-            this.splitContainer12.SplitterDistance = 167;
+            this.splitContainer12.SplitterDistance = 163;
             this.splitContainer12.SplitterWidth = 5;
             this.splitContainer12.TabIndex = 2;
             // 
@@ -1353,7 +1356,7 @@
             // splitContainer13.Panel2
             // 
             this.splitContainer13.Panel2.Controls.Add(this.groupBox16);
-            this.splitContainer13.Size = new System.Drawing.Size(167, 81);
+            this.splitContainer13.Size = new System.Drawing.Size(163, 81);
             this.splitContainer13.SplitterDistance = 25;
             this.splitContainer13.SplitterWidth = 5;
             this.splitContainer13.TabIndex = 1;
@@ -1365,7 +1368,7 @@
             this.groupBox16.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox16.Location = new System.Drawing.Point(0, 0);
             this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(167, 51);
+            this.groupBox16.Size = new System.Drawing.Size(163, 51);
             this.groupBox16.TabIndex = 0;
             this.groupBox16.TabStop = false;
             this.groupBox16.Text = "Password";
@@ -1376,7 +1379,7 @@
             this.ProductPassword.Location = new System.Drawing.Point(3, 23);
             this.ProductPassword.Name = "ProductPassword";
             this.ProductPassword.PasswordChar = '*';
-            this.ProductPassword.Size = new System.Drawing.Size(161, 27);
+            this.ProductPassword.Size = new System.Drawing.Size(157, 27);
             this.ProductPassword.TabIndex = 0;
             // 
             // tableLayoutPanel16
@@ -1392,7 +1395,7 @@
             this.tableLayoutPanel16.RowCount = 2;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(101, 81);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(105, 81);
             this.tableLayoutPanel16.TabIndex = 3;
             // 
             // SaveProduct
@@ -1925,23 +1928,26 @@
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableLayoutPanel14.Controls.Add(this.groupBox32, 0, 0);
             this.tableLayoutPanel14.Controls.Add(this.groupBox33, 0, 1);
+            this.tableLayoutPanel14.Controls.Add(this.groupBox44, 0, 2);
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel14.Location = new System.Drawing.Point(3, 23);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
-            this.tableLayoutPanel14.RowCount = 3;
+            this.tableLayoutPanel14.RowCount = 4;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 219F));
             this.tableLayoutPanel14.Size = new System.Drawing.Size(233, 512);
             this.tableLayoutPanel14.TabIndex = 0;
             // 
             // groupBox32
             // 
             this.groupBox32.Controls.Add(this.CompanyPhone);
+            this.groupBox32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox32.ForeColor = System.Drawing.Color.White;
             this.groupBox32.Location = new System.Drawing.Point(3, 3);
             this.groupBox32.Name = "groupBox32";
-            this.groupBox32.Size = new System.Drawing.Size(187, 93);
+            this.groupBox32.Size = new System.Drawing.Size(227, 94);
             this.groupBox32.TabIndex = 0;
             this.groupBox32.TabStop = false;
             this.groupBox32.Text = "Main Phone";
@@ -1953,7 +1959,7 @@
             this.CompanyPhone.Mask = "(999) 000-0000";
             this.CompanyPhone.Name = "CompanyPhone";
             this.CompanyPhone.RejectInputOnFirstFailure = true;
-            this.CompanyPhone.Size = new System.Drawing.Size(181, 27);
+            this.CompanyPhone.Size = new System.Drawing.Size(221, 27);
             this.CompanyPhone.TabIndex = 0;
             // 
             // groupBox33
@@ -1975,6 +1981,26 @@
             this.CompanyEmail.Name = "CompanyEmail";
             this.CompanyEmail.Size = new System.Drawing.Size(221, 27);
             this.CompanyEmail.TabIndex = 0;
+            // 
+            // groupBox44
+            // 
+            this.groupBox44.Controls.Add(this.CompanyAddress);
+            this.groupBox44.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox44.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.groupBox44.Location = new System.Drawing.Point(3, 203);
+            this.groupBox44.Name = "groupBox44";
+            this.groupBox44.Size = new System.Drawing.Size(227, 87);
+            this.groupBox44.TabIndex = 2;
+            this.groupBox44.TabStop = false;
+            this.groupBox44.Text = "Delivery Address";
+            // 
+            // CompanyAddress
+            // 
+            this.CompanyAddress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CompanyAddress.Location = new System.Drawing.Point(3, 23);
+            this.CompanyAddress.Name = "CompanyAddress";
+            this.CompanyAddress.Size = new System.Drawing.Size(221, 27);
+            this.CompanyAddress.TabIndex = 0;
             // 
             // tabPage13
             // 
@@ -2828,6 +2854,8 @@
             this.groupBox32.PerformLayout();
             this.groupBox33.ResumeLayout(false);
             this.groupBox33.PerformLayout();
+            this.groupBox44.ResumeLayout(false);
+            this.groupBox44.PerformLayout();
             this.tabPage13.ResumeLayout(false);
             this.groupBox35.ResumeLayout(false);
             this.splitContainer15.Panel1.ResumeLayout(false);
@@ -3070,5 +3098,7 @@
         private GroupBox groupBox43;
         private Panel EmployeePic;
         private TableLayoutPanel tableLayoutPanel16;
+        private GroupBox groupBox44;
+        private TextBox CompanyAddress;
     }
 }
