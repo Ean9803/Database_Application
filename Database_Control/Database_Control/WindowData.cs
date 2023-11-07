@@ -12,12 +12,14 @@ namespace Database_Control
         private MainForm Form;
         public WindowData(MainForm Form, StatusType Status) { this.Form = Form; this.Status = Status; }
 
+        // delegates for UI self-interaction
         private delegate bool NewWindowState(MainForm Form, StatusType Status, Dictionary<string, object> DataIn);
         public delegate Dictionary<string, object> CollectionReturn();
         public delegate List<(bool, Control)> CreateButonConent();
 
+        // declaring links to the windowtypes to methods
         private Dictionary<MainForm.WindowProfile, NewWindowState> Windows = new Dictionary<MainForm.WindowProfile, NewWindowState>()
-        {
+        {                             // second parameters details the actions for each window to show user the display
             { MainForm.WindowType.Login, OpenLogin },
             { MainForm.WindowType.Delivery, OpenDelivery },
             { MainForm.WindowType.Product, OpenProduct },
@@ -27,7 +29,8 @@ namespace Database_Control
         };
 
         public bool OpenWindow(MainForm.WindowProfile Type, Dictionary<string, object> DataIn)
-        {
+        {  // looks through dictionary to run the method
+            //basically switches windows
             if (Windows.ContainsKey(Type))
             {
                 if (Windows[Type] != null)
@@ -38,13 +41,15 @@ namespace Database_Control
             return false;
         }
 
-        private static void DeleteAllConents(FlowLayoutPanel list)
+        private static void DeleteAllContents(FlowLayoutPanel list)
         {
             list.Controls.Clear();
         }
 
+        //contains groups of items which user has selected in a collection (for example, used in permission selection in employee or product selection in a delivery)
         private static Dictionary<string, (uint Max, uint Min, Color GroupColor, List<(Panel, Action, CollectionReturn Attribute, int Live)> Collection)> selectionGroup = new Dictionary<string, (uint, uint, Color, List<(Panel, Action, CollectionReturn, int)>)>();
 
+        // Creates a selection group to store data
         public static void SetSelectionGroup(string Name, (uint MinItems, uint MaxItems) Bounds, Color colorGroup)
         {
             if (string.IsNullOrEmpty(Name))
@@ -59,29 +64,37 @@ namespace Database_Control
             }
         }
 
+        // dictionary that stores name representations of delivery status / progress
         private static Dictionary<int, string> StatusMap = new Dictionary<int, string>() { { 1, "Init" }, { 2, "In Progress" }, { 3, "Completed" } };
         public static string GetOrderStatus(int Stat)
-        {
+        {   // if the dictionary for statuses contains the 
             if (StatusMap.ContainsKey(Stat))
                 return StatusMap[Stat];
             return "UNKNOWN";
         }
 
+        // gets all selected objects user has clicked on 
         public static List<(Control, CollectionReturn)> GetSelectedObjects(string Group)
         {
+            // 
             if (string.IsNullOrEmpty(Group))
                 return new List<(Control, CollectionReturn)>();
+
+            // ret is the list of selected items that will be returned for the program to deal with
             List<(Control, CollectionReturn)> Ret = new List<(Control, CollectionReturn)>();
+
+            // grabs information from the selected items if the selection group has desired group
             if (selectionGroup.ContainsKey(Group))
             {
+                // iterates through all items in the list
                 for (int i = selectionGroup[Group].Collection.Count - 1; i >= 0; i--)
                 {
                     if (selectionGroup[Group].Collection[i].Attribute != null)
-                    {
+                    {   
                         Ret.Add((selectionGroup[Group].Collection[i].Item1, selectionGroup[Group].Collection[i].Attribute));
                     }
                     else
-                    {
+                    {  // if there is a group within the index then delete
                         selectionGroup[Group].Collection.RemoveAt(i);
                     }
                 }
@@ -91,17 +104,19 @@ namespace Database_Control
 
         private static void UpdateSelectionGroups()
         {
+            // for every item in the selectiongroup
             foreach (var item in selectionGroup)
-            {
+            {   // checks to see if user has selected more items than a selectiongroup can handle
                 for (int i = item.Value.Collection.Count - 1; i >= 0; i--)
                 {
                     if (item.Value.Collection[i].Item1 == null || item.Value.Collection[i].Item2 == null)
-                    {
+                    {   // checks if there are any unnecessary items within a selection group which have null values.
                         item.Value.Collection.RemoveAt(i);
                     }
                 }
+
                 while (item.Value.Collection.Count > item.Value.Max && item.Value.Collection.Count > item.Value.Min)
-                {
+                {  // when there are more items that can be handle, this loops handles the "overflow"
                     item.Value.Collection[0].Item2();
                     item.Value.Collection.RemoveAt(0);
                 }
@@ -109,15 +124,17 @@ namespace Database_Control
         }
 
         private static void RemoveFromCollection(string Group, Panel Box)
-        {
+        {// method removes an item from a collection of selection groups
+
             if (!string.IsNullOrEmpty(Group))
-            {
+            {   // when desired group is found in collection
                 if (selectionGroup.ContainsKey(Group))
-                {
+                {  // checking if it is possible to remove an item to remain within bounds
+                    // (if there are 2 selections we want to make sure that we remain with 2)
                     if (selectionGroup[Group].Collection.Count - 1 >= selectionGroup[Group].Min)
-                    {
+                    {   // search for the item to remove
                         for (int i = selectionGroup[Group].Collection.Count - 1; i >= 0; i--)
-                        {
+                        {  
                             if (selectionGroup[Group].Collection[i].Item1 == Box)
                             {
                                 selectionGroup[Group].Collection[i].Item2();
@@ -130,34 +147,38 @@ namespace Database_Control
         }
 
         private static bool InCollection(string Group, Panel Box, bool Wake = false)
-        {
+        {   // checking to see if a group is within a collection of a selectiongroup
             if (!string.IsNullOrEmpty(Group))
             {
+                // checking to see if group is within collection
                 if (selectionGroup.ContainsKey(Group))
                 {
-                    bool Add = false;
+                    bool result = false;
+                    // loops to see if item is in the collection 
                     for (int i = 0; i < selectionGroup[Group].Collection.Count; i++)
                     {
                         if (selectionGroup[Group].Collection[i].Item1 == Box)
-                        {
+                        {  // wake to ensure that no items are modified
                             if (selectionGroup[Group].Collection[i].Live == 0 && Wake)
-                            {
+                            {  
                                 selectionGroup[Group].Collection[i] = (selectionGroup[Group].Collection[i].Item1, selectionGroup[Group].Collection[i].Item2, selectionGroup[Group].Collection[i].Attribute, 1);
                             }
                             else
                             {
-                                Add = true;
+                                result = true;
                             }
                             break;
                         }
                     }
-                    return Add;
+                    return result;
                 }
             }
             return false;
         }
 
-        //"Iterative with two matrix rows"
+        //"Iterative with two matrix rows" 
+        // https://stackoverflow.com/questions/36472793/levenshtein-distance-algorithm
+        // asked by user "mary" on Apr 7, 2016
         public static int LevenshteinDistance(string source, string target)
         {
             // degenerate cases
@@ -198,36 +219,48 @@ namespace Database_Control
             return v1[target.Length];
         }
 
+        // calculates differences between strings as a percentage
+        // search by similarity instead of exact name for predictive searching
+        // implemented by Ian
         public static double CalculateSimilarity(string source, string target)
-        {
+        {   // checks if strings are null or if they are the same 
             if ((source == null) || (target == null)) return 0.0;
             if ((source.Length == 0) || (target.Length == 0)) return 0.0;
             if (source == target) return 1.0;
 
+
             int stepsToSame = LevenshteinDistance(source, target);
+            // returns percentage of similarity between the strings
             return (1.0 - ((double)stepsToSame / (double)Math.Max(source.Length, target.Length)));
         }
 
+        // enum for button flow direction
         private enum Direction { vertical, horizontal }
 
-        private static void AddNewConentItem(FlowLayoutPanel list, string GroupName, int Size = 70, int Offset = 20, Direction Flow = Direction.vertical, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null, Action UnClick = null, CreateButonConent Content = null)
-        {
+        // method that creates a button that is connected to a group and placed inside of a list
+        private static void AddNewContentItem(FlowLayoutPanel list, string GroupName, int Size = 70, int Offset = 20, Direction Flow = Direction.vertical, EventHandler OnClick = null, string SelectionGroup = null, CollectionReturn Return = null, Action UnClick = null, CreateButonConent Content = null)
+        {   // spawns item into a panel
             Panel Item = new Panel();
             ItemBtn Box = new ItemBtn();
             int Width = Flow == Direction.vertical ? (list.Size.Width - Offset) : (list.Size.Height - Offset);
             Item.BackColor = Color.White;
             Item.BorderStyle = BorderStyle.Fixed3D;
             int Down = 3;
+
+            // loop to control flow of buttons to see which direction it flows to to spawn it into a panel and create dynamic UI
             for (int i = 0; i < list.Controls.Count; i++)
-            {
+            {  // !!!!!!
                 Down += Flow == Direction.vertical ? list.Controls[i].Size.Height : list.Controls[i].Size.Width;
             }
+
+            // Initializes button UI elements
             Item.Location = Flow == Direction.vertical ? new Point(3, Down) : new Point(Down, 3);
             Item.Name = "Item#" + StatusType.RandomString(5);
             Item.Size = Flow == Direction.vertical ? new Size(Width, Size) : new Size(Size, Width);
             Item.TabIndex = 0;
-            Item.Controls.Add(Box);
+            Item.Controls.Add(Box); // adds the button (box) to the controls of the panel
 
+            // initializes UI button interaction
             Box.Dock = DockStyle.Fill;
             Box.Location = new Point(0, 0);
             Box.Name = "groupBox";
@@ -236,6 +269,7 @@ namespace Database_Control
             Box.TabStop = false;
             Box.Text = GroupName;
 
+            // event handlers for the button
             EventHandler MouseEnterMeth = (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Item)) Item.BackColor = Color.Tan; };
             EventHandler MouseLeaveMeth = (object? sender, EventArgs e) => { if (!InCollection(SelectionGroup, Item)) Item.BackColor = Color.White; };
 
@@ -266,6 +300,7 @@ namespace Database_Control
                 }
             }
 
+            // assigning event handlers to 
             Box.MouseEnter += MouseEnterMeth;
             Box.MouseLeave += MouseLeaveMeth;
 
@@ -309,6 +344,7 @@ namespace Database_Control
             }
         }
 
+        //  ---------------- continue from here
         private static void SelectItem(FlowLayoutPanel list, string Item)
         {
             List<(double, int)> Sorted = new List<(double, int)>();
@@ -326,7 +362,7 @@ namespace Database_Control
         }
 
         public static void SortItems(FlowLayoutPanel list, string Text)
-        {
+        {   
             List<(double, Control)> Sorted = new List<(double, Control)>();
             for (int i = 0; i < list.Controls.Count; i++)
             {
@@ -344,7 +380,7 @@ namespace Database_Control
 
         private static bool OpenLogin(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
-            DeleteAllConents(Form.GetList(MainForm.List.UIList));
+            DeleteAllContents(Form.GetList(MainForm.List.UIList));
             return true;
         }
 
@@ -386,7 +422,7 @@ namespace Database_Control
         }
 
         private static void DeleteDelivery(MainForm Form, StatusType Status, Dictionary<string, object> item)
-        {
+        { 
             List<Dictionary<string, object>> OrderBundles = Form.Connection.GetData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", item["Bundle_ID"].ToString()) }), "Product_ID", "Quantity", "Delivered");
             List<Dictionary<string, object>> ProductInfo;
             List<string> RestoredProducts = new List<string>();
@@ -455,7 +491,7 @@ namespace Database_Control
         }
 
         private static void DeleteCompany(MainForm Form, StatusType Status, Dictionary<string, object> item)
-        {
+        {   
             List<Dictionary<string, object>> Deliveries = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Bundle_ID", "Order_ID", "Status", "Company_ID", "Salesman_ID", "History", "Memo", "CreationDate");
             List<Dictionary<string, object>> Products = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Supplier=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "Image");
             List<string> DeletedItemsOrder = new List<string>();
@@ -484,12 +520,12 @@ namespace Database_Control
                 return true;
             if (DataIn.ContainsKey("INIT"))
             {
-                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
-                DeleteAllConents(Form.GetList(MainForm.List.ListDisplay));
+                DeleteAllContents(Form.GetList(MainForm.List.OrderList));
+                DeleteAllContents(Form.GetList(MainForm.List.ListDisplay));
 
                 if (DataIn.ContainsKey("NAME"))
                 {
-                    DeleteAllConents(Form.GetList(MainForm.List.UIList));
+                    DeleteAllContents(Form.GetList(MainForm.List.UIList));
                     AddNewConentItem(Form.GetList(MainForm.List.UIList), "Position: " + DataIn["INIT"].ToString(), 200, 0, Direction.horizontal);
                     AddNewConentItem(Form.GetList(MainForm.List.UIList), "Employee: " + DataIn["NAME"].ToString(), 200, 0, Direction.horizontal);
                 }
@@ -501,7 +537,7 @@ namespace Database_Control
                             OnClick: (object? sender, EventArgs e) =>
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
-                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                DeleteAllContents(Form.GetList(MainForm.List.OrderList));
                                 List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[DELIVERIES]", ("", null), "Bundle_ID", "Order_ID", "Status", "Company_ID", "Salesman_ID", "History", "Memo", "CreationDate");
                                 if (ListItems.Count != 0)
                                 {
@@ -510,7 +546,7 @@ namespace Database_Control
                                         AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Order_ID: " + item["Order_ID"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
                                             OnClick: (object? sender, EventArgs e) =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanUpdateDelivery))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Order_ID"].ToString(), 200, 0, Direction.horizontal,
@@ -543,7 +579,7 @@ namespace Database_Control
                                                 Form.FillDeliveryDisplay(item);
                                             }, UnClick: () =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanCreateDelivery))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -575,7 +611,7 @@ namespace Database_Control
                                 }
                                 else
                                 {
-                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                    DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                     if (Status.HasAbility(StatusType.Action.CanCreateDelivery))
                                     {
                                         AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -601,7 +637,7 @@ namespace Database_Control
                             OnClick: (object? sender, EventArgs e) =>
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
-                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                DeleteAllContents(Form.GetList(MainForm.List.OrderList));
                                 List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("", null), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "History");
                                 if (ListItems.Count != 0)
                                 {
@@ -610,7 +646,7 @@ namespace Database_Control
                                         AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Product: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
                                             OnClick: (object? sender, EventArgs e) =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanUpdateProduct))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal,
@@ -643,7 +679,7 @@ namespace Database_Control
                                                 Form.FillProductDisplay(item);
                                             }, UnClick: () =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanCreateProduct))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -669,7 +705,7 @@ namespace Database_Control
                                 }
                                 else
                                 {
-                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                    DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                     if (Status.HasAbility(StatusType.Action.CanCreateProduct))
                                     {
                                         AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -693,7 +729,7 @@ namespace Database_Control
                             OnClick: (object? sender, EventArgs e) =>
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
-                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                DeleteAllContents(Form.GetList(MainForm.List.OrderList));
                                 List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]",
                                     (Status.HasAbility(StatusType.Action.CanSeeEmployee) ? ("", new (string, string)[0]) : ("Salesman_ID=@ID", new (string, string)[] { ("@ID", Status.GetIDNumber().ToString()) })),
                                     "Name", "Username", "Position", "History", "Salesman_ID", "Password", "Image");
@@ -704,7 +740,7 @@ namespace Database_Control
                                         AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Employee: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
                                             OnClick: (object? sender, EventArgs e) =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanUpdateEmployee))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal,
@@ -746,7 +782,7 @@ namespace Database_Control
                                                 Form.FillEmployeeDisplay(item);
                                             }, UnClick: () =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -774,7 +810,7 @@ namespace Database_Control
                                 }
                                 else
                                 {
-                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                    DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                     if (Status.HasAbility(StatusType.Action.CanCreateEmployee))
                                     {
                                         AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -796,7 +832,7 @@ namespace Database_Control
                             OnClick: (object? sender, EventArgs e) =>
                             {
                                 SetSelectionGroup("ItemSelect", (0, 1), Color.Green);
-                                DeleteAllConents(Form.GetList(MainForm.List.OrderList));
+                                DeleteAllContents(Form.GetList(MainForm.List.OrderList));
                                 List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("", null), "Name", "Company_ID", "Description", "Phone", "Email", "Address");
                                 if (ListItems.Count != 0)
                                 {
@@ -805,7 +841,7 @@ namespace Database_Control
                                         AddNewConentItem(Form.GetList(MainForm.List.OrderList), "Company: " + item["Name"].ToString(), Flow: Direction.vertical, SelectionGroup: "ItemSelect",
                                             OnClick: (object? sender, EventArgs e) =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanUpdateCompany))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Update " + item["Name"].ToString(), 200, 0, Direction.horizontal,
@@ -838,7 +874,7 @@ namespace Database_Control
                                                 Form.FillCompanyDisplay(item);
                                             }, UnClick: () =>
                                             {
-                                                DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                                DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                                 if (Status.HasAbility(StatusType.Action.CanCreateCompany))
                                                 {
                                                     AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -853,7 +889,7 @@ namespace Database_Control
                                 }
                                 else
                                 {
-                                    DeleteAllConents(Form.GetList(MainForm.List.ControlList));
+                                    DeleteAllContents(Form.GetList(MainForm.List.ControlList));
                                     if (Status.HasAbility(StatusType.Action.CanCreateCompany))
                                     {
                                         AddNewConentItem(Form.GetList(MainForm.List.ControlList), "Create New", 100, 0, Direction.horizontal,
@@ -877,9 +913,9 @@ namespace Database_Control
 
         private static bool OpenProduct(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
-            DeleteAllConents(Form.GetList(MainForm.List.ProductItemList));
-            DeleteAllConents(Form.GetList(MainForm.List.ProductSupplier));
-            DeleteAllConents(Form.GetList(MainForm.List.ProductReferences));
+            DeleteAllContents(Form.GetList(MainForm.List.ProductItemList));
+            DeleteAllContents(Form.GetList(MainForm.List.ProductSupplier));
+            DeleteAllContents(Form.GetList(MainForm.List.ProductReferences));
             Form.resetPass();
             Form.SetPropertiesWindow(0);
             Form.SetReferencedNum("-");
@@ -1081,7 +1117,7 @@ namespace Database_Control
 
         private static bool OpenCompany(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
-            DeleteAllConents(Form.GetList(MainForm.List.ProductItemList));
+            DeleteAllContents(Form.GetList(MainForm.List.ProductItemList));
 
             Form.resetPass();
             Form.SetPropertiesWindow(0);
@@ -1096,7 +1132,7 @@ namespace Database_Control
                 {
                     Form.SetPropertiesWindow(1);
 
-                    DeleteAllConents(Form.GetList(MainForm.List.ProductSupplier));
+                    DeleteAllContents(Form.GetList(MainForm.List.ProductSupplier));
                     SetSelectionGroup("CompanyAttributeSelect", (0, 1), Color.Green);
                     if (DataIn != null)
                     {
@@ -1138,7 +1174,7 @@ namespace Database_Control
                 {
                     Form.SetPropertiesWindow(1);
 
-                    DeleteAllConents(Form.GetList(MainForm.List.ProductSupplier));
+                    DeleteAllContents(Form.GetList(MainForm.List.ProductSupplier));
                     SetSelectionGroup("CompanyAttributeSelect", (0, 1), Color.Green);
                     if (DataIn != null)
                     {
@@ -1257,9 +1293,9 @@ namespace Database_Control
 
         private static bool OpenEmployee(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
-            DeleteAllConents(Form.GetList(MainForm.List.ProductItemList));
-            DeleteAllConents(Form.GetList(MainForm.List.EmployeePermissions));
-            DeleteAllConents(Form.GetList(MainForm.List.EmployeePresets));
+            DeleteAllContents(Form.GetList(MainForm.List.ProductItemList));
+            DeleteAllContents(Form.GetList(MainForm.List.EmployeePermissions));
+            DeleteAllContents(Form.GetList(MainForm.List.EmployeePresets));
             Form.resetPass();
             if (DataIn == null)
                 Form.SetPropertiesWindow(0);
@@ -1275,7 +1311,7 @@ namespace Database_Control
 
             foreach (var item in Status.GetPresets())
             {
-                AddNewConentItem(Form.GetList(MainForm.List.EmployeePresets), item, 30, 0, Direction.vertical);
+                AddNewContentItem(Form.GetList(MainForm.List.EmployeePresets), item, 30, 0, Direction.vertical);
             }
 
             foreach (int i in Enum.GetValues(typeof(StatusType.Action)))
@@ -1400,8 +1436,8 @@ namespace Database_Control
 
         private static bool OpenOrdering(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
-            DeleteAllConents(Form.GetList(MainForm.List.OrderDiplay_Company));
-            DeleteAllConents(Form.GetList(MainForm.List.OrderDisplay_Product));
+            DeleteAllContents(Form.GetList(MainForm.List.OrderDiplay_Company));
+            DeleteAllContents(Form.GetList(MainForm.List.OrderDisplay_Product));
 
             Form.resetPass();
             if (DataIn != null)
