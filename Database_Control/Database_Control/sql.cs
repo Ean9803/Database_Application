@@ -12,12 +12,14 @@ namespace Database_Control
     {
         private SqlConnection com;
 
+        //Method to connect to Server
         public bool Connect(string Database, string Username, string Password, out Exception? Ex)
         {
             if (com != null)
                 com.Close();
             try
             {
+                //Establish new SQL connection with provided parameters(server, user ID, Password)
                 com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True;MultipleActiveResultSets=true");
                 com.Open();
                 Ex = null;
@@ -29,8 +31,14 @@ namespace Database_Control
                 return false;
             }
         }
+
+        //Enumeration to define the direction of the data that is being processed
         private enum Direction { Reciving, Delivering }
+
+        //Delegation to define the data processing method
         private delegate object Process(object Input, Direction Mode);
+
+        //List of dictionaries to store data processing methods for different columns
         private List<Dictionary<string, Process>> Gate = new List<Dictionary<string, Process>>()
         {
             new Dictionary<string, Process>()
@@ -49,21 +57,24 @@ namespace Database_Control
             },
         };
 
+        //Method to check if a data processing method exists for a column
         private bool HasProcess(string Col, object Val, Direction Dir, out object ValResult)
         {
             foreach (var item in Gate)
             {
+
                 if (item.ContainsKey(Col))
                 {
                     ValResult = item[Col](Val, Dir);
                     return true;
                 }
             }
-            
+
             ValResult = Val;
             return false;
         }
 
+        //Data processing method for passwords
         private static object ProcessPassword(object Input, Direction Mode)
         {
             if (Mode == Direction.Reciving)
@@ -80,26 +91,32 @@ namespace Database_Control
             }
         }
 
+        //Method to insert data into a table
         public void InsertData(string tableName, params (string Col, object Val)[] Data)
         {
             try
             {
-                string columnsString = "";
-                string parameterPlaceholders = "";
+                string columnsString = ""; //Initialize an empty string to store column names
+                string parameterPlaceholders = ""; //Initialize an empty string to store parameter placeholder
 
+                //Loop the data that will be inserted
                 for (int i = 0; i < Data.Length; i++)
                 {
                     columnsString += Data[i].Col + ",";
                     parameterPlaceholders += $"@param{i},";
+
+                    //Checks if data needs processing
                     if (HasProcess(Data[i].Col, Data[i].Val, Direction.Delivering, out object Result))
                     {
-                        Data[i].Val = Result;
+                        Data[i].Val = Result; //Stores processed data into result
                     }
                 }
                 columnsString = columnsString.Substring(0, columnsString.Length - 1);
                 parameterPlaceholders = parameterPlaceholders.Substring(0, parameterPlaceholders.Length - 1);
 
-                string sqlInsert = $"INSERT INTO {tableName} ({columnsString}) VALUES ({parameterPlaceholders})";
+                string sqlInsert = $"INSERT INTO {tableName} ({columnsString}) VALUES ({parameterPlaceholders})"; //Creates INSERT command
+
+                //Using the INSERT command created, adds parameters for each value being inserted, then executes the command
                 using (SqlCommand cmd = new SqlCommand(sqlInsert, com))
                 {
                     for (int i = 0; i < Data.Length; i++)
@@ -115,26 +132,30 @@ namespace Database_Control
             }
         }
 
+        //Method to delete data from a table
         public void DeleteData(string tableName, (string Clause, (string, string)[] WhereParams) whereClause)
         {
             try
             {
-                string sqlDelete = $"DELETE FROM {tableName} WHERE {whereClause.Clause}";
+                string sqlDelete = $"DELETE FROM {tableName} WHERE {whereClause.Clause}"; //Construct Delete statement
+
+                //Creates new command using the DELETE command created
                 using (SqlCommand cmd = new SqlCommand(sqlDelete, com))
                 {
+                    //Checks to make sure row affected is not NULL
                     if (whereClause.WhereParams != null)
                     {
                         for (int i = 0; i < whereClause.WhereParams.Length; i++)
                         {
                             if (HasProcess(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2, Direction.Delivering, out object Result))
                             {
-                                whereClause.WhereParams[i].Item2 = Result.ToString();
+                                whereClause.WhereParams[i].Item2 = Result.ToString(); //Replaces orignal value with the processed result
                             }
                             cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
                         }
                     }
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery(); //Ececute delete command
                 }
             }
             catch (Exception ex)
@@ -143,30 +164,38 @@ namespace Database_Control
             }
         }
 
+        //Method to update data in a column
         public void UpdateData(string tableName, (string Clause, (string, string)[] WhereParams) whereClause, params (string Col, object Val)[] Data)
         {
             try
             {
-                string setClause = "";
+                string setClause = ""; //Intitialize empty string to setClause for updates
+
+                //Loop through data to be updated
                 for (int i = 0; i < Data.Length; i++)
                 {
-                    setClause += $"{Data[i].Col} = @param{i},";
+                    setClause += $"{Data[i].Col} = @param{i},"; //Construct setClause with column names and parameter placeholders
+
+                    //Check to see if data needs processing
                     if (HasProcess(Data[i].Col, Data[i].Val, Direction.Delivering, out object Result))
                     {
-                        Data[i].Val = Result;
+                        Data[i].Val = Result; //Store new data into result
                     }
                 }
                 setClause = setClause.Substring(0, setClause.Length - 1);
 
-                string sqlUpdate = $"UPDATE {tableName} SET {setClause}" + (string.IsNullOrEmpty(whereClause.Clause) ? "" : $" WHERE {whereClause.Clause}");
+                string sqlUpdate = $"UPDATE {tableName} SET {setClause}" + (string.IsNullOrEmpty(whereClause.Clause) ? "" : $" WHERE {whereClause.Clause}"); //Create update command
 
-
+                //Creates new command using sqlUpdate
                 using (SqlCommand cmd = new SqlCommand(sqlUpdate, com))
                 {
+                    //Make sure row being updated is not null
                     if (whereClause.WhereParams != null)
                     {
+                        //Check to see if whereClause parameters are provied
                         for (int i = 0; i < whereClause.WhereParams.Length; i++)
                         {
+                            //If paramters are, then replace orignal value with new result
                             if (HasProcess(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2, Direction.Delivering, out object Result))
                             {
                                 whereClause.WhereParams[i].Item2 = Result.ToString();
@@ -175,11 +204,12 @@ namespace Database_Control
                         }
                     }
 
+                    //Add parameters for the SET clause values 
                     for (int i = 0; i < Data.Length; i++)
                     {
                         cmd.Parameters.AddWithValue($"@param{i}", Data[i].Val);
                     }
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery(); //Execute update command
                 }
             }
             catch (Exception ex)
@@ -188,22 +218,29 @@ namespace Database_Control
             }
         }
 
-
+        //Method to retrive data from a specified Database
         public List<Dictionary<string, object>> GetData(string tableName, (string Clause, (string, string)[] WhereParams) whereClause, params string[] Cols)
         {
+            //Construct a SQL select statement that must have specified columns, table, and an optional whereClause
             string sqlGet = $"SELECT {string.Join(", ", Cols)} FROM {tableName}" + (string.IsNullOrEmpty(whereClause.Clause) ? "" : $" WHERE {whereClause.Clause}");
             List<Dictionary<string, object>> Ret = new List<Dictionary<string, object>>();
+
+            //Creates new command using sqlGet
             using (SqlCommand cmd = new SqlCommand(sqlGet, com))
             {
                 try
                 {
+
+                    //Checks WHERE exists
                     if (whereClause.WhereParams != null)
                     {
+
+                        //if whereClause exist loop through parameters
                         for (int i = 0; i < whereClause.WhereParams.Length; i++)
                         {
                             if (HasProcess(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2, Direction.Delivering, out object Result))
                             {
-                                whereClause.WhereParams[i].Item2 = Result.ToString();
+                                whereClause.WhereParams[i].Item2 = Result.ToString(); //Store new value 
                             }
                             cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
                         }
@@ -211,6 +248,7 @@ namespace Database_Control
                     SqlDataReader Read = cmd.ExecuteReader();
                     while (Read.Read())
                     {
+                        //Decods and adds new data into return dictionary
                         Ret.Add(new Dictionary<string, object>());
                         for (int i = 0; i < Cols.Length; i++)
                         {
@@ -235,6 +273,7 @@ namespace Database_Control
             return Ret;
         }
 
+        //Closes DB connection
         public void Close()
         {
             com.Close();
