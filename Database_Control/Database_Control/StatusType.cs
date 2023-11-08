@@ -209,5 +209,19 @@ namespace Database_Control
             }
             return StatOut;
         }
+
+        //Gets all names of permissions the user has access to
+        public List<string> PrintStats()
+        {
+            List<string> stats = new List<string>();
+
+            foreach (Action item in Enum.GetValues(typeof(Action)))
+            {
+                if (HasAbility(item))
+                    stats.Add(item.ToString());
+            }
+
+            return stats;
+        }
     }
 }
