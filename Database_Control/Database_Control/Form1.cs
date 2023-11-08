@@ -60,7 +60,7 @@ namespace Database_Control
                     File.AppendAllText(Application.StartupPath + FileName, "\n" + String.Join("\n", Add));
                 }
 
-                if (E != null) 
+                if (E != null)
                 {
                     MessageBox.Show(E.Message);
                 }
@@ -278,8 +278,8 @@ namespace Database_Control
         }
 
         private void CompanySearch_TextChanged(object sender, EventArgs e)
-        {   
-            WindowData.SortItems(GetList(List.OrderDiplay_Company), CompanySearch.Text);
+        {
+            WindowData.SortItems(GetList(List.OrderDisplay_Company), CompanySearch.Text);
         }
 
         private void ProductSearch_TextChanged(object sender, EventArgs e)
@@ -297,7 +297,7 @@ namespace Database_Control
             WindowData.SortItems(GetList(List.ProductReferences), referenceSearch.Text);
         }
 
-       //on clicking on cancel order returns the user to delivery tab
+        //on clicking on cancel order returns the user to delivery tab
         private void CancelOrder_Click(object sender, EventArgs e)
         {
             SetWindow(WindowType.Delivery, null);
@@ -466,7 +466,7 @@ namespace Database_Control
         {
             return EmployeeUser.Text;
         }
-        
+
         // deletes orders associated with a company when a corrext password is entered
         private void button1_Click(object sender, EventArgs e)
         {//  deleting products from deliveries
@@ -683,8 +683,19 @@ namespace Database_Control
         { // same logic as other fill methods to display info about selected employee
             EmployeeInfo.Clear();
             EmployeeInfo.AppendText("Employee: " + ListItems["Name"].ToString() + "\n\n");
-            EmployeeInfo.AppendText("Position: " + ListItems["Position"].ToString() + "\n\n");
+            EmployeeInfo.AppendText("Position: " + ListItems["Position"].ToString() + "\n");
+
+            StatusType EmpStat = new StatusType(StatusType.CreateFrom((string)ListItems["Position"]), 0, "", "", "");
+            List<string> Perms = EmpStat.PrintStats();
+            EmployeeInfo.AppendText("Abilities: { ");
+            foreach (var item in Perms)
+            {
+                EmployeeInfo.AppendText(item + " ");
+            }
+            EmployeeInfo.AppendText("}\n");
+
             EmployeeInfo.AppendText("[USERNAME]: " + ListItems["Username"].ToString() + "\n");
+
             EmployeeInfo.AppendText("-----------------[USER HISTORY]-----------------\n");
             EmployeeInfo.AppendText(ListItems["History"].ToString());
 
@@ -717,7 +728,7 @@ namespace Database_Control
                 }
                 catch (Exception e)
                 {   // if photo size is too large then display error message.
-                    MessageBox.show("Image file too large, please keep it under 50Kb");
+                    MessageBox.Show("Image file too large, please keep it under 50Kb");
                 }
             }
         }
@@ -731,7 +742,7 @@ namespace Database_Control
 
         // method to show image within a specific display
         public void SetImage(byte[] Data, Picture Pic)
-        {   
+        {
             byte[] PicData = Data.Length == 0 ? DefaultPicture : Data;
 
             switch (Pic)

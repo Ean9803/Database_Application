@@ -192,5 +192,21 @@ namespace Database_Control
             }
             return StatOut;
         }
+
+
+        public List<string> PrintStats()
+        {
+            List<string> Ret = new List<string>();
+
+            foreach (Action item in Enum.GetValues(typeof(Action)))
+            {
+                if (HasAbility(item))
+                {
+                    Ret.Add(item.ToString());
+                }
+            }
+
+            return Ret;
+        }
     }
 }
