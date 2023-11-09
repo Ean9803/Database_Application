@@ -10,7 +10,7 @@ namespace Database_Control
     {
         public SQL Connection { get; internal set; }
         public string FileName = "DataBaseOptions.options";
-        public string[] Servers = new string[] { "GameStation\\SQLEXPRESS", "DESKTOP-E\\SQLEXPRESS", "LAPTOP-JP2PAISQ" };
+        public string[] Servers = new string[] { "GameStation\\SQLEXPRESS", "DESKTOP-E\\SQLEXPRESS", "LAPTOP-JP2PAISQ", "Cayden\\SQLEXPRESS01" };
         private byte[] DefaultPicture;
 
         private void SetCallbacks() // setting up UI components
