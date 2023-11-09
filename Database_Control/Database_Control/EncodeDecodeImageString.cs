@@ -2,6 +2,8 @@
 
 class ImageStringEncoderDecoder
 {
+    // adapted from stack overflow
+    // https://stackoverflow.com/questions/21325661/convert-an-image-selected-by-path-to-base64-string
     public static string encodeImageToString(string filePath)
     {
         // arrays and string to save image into array and then saving it into a byte[] array 
