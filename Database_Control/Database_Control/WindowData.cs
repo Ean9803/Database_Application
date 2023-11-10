@@ -334,6 +334,7 @@ namespace Database_Control
                     item.Item2.BringToFront();
                 }
             }
+            Box.SendToBack();
         }
 
         // when an item is clicked perform Activate method associated to the button
@@ -352,7 +353,7 @@ namespace Database_Control
 
             for (int i = 0; i < list.Controls.Count; i++) // loop that sorts most similar string to the top
             {
-                string Title = list.Controls[i].Controls[0].Text.Substring(list.Controls[i].Controls[0].Text.IndexOf(':') + 1).Trim();
+                string Title = list.Controls[i].Controls[list.Controls[i].Controls.Count - 1].Text.Substring(list.Controls[i].Controls[list.Controls[i].Controls.Count - 1].Text.IndexOf(':') + 1).Trim();
                 double Percent = CalculateSimilarity(Title, Item); // calls method that calculates percentage similiarity
                 Sorted.Add((Percent, i));
             }
@@ -370,7 +371,7 @@ namespace Database_Control
             List<(double, Control)> Sorted = new List<(double, Control)>();
             for (int i = 0; i < list.Controls.Count; i++)
             {
-                string Title = list.Controls[i].Controls[0].Text.Substring(list.Controls[i].Controls[0].Text.IndexOf(':') + 1).Trim();
+                string Title = list.Controls[i].Controls[list.Controls[i].Controls.Count - 1].Text.Substring(list.Controls[i].Controls[list.Controls[i].Controls.Count - 1].Text.IndexOf(':') + 1).Trim();
                 double Percent = CalculateSimilarity(Title, Text);
                 Sorted.Add((Percent, list.Controls[i]));
             }
