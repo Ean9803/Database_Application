@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Database_Control.StatusType;
 
 namespace Database_Control
 {
@@ -24,6 +25,12 @@ namespace Database_Control
             this.Position = Position;
             Pass = Password;
         }
+
+        public void SetPosition(string Pos)
+        {
+            Position = Pos;
+        }
+
         //Getter method to get password
         public string GetPass()
         {
@@ -144,6 +151,13 @@ namespace Database_Control
             return Defaults.Keys.ToArray();
         }
 
+        public Action[] GetPerms(string Position)
+        {
+            if (Defaults.ContainsKey(Position))
+                return Defaults[Position];
+            return new Action[0];
+        }
+
         //Method to find match based on parameters
         public string FindMatch(List<Action> ActionItems)
         {
@@ -218,6 +232,19 @@ namespace Database_Control
             foreach (Action item in Enum.GetValues(typeof(Action)))
             {
                 if (HasAbility(item))
+                    stats.Add(item.ToString());
+            }
+
+            return stats;
+        }
+
+        public static List<string> PrintStats(int Number)
+        {
+            List<string> stats = new List<string>();
+
+            foreach (Action item in Enum.GetValues(typeof(Action)))
+            {
+                if (CheckStatus(Number, (int)item))
                     stats.Add(item.ToString());
             }
 

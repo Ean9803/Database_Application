@@ -28,19 +28,32 @@ class ImageStringEncoderDecoder
         return img;
     }
 
-    public static Image GetImage(byte[] Data)
-    {   // generating image from the byte array data
+    public static Image GetImage(byte[] Data, byte[] Default)
+    {
         Image newImg;
-        byte[] ImgData = (Data);
-
-
-        using(MemoryStream ms = new MemoryStream(ImgData, 0, ImgData.Length))
+        try
         {
-            ms.Write(ImgData, 0, ImgData.Length);
-            newImg = Image.FromStream(ms, true);
-        }
+            // generating image from the byte array data
+            byte[] ImgData = (Data);
 
-        return newImg;
+            using (MemoryStream ms = new MemoryStream(ImgData, 0, ImgData.Length))
+            {
+                ms.Write(ImgData, 0, ImgData.Length);
+                newImg = Image.FromStream(ms, true);
+            }
+
+            return newImg;
+        }
+        catch(Exception e)
+        {   
+            using (MemoryStream ms = new MemoryStream(Default, 0, Default.Length))
+            {
+                ms.Write(Default, 0, Default.Length);
+                newImg = Image.FromStream(ms, true);
+            }
+
+            return newImg;
+        }
     }
 
     public static byte[] ImageBytes(Image image)

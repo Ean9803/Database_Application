@@ -787,6 +787,7 @@ namespace Database_Control
                                                         {
                                                             if (Text.Equals(Status.GetPass()))
                                                             {
+                                                                Form.Connection.UpdateData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", item["Salesman_ID"].ToString()) }), ("History", "DELETE"));
                                                                 Form.Connection.DeleteData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", item["Salesman_ID"].ToString()) }));
                                                                 if ((int)item["Salesman_ID"] == Status.GetIDNumber())
                                                                 {
@@ -1350,7 +1351,16 @@ namespace Database_Control
 
             foreach (var item in Status.GetPresets())
             {
-                AddNewContentItem(Form.GetList(MainForm.List.EmployeePresets), item, 30, 0, Direction.vertical);
+                AddNewContentItem(Form.GetList(MainForm.List.EmployeePresets), item, 30, 0, Direction.vertical, OnClick: 
+                    (object? sender, EventArgs Args) => 
+                    {
+                        SetSelectionGroup("Permissions", (0, 1000), Color.Green);
+                        StatusType.Action[] Acts = Status.GetPerms(item);
+                        foreach (StatusType.Action i in Acts)
+                        {
+                            SelectItem(Form.GetList(MainForm.List.EmployeePermissions), i.ToString());
+                        }
+                    });
             }
 
             foreach (int i in Enum.GetValues(typeof(StatusType.Action)))

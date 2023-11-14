@@ -11,16 +11,29 @@ namespace Database_Control
     public class SQL
     {
         private SqlConnection com;
+        private SqlDependency Change = null;
+
+        //Closes DB connection
+        public void Close()
+        {
+            SqlDependency.Stop(com.ConnectionString);
+            com.Close();
+        }
 
         //Method to connect to Server
         public bool Connect(string Database, string Username, string Password, out Exception? Ex)
         {
             if (com != null)
-                com.Close();
+            {
+                Close();
+            }
             try
             {
                 //Establish new SQL connection with provided parameters(server, user ID, Password)
-                com = new SqlConnection(@"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True;MultipleActiveResultSets=true");
+                string ConnectionString = @"server=" + Database + ";User ID=" + Username + ";Password=" + Password + ";TrustServerCertificate=True;MultipleActiveResultSets=true";
+                com = new SqlConnection(ConnectionString);
+                SqlDependency.Stop(com.ConnectionString);
+                SqlDependency.Start(com.ConnectionString);
                 com.Open();
                 Ex = null;
                 return true;
@@ -273,10 +286,28 @@ namespace Database_Control
             return Ret;
         }
 
-        //Closes DB connection
-        public void Close()
+        public void ResetCallback()
         {
-            com.Close();
+            Change = null;
+        }
+
+        public void CreateUserChangeCallback(StatusType User, OnChangeEventHandler Event)
+        {
+            ResetCallback();
+            string sqlCommandText = $"SELECT Position, History FROM [dbo].[EMPLOYEE] WHERE Salesman_ID = " + User.GetIDNumber();
+            using (SqlCommand cmd = new SqlCommand(sqlCommandText, com))
+            {
+
+                if (Change == null)
+                    Change = new SqlDependency(cmd);
+
+                Change.OnChange += Event;
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    // Process the DataReader.
+                }
+            }
         }
 
     }

@@ -3,6 +3,8 @@ using System.Data;
 using System;
 using Microsoft.VisualBasic;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Database_Control
 {
@@ -30,6 +32,13 @@ namespace Database_Control
             SaveOrder.Click += SaveOrder_Click;
             ProductSearch.TextChanged += ProductSearch_TextChanged;
             LogoutBtn.Click += LogoutBtn_Click_1;
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (Connection != null)
+                Connection.Close();
         }
 
         public MainForm()
@@ -212,6 +221,7 @@ namespace Database_Control
             else
             {   // grabs information from the table on user access rights and moves into the homepage
                 Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"], (string)User[0]["Name"], (string)User[0]["Position"], (string)User[0]["Password"]);
+                Connection.CreateUserChangeCallback(Stat, OnUserChange);
                 DisplayControl = new WindowData(this, Stat);
                 LogoutBtn.Visible = true;
                 SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -229,6 +239,7 @@ namespace Database_Control
             UserName.Text = "";
             PassWord.Text = "";
             SetWindow(WindowType.Login, null);
+            Connection.ResetCallback();
         }
 
         // adding new employee to the database
@@ -254,6 +265,7 @@ namespace Database_Control
                         // gets permission object. !!!!
                         Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"], (string)User[0]["Name"], (string)User[0]["Position"], (string)User[0]["Password"]);
                         DisplayControl = new WindowData(this, Stat);
+                        Connection.CreateUserChangeCallback(Stat, OnUserChange);
                         LogoutBtn.Visible = true;
                         // afterwards then sends user back to delivery homepage
                         SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -748,19 +760,45 @@ namespace Database_Control
             switch (Pic)
             {
                 case Picture.EditPage:
-                    ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    ProductImage.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData, DefaultPicture);
                     break;
                 case Picture.Detail_Product:
-                    ProductPic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    ProductPic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData, DefaultPicture);
                     break;
                 case Picture.Detail_Company:
-                    CompanyPic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    CompanyPic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData, DefaultPicture);
                     break;
                 case Picture.Detail_Employee:
-                    EmployeePic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData);
+                    EmployeePic.BackgroundImage = ImageStringEncoderDecoder.GetImage(PicData, DefaultPicture);
                     break;
                 default:
                     break;
+            }
+        }
+
+        void OnUserChange(object sender, SqlNotificationEventArgs e)
+        {
+            if (e.Info == SqlNotificationInfo.Update)
+            {
+                List<Dictionary<string, object>> Position = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", Stat.GetIDNumber().ToString()) }), "Position");
+                if (Position.Count == 0)
+                {
+                    LogOut();
+                    MessageBox.Show("You have been deleted");
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(Position[0]["Position"].ToString()))
+                    {
+                        if (!Position[0]["Position"].ToString().Equals(Stat.GetPosition()))
+                        {
+                            MessageBox.Show("Your permissions have been changed from: " + Stat.GetPosition() + " to: " + Position[0]["Position"].ToString() + "\n"
+                                + "Before:\n{" + string.Join(' ', Stat.PrintStats()) + "}\nNow:\n{" + 
+                                string.Join(' ', StatusType.PrintStats(StatusType.CreateFrom(Position[0]["Position"].ToString()))) + "}");
+                            LogOut();
+                        }
+                    }
+                }
             }
         }
     }
