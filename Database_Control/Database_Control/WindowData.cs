@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -456,6 +457,7 @@ namespace Database_Control
             ProductInfo = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), "Name");
             // deleting data from deliveries and bundles
             Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", item["Bundle_ID"].ToString()) }));
+            Form.Connection.UpdateData("[Maestro].[dbo].[DELIVERIES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", item["Order_ID"].ToString()) }), ("History", "DELETE"));
             Form.Connection.DeleteData("[Maestro].[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", item["Order_ID"].ToString()) }));
            // updating access log
             UpdateUserHistory(Form, Status.GetIDNumber(), "User deleted order: " + item["Order_ID"].ToString() +
@@ -503,7 +505,7 @@ namespace Database_Control
                 //
                 Form.Connection.DeleteData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID AND Product_ID=@PID", new (string, string)[] { ("@ID", Delivery[0]["Bundle_ID"].ToString()), ("@PID", item["Product_ID"].ToString()) }));
             }
-
+            Form.Connection.UpdateData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }), ("History", "DELETE"));
             Form.Connection.DeleteData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", item["Product_ID"].ToString()) }));
            
             // updating log with changes to database
@@ -531,6 +533,7 @@ namespace Database_Control
                 DeletedItemsProduct.Add(Product["Name"].ToString());
             }
             // deleting data from database
+            Form.Connection.UpdateData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), ("History", "DELETE"));
             Form.Connection.DeleteData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }));
 
             //updating history
@@ -544,7 +547,7 @@ namespace Database_Control
         {
             if (DataIn == null)
                 return true;
-
+            //Form.Connection.ResetCallback("EditData");
             if (DataIn.ContainsKey("INIT"))
             {
                 DeleteAllContents(Form.GetList(MainForm.List.OrderList));
@@ -942,6 +945,21 @@ namespace Database_Control
             return true;
         }
 
+        private static void RefreshProduct(MainForm Form, Dictionary<string, object> Data)
+        {
+            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", Data["Product_ID"].ToString()) }), "Name", "Product_ID", "Available_Amt", "Description", "Supplier", "Time", "Price", "History");
+            if (ListItems.Count == 0)
+            {
+                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                MessageBox.Show("Item was deleted");
+            }
+            else
+            {
+                Form.SetWindow(MainForm.WindowType.Product, ListItems[0]);
+                MessageBox.Show("Item was updated");
+            }
+        }
+
         // same logic as last method but specialized to display product information
         private static bool OpenProduct(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         { //method displays certain buttons and information depending on the user access privileges just like last method
@@ -1033,12 +1051,16 @@ namespace Database_Control
                 TotalAmount = reservedAmount + int.Parse(ProductBundle[0]["Available_Amt"].ToString());
 
                 Form.SetTotalAmount(TotalAmount);
+
+                Form.Connection.CreateChangeCallback("EditData", RefreshProduct, Form, DataIn, "[dbo].[PRODUCTS]", ("Product_ID=@ID", new (string, string)[] { ("@ID", DataIn["Product_ID"].ToString()) }), "History");
             }
             else
             {
                 Form.SetImage(new byte[0], MainForm.Picture.EditPage);
                 Form.SetProductDesc("[Enter Product Description]", false);
                 Form.SetTotalAmount(0);
+
+                Form.Connection.IgnoreCallback("EditData");
             }
 
             Action SaveAction;
@@ -1047,6 +1069,7 @@ namespace Database_Control
             {
                 SaveAction = () =>
                 {
+                    Form.Connection.IgnoreCallback("EditData");
                     if (!string.IsNullOrEmpty(Form.GetProductName()))
                     {
                         if (Form.GetProductPrice() >= 0)
@@ -1149,6 +1172,21 @@ namespace Database_Control
             Form.SaveProductAction = SaveAction;
 
             return true;
+        }
+
+        private static void RefreshCompany(MainForm Form, Dictionary<string, object> Data)
+        {
+            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", Data["Company_ID"].ToString()) }), "Name", "Company_ID", "Description", "Phone", "Email", "Address");
+            if (ListItems.Count == 0)
+            {
+                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                MessageBox.Show("Item was deleted");
+            }
+            else
+            {
+                Form.SetWindow(MainForm.WindowType.Company, ListItems[0]);
+                MessageBox.Show("Item was updated");
+            }
         }
 
         // same opening method to display company information but specialized for companies
@@ -1260,11 +1298,15 @@ namespace Database_Control
                 Form.SetProductName(DataIn["Name"].ToString(), false);
                 Form.SetEmail(DataIn["Email"].ToString());
                 Form.SetPhone(DataIn["Phone"].ToString());
+
+                Form.Connection.CreateChangeCallback("EditData", RefreshCompany, Form, DataIn, "[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "History");
             }
             else
             {
                 Form.SetImage(new byte[0], MainForm.Picture.EditPage);
                 Form.SetProductDesc("[Enter Company Description]", false);
+
+                Form.Connection.IgnoreCallback("EditData");
             }
 
             Action SaveAction;
@@ -1273,6 +1315,7 @@ namespace Database_Control
             {
                 SaveAction = () =>
                 {
+                    Form.Connection.IgnoreCallback("EditData");
                     if (!string.IsNullOrEmpty(Form.GetProductName()))
                     {
                         (bool, string) Em = Form.GetEmail();
@@ -1330,6 +1373,21 @@ namespace Database_Control
             return true;
         }
 
+        private static void RefreshEmployee(MainForm Form, Dictionary<string, object> Data)
+        {
+            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Username=@User", new (string, string)[] { ("@User", Data["Username"].ToString()) }), "Name", "Username", "Position", "History", "Salesman_ID", "Password", "Image");
+            if (ListItems.Count == 0)
+            {
+                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+                MessageBox.Show("Item was deleted");
+            }
+            else
+            {
+                Form.SetWindow(MainForm.WindowType.Employee, ListItems[0]);
+                MessageBox.Show("Item was updated");
+            }
+        }
+
         // same method to populate employee tab with employee information
         private static bool OpenEmployee(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
         {
@@ -1384,6 +1442,8 @@ namespace Database_Control
                     if (EmpStat.HasAbility(((StatusType.Action)i)))
                         SelectItem(Form.GetList(MainForm.List.EmployeePermissions), ((StatusType.Action)i).ToString());
                 }
+
+                Form.Connection.CreateChangeCallback("EditData", RefreshEmployee, Form, DataIn, "[dbo].[EMPLOYEE]", ("Username=@User", new (string, string)[] { ("@User", DataIn["Username"].ToString()) }), "History");
             }
             else
             {
@@ -1391,6 +1451,8 @@ namespace Database_Control
                 Form.SetEmployeePass("", false, false);
                 Form.SetProductName("", false);
                 Form.SetEmployeeUser("", false);
+
+                Form.Connection.IgnoreCallback("EditData");
             }
 
             Action SaveAction;
@@ -1399,6 +1461,7 @@ namespace Database_Control
             {
                 SaveAction = () =>
                 {
+                    Form.Connection.IgnoreCallback("EditData");
                     if (!string.IsNullOrEmpty(Form.GetProductName()))
                     {
                         if (!string.IsNullOrEmpty(Form.GetEmployeeUser()) && Form.GetEmployeePass().Length >= 10)
@@ -1481,6 +1544,20 @@ namespace Database_Control
             Form.SaveProductAction = SaveAction;
 
             return true;
+        }
+
+        private static void RefreshOrdering(MainForm Form, Dictionary<string, object> Data)
+        {
+            List<Dictionary<string, object>> ListItems = Form.Connection.GetData("[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", Data["Order_ID"].ToString()) }), "Bundle_ID", "Order_ID", "Status", "Company_ID", "Salesman_ID", "History", "Memo", "CreationDate");
+            if (ListItems.Count == 0)
+            {
+                Form.SetWindow(MainForm.WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
+            }
+            else
+            {
+                Form.SetWindow(MainForm.WindowType.Ordering, ListItems[0]);
+            }
+
         }
 
         private static bool OpenOrdering(MainForm Form, StatusType Status, Dictionary<string, object> DataIn)
@@ -1610,12 +1687,22 @@ namespace Database_Control
                 SelectItem(Form.GetList(MainForm.List.OrderDisplay_Product), item);
             }
 
+            if (DataIn != null)
+            {
+                Form.Connection.CreateChangeCallback("EditData", RefreshOrdering, Form, DataIn, "[dbo].[DELIVERIES]", ("Order_ID=@ID", new (string, string)[] { ("@ID", DataIn["Order_ID"].ToString()) }), "History");
+            }
+            else
+            {
+                Form.Connection.IgnoreCallback("EditData");
+            }
+
             Action SaveAction;
 
             if (DataIn != null)
             {
                 SaveAction = () =>
                 {
+                    Form.Connection.IgnoreCallback("EditData");
                     List<(Control, CollectionReturn Call)> Products = GetSelectedObjects("OrderProductSelect");
                     List<(Control, CollectionReturn)> Company = GetSelectedObjects("CompanySelect");
                     Form.Connection.UpdateData("[Maestro].[dbo].[BUNDLES]", ("Bundle_ID=@ID", new (string, string)[] { ("@ID", DataIn["Bundle_ID"].ToString()) }), ("Delivered", 1));

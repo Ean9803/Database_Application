@@ -221,7 +221,7 @@ namespace Database_Control
             else
             {   // grabs information from the table on user access rights and moves into the homepage
                 Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"], (string)User[0]["Name"], (string)User[0]["Position"], (string)User[0]["Password"]);
-                Connection.CreateUserChangeCallback(Stat, OnUserChange);
+                Connection.CreateChangeCallback("UserCheck", OnUserChange, this, null, "[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", User[0]["Salesman_ID"].ToString()) }), "Position", "History");
                 DisplayControl = new WindowData(this, Stat);
                 LogoutBtn.Visible = true;
                 SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -265,7 +265,7 @@ namespace Database_Control
                         // gets permission object. !!!!
                         Stat = new StatusType(StatusType.CreateFrom((string)User[0]["Position"]), (int)User[0]["Salesman_ID"], (string)User[0]["Name"], (string)User[0]["Position"], (string)User[0]["Password"]);
                         DisplayControl = new WindowData(this, Stat);
-                        Connection.CreateUserChangeCallback(Stat, OnUserChange);
+                        Connection.CreateChangeCallback("UserCheck", OnUserChange, this, null, "[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", User[0]["Salesman_ID"].ToString()) }), "Position", "History");
                         LogoutBtn.Visible = true;
                         // afterwards then sends user back to delivery homepage
                         SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", (string)User[0]["Position"] }, { "NAME", (string)User[0]["Name"] } });
@@ -312,7 +312,7 @@ namespace Database_Control
         //on clicking on cancel order returns the user to delivery tab
         private void CancelOrder_Click(object sender, EventArgs e)
         {
-            SetWindow(WindowType.Delivery, null);
+            SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } });
         }
 
         public Action SaveOrderAction;
@@ -326,7 +326,6 @@ namespace Database_Control
                 {
                     if (SaveOrderAction != null)
                         SaveOrderAction(); // calling function to save data into the database
-                    MessageBox.Show("Action complete");
                 }
                 else
                 {
@@ -402,7 +401,7 @@ namespace Database_Control
         // button to return to Delivery tab
         private void ProductBack_Click(object sender, EventArgs e)
         {
-            SetWindow(WindowType.Delivery, null); // sending null data to a delivery page reinitializes the window
+            SetWindow(WindowType.Delivery, new Dictionary<string, object>() { { "INIT", "" } }); // sending null data to a delivery page reinitializes the window
         }
 
         public Action SaveProductAction;
@@ -416,7 +415,6 @@ namespace Database_Control
                 {
                     if (SaveProductAction != null)
                         SaveProductAction(); // calls function to save product into database
-                    MessageBox.Show("Action complete");
                 }
                 else
                 {
@@ -776,27 +774,24 @@ namespace Database_Control
             }
         }
 
-        void OnUserChange(object sender, SqlNotificationEventArgs e)
+        void OnUserChange(MainForm Form, Dictionary<string, object> Data)
         {
-            if (e.Info == SqlNotificationInfo.Update)
+            List<Dictionary<string, object>> Position = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", Stat.GetIDNumber().ToString()) }), "Position");
+            if (Position.Count == 0)
             {
-                List<Dictionary<string, object>> Position = Connection.GetData("[Maestro].[dbo].[EMPLOYEE]", ("Salesman_ID=@ID", new (string, string)[] { ("@ID", Stat.GetIDNumber().ToString()) }), "Position");
-                if (Position.Count == 0)
+                LogOut();
+                MessageBox.Show("You have been deleted");
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(Position[0]["Position"].ToString()))
                 {
-                    LogOut();
-                    MessageBox.Show("You have been deleted");
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(Position[0]["Position"].ToString()))
+                    if (!Position[0]["Position"].ToString().Equals(Stat.GetPosition()))
                     {
-                        if (!Position[0]["Position"].ToString().Equals(Stat.GetPosition()))
-                        {
-                            MessageBox.Show("Your permissions have been changed from: " + Stat.GetPosition() + " to: " + Position[0]["Position"].ToString() + "\n"
-                                + "Before:\n{" + string.Join(' ', Stat.PrintStats()) + "}\nNow:\n{" + 
-                                string.Join(' ', StatusType.PrintStats(StatusType.CreateFrom(Position[0]["Position"].ToString()))) + "}");
-                            LogOut();
-                        }
+                        MessageBox.Show("Your permissions have been changed from: " + Stat.GetPosition() + " to: " + Position[0]["Position"].ToString() + "\n"
+                            + "Before:\n{" + string.Join(' ', Stat.PrintStats()) + "}\nNow:\n{" +
+                            string.Join(' ', StatusType.PrintStats(StatusType.CreateFrom(Position[0]["Position"].ToString()))) + "}");
+                        LogOut();
                     }
                 }
             }

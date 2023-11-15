@@ -11,7 +11,8 @@ namespace Database_Control
     public class SQL
     {
         private SqlConnection com;
-        private SqlDependency Change = null;
+        private Dictionary<string, SqlDependency> Change = new Dictionary<string, SqlDependency>();
+        private Dictionary<string, bool> Ignore = new Dictionary<string, bool>();
 
         //Closes DB connection
         public void Close()
@@ -286,26 +287,100 @@ namespace Database_Control
             return Ret;
         }
 
-        public void ResetCallback()
+        public void ResetCallback(string Name = null)
         {
-            Change = null;
+            if (!string.IsNullOrEmpty(Name))
+            {
+                if (Change.ContainsKey(Name))
+                    Change[Name] = null;
+                else
+                    Change.Add(Name, null);
+
+                if (Ignore.ContainsKey(Name))
+                    Ignore[Name] = false;
+                else
+                    Ignore.Add(Name, false);
+            }
+            else
+            {
+                Change.Clear();
+                Ignore.Clear();
+            }
         }
 
-        public void CreateUserChangeCallback(StatusType User, OnChangeEventHandler Event)
+        public void IgnoreCallback(string Name)
         {
-            ResetCallback();
-            string sqlCommandText = $"SELECT Position, History FROM [dbo].[EMPLOYEE] WHERE Salesman_ID = " + User.GetIDNumber();
-            using (SqlCommand cmd = new SqlCommand(sqlCommandText, com))
+            if (Ignore.ContainsKey(Name))
+                Ignore[Name] = true;
+            else
+                Ignore.Add(Name, true);
+        }
+
+        public delegate void ChangeCallback(MainForm Form, Dictionary<string, object> Data);
+
+        public void CreateChangeCallback(string Name, ChangeCallback Event, MainForm Form, Dictionary<string, object> Data, string tableName, (string Clause, (string, string)[] WhereParams) whereClause, params string[] Cols)
+        {
+            ResetCallback(Name);
+            string sqlGet = $"SELECT {string.Join(", ", Cols)} FROM {tableName}" + (string.IsNullOrEmpty(whereClause.Clause) ? "" : $" WHERE {whereClause.Clause}");
+            List<Dictionary<string, object>> Ret = new List<Dictionary<string, object>>();
+
+            //Creates new command using sqlGet
+            using (SqlCommand cmd = new SqlCommand(sqlGet, com))
             {
-
-                if (Change == null)
-                    Change = new SqlDependency(cmd);
-
-                Change.OnChange += Event;
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                try
                 {
-                    // Process the DataReader.
+                    //Checks WHERE exists
+                    if (whereClause.WhereParams != null)
+                    {
+
+                        //if whereClause exist loop through parameters
+                        for (int i = 0; i < whereClause.WhereParams.Length; i++)
+                        {
+                            if (HasProcess(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2, Direction.Delivering, out object Result))
+                            {
+                                whereClause.WhereParams[i].Item2 = Result.ToString(); //Store new value 
+                            }
+                            cmd.Parameters.AddWithValue(whereClause.WhereParams[i].Item1, whereClause.WhereParams[i].Item2);
+                        }
+                    }
+
+                    Change[Name] = new SqlDependency(cmd);
+                    Change[Name].OnChange += (object Sender, SqlNotificationEventArgs e) => 
+                    { 
+                        if (e.Info == SqlNotificationInfo.Update)
+                        {
+                            try
+                            {
+                                Form.Invoke(new Action(() =>
+                                {
+                                    bool In = false;
+                                    if (Ignore.ContainsKey(Name))
+                                        In = Ignore[Name];
+                                    if (!In)
+                                    {
+                                        Event(Form, Data);
+                                        if (Ignore.ContainsKey(Name))
+                                            Ignore[Name] = true;
+                                        else
+                                            Ignore.Add(Name, true);
+                                    }
+                                }));
+                            }
+                            catch(Exception eI)
+                            {
+                                MessageBox.Show(eI.Message);
+                            }
+                        }
+                    };
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Process the DataReader.
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error getting data! " + ex.Message);
                 }
             }
         }
