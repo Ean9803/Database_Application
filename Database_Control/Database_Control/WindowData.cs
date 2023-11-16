@@ -1299,7 +1299,7 @@ namespace Database_Control
                 Form.SetEmail(DataIn["Email"].ToString());
                 Form.SetPhone(DataIn["Phone"].ToString());
 
-                Form.Connection.CreateChangeCallback("EditData", RefreshCompany, Form, DataIn, "[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "Name");
+                Form.Connection.CreateChangeCallback("EditData", RefreshCompany, Form, DataIn, "[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "Name", "Description", "Phone", "Email", "Address", "Image");
             }
             else
             {
