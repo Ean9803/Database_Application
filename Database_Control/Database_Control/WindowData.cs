@@ -533,7 +533,7 @@ namespace Database_Control
                 DeletedItemsProduct.Add(Product["Name"].ToString());
             }
             // deleting data from database
-            Form.Connection.UpdateData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), ("History", "DELETE"));
+            Form.Connection.UpdateData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }), ("Name", "DELETE"));
             Form.Connection.DeleteData("[Maestro].[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", item["Company_ID"].ToString()) }));
 
             //updating history
@@ -1299,7 +1299,7 @@ namespace Database_Control
                 Form.SetEmail(DataIn["Email"].ToString());
                 Form.SetPhone(DataIn["Phone"].ToString());
 
-                Form.Connection.CreateChangeCallback("EditData", RefreshCompany, Form, DataIn, "[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "History");
+                Form.Connection.CreateChangeCallback("EditData", RefreshCompany, Form, DataIn, "[dbo].[COMPANIES]", ("Company_ID=@ID", new (string, string)[] { ("@ID", DataIn["Company_ID"].ToString()) }), "Name");
             }
             else
             {
